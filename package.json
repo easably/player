@@ -85,6 +85,7 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "matroska-subtitles": "^2.0.3",
     "mpv.js-vanilla": "^0.3.1"
   }
 }
