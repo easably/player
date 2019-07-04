@@ -9,16 +9,21 @@ export class MpvService {
   public mpv: MpvJs;
   public state: any =  {pause: false, "time-pos": 0, duration: 0, fullscreen: false};
   public seeking: boolean;
-  
+
   constructor() {
     this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
   }
-  handleMPVReady = (mpv) => {
+  setTimePos = (timePos)=>{
+    this.state["time-pos"] = timePos;
+    this.mpv.property("time-pos", timePos);
+  }
+  
+  handleMPVReady = (mpv)=>{
     const observe = mpv.observe.bind(mpv);
     ["pause", "time-pos", "duration", "eof-reached"].forEach(observe);
     this.mpv.property("hwdec", "auto");
   }
-  handlePropertyChange = (name, value) => {
+  handlePropertyChange = (name, value)=>{
     if (name === "time-pos" && this.seeking) {
       return;
     } else if (name === "eof-reached" && value) {
@@ -27,15 +32,23 @@ export class MpvService {
       this.state[name] = value;
     }
   }
-  handleKeyDown = (e) => {
+  handleKeyDown=(e)=>{
     e.preventDefault();
     if (e.key === "f" || (e.key === "Escape" && this.state.fullscreen)) {
       this.toggleFullscreen();
     } else if (this.state.duration) {
-      this.mpv.keypress(e);
+      // if (e.key === ' '){
+      //   this.mpv.keypress(e);
+      // }else if(e.keyCode === 82){
+      //   this.setSubtitleRepeat();
+      // }else if(e.key === 'ArrowLeft'){
+      //   this.setSubtitlePrev();
+      // }else if(e.key === 'ArrowRight'){
+      //   this.setSubtitleNext();
+      // }
     }
   }
-  toggleFullscreen = () => {
+  toggleFullscreen(){
     if (this.state.fullscreen) {
       document['webkitExitFullscreen']();
     } else {
@@ -43,20 +56,17 @@ export class MpvService {
     }
     this.state.fullscreen = !this.state.fullscreen;
   }
-  togglePause = (e) => {
-    e.target.blur();
+  togglePause(){
     if (!this.state.duration) return;
     this.mpv.property("pause", !this.state.pause);
   }
-  handleStop = (e) => {
-    e.target.blur();
+  stop(){
     this.mpv.property("pause", true);
     this.mpv.command("stop");
     this.state['time-pos'] = 0;
     this.state.duration = 0;
   }
-  handleLoad = (e) => {
-    e.target.blur();
+  loadFile(){
     const items = remote.dialog.showOpenDialog({
       filters: [{
           name: "Videos",
@@ -70,8 +80,8 @@ export class MpvService {
     });
     if (items) {
       this.mpv.command("loadfile", items[0]);
-      this.togglePause(e);
-
+      this.mpv.property("pause", false);
+      return items[0];
     }
   }
 }
