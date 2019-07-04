@@ -1,8 +1,8 @@
 <div class="controls">
-  <button class="control" (click)='mpvService.togglePause($event)'>
+  <button class="control" (click)='togglePause($event)'>
     {{mpvService.state.pause ? "▶" : "❚❚"}}
   </button>
-  <button class="control" (click)="mpvService.handleStop($event)">■</button>
+  <button class="control" (click)="handleStop($event)">■</button>
   <input
     class="seek"
     type="range"
@@ -14,5 +14,5 @@
     (mousedown)='handleSeekMouseDown()'
     (mouseup)='handleSeekMouseUp()'
   />
-  <button class="control" (click)='mpvService.handleLoad($event)'>⏏</button>
+  <button class="control" (click)='handleLoad($event)'>⏏</button>
 </div>

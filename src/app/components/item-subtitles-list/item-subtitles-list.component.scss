@@ -1,0 +1,16 @@
+.subtitle{
+    &.current{
+        background-color: #45B8FF;
+    }
+    display: block;
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    &:hover{
+        cursor: pointer;
+        &:not(.current){
+            background-color: #eee;
+        }
+    }
+
+}

@@ -20,6 +20,9 @@ import { AppComponent } from './app.component';
 import { PlayerComponent } from './components/player/player.component';
 import { ControlComponent } from './components/control/control.component';
 import { VideoComponent } from './components/video/video.component';
+import { SubtitlesListComponent } from './components/subtitles-list/subtitles-list.component';
+import { ItemSubtitlesListComponent } from './components/item-subtitles-list/item-subtitles-list.component';
+import { VideoSubtitleComponent } from './components/video-subtitle/video-subtitle.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -32,7 +35,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     WebviewDirective,
     PlayerComponent,
     ControlComponent,
-    VideoComponent
+    VideoComponent,
+    SubtitlesListComponent,
+    ItemSubtitlesListComponent,
+    VideoSubtitleComponent
   ],
   imports: [
     BrowserModule,

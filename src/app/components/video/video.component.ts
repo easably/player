@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef} from '@angular/core';
 import { MpvService} from '../../services/mpv.service'
+import { SubtitlesService } from '../../services/subtitles.service';
 
 @Component({
   selector: 'app-video',
@@ -9,7 +10,8 @@ import { MpvService} from '../../services/mpv.service'
 export class VideoComponent implements OnInit {
   private embed;
   private embedProps;
-  constructor(private mpvService: MpvService, public elRef: ElementRef){
+  
+  constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService, public elRef: ElementRef){
     this.embedProps = this.mpvService.mpv.getDefProps();
   }
   ngOnInit(){
@@ -22,5 +24,7 @@ export class VideoComponent implements OnInit {
   ngOnDestroy(){
     document.removeEventListener("keydown", this.mpvService.handleKeyDown, false);
   }
-  
+  ngDoCheck(){
+    this.subtitlesService.findCurrentSubtitle();
+  }
 }

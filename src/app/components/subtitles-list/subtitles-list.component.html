@@ -1,0 +1,16 @@
+<div class="side-menu" *ngIf="mpvService.state.duration !== 0">
+  <div class="add-language">
+    <button (click)="subtitlesService.loadSubtitles()">+ Upload subtitles</button>
+  </div>
+  <div class="select-language" *ngIf="subtitlesService.subtitles">
+    <span class="select-language-title">Select subtitles: </span>
+    <select name="language-subtitle" (change)="onChangeLang($event)">
+      <option *ngFor="let lang of subtitlesService.subtitles" [value]="lang.number">{{lang.language || 'eng'}}</option>
+    </select>
+  </div>
+    <ul class="subtitle-list">
+        <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles()">
+          <app-item-subtitles-list [subtitle]="subtitle"></app-item-subtitles-list>
+        </li>
+      </ul>
+</div>

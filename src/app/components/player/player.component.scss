@@ -1,9 +1,15 @@
-.container {
+.video-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
 }
 .video {
   flex: 1;
   min-height: 0;
+  position: relative;
+}
+.app{
+  display: flex;
+  height: 100%;
 }
