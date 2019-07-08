@@ -5,7 +5,7 @@
   <div class="select-language" *ngIf="subtitlesService.subtitles">
     <span class="select-language-title">Select subtitles: </span>
     <select name="language-subtitle" (change)="onChangeLang($event)">
-      <option *ngFor="let lang of subtitlesService.subtitles" [value]="lang.number">{{lang.language || 'eng'}}</option>
+      <option *ngFor="let lang of subtitlesService.subtitles" [selected]="lang.number === subtitlesService.currentSubtitleLanguageNumber" [value]="lang.number">{{lang.language || 'eng'}}</option>
     </select>
   </div>
     <ul class="subtitle-list">

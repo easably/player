@@ -87,6 +87,6 @@
   "dependencies": {
     "matroska-subtitles": "^2.0.3",
     "mpv.js-vanilla": "^0.3.1",
-    "subtitles-parser": "0.0.2"
+    "subtitles-parser-vtt": "0.0.2"
   }
 }

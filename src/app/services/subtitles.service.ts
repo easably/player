@@ -3,7 +3,7 @@ import {remote} from 'electron';
 import {MpvService} from './mpv.service'
 import * as fs from 'fs';
 import * as MatroskaSubtitles from 'matroska-subtitles';
-import * as parser from 'subtitles-parser';
+import * as parser from 'subtitles-parser-vtt';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,9 @@ export class SubtitlesService {
       else if (this.subtitles.every(e=>e.number!==num)) return num;
       else return genNewNumber(num+1);
     }
-    let name = fileName.split('.');
+    let name = fileName.split('/')
+    name = name[name.length-1];
+    name = name.split('.');
     name = name[name.length-2];
     return {
       language: name,
@@ -43,7 +45,7 @@ export class SubtitlesService {
     const items = remote.dialog.showOpenDialog({
       filters: [{
           name: "Subtitles",
-          extensions: ["srt"]
+          extensions: ["srt","vtt"]
         },
         {
           name: "All files",
@@ -54,6 +56,7 @@ export class SubtitlesService {
     if (items) {
       let srt = fs.readFileSync(items[0],'utf8');
       let subtitle = this.changeSubtitleFormat(parser.fromSrt(srt,true),items[0]);
+      console.log(srt,subtitle)
       if (!this.subtitles) this.subtitles = [];
       this.subtitles.push(subtitle);
       this.currentSubtitleLanguageNumber = subtitle.number;

@@ -25,7 +25,7 @@ export class ControlComponent implements OnInit {
   handleLoad(e){
     e.target.blur();
     let file = this.mpvService.loadFile();
-    this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
+    file && this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
   }
   handleStop(e){
     e.target.blur();
