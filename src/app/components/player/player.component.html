@@ -1,7 +1,7 @@
 <div class="app">
   <div class="video-container">
     <app-video class="video"></app-video>
-    <app-control></app-control>
+    <app-control [toggleOpenSideBar]="toggleOpenSideBar.bind(this)"></app-control>
   </div>
-  <app-subtitles-list></app-subtitles-list>
+  <app-subtitles-list [open]="openSideBar"></app-subtitles-list>
 </div>

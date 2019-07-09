@@ -1,4 +1,4 @@
-<div class="side-menu" *ngIf="mpvService.state.duration !== 0">
+<div [ngClass]="open ? 'side-menu open' : 'side-menu'">
   <div class="add-language">
     <button (click)="subtitlesService.loadSubtitles()">+ Upload subtitles</button>
   </div>
@@ -9,8 +9,8 @@
     </select>
   </div>
     <ul class="subtitle-list">
-        <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles()">
-          <app-item-subtitles-list [subtitle]="subtitle"></app-item-subtitles-list>
-        </li>
-      </ul>
+      <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles().subtitle">
+        <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift"></app-item-subtitles-list>
+      </li>
+    </ul>
 </div>

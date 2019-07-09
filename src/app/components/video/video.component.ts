@@ -18,12 +18,6 @@ export class VideoComponent implements OnInit {
     this.embed = this.elRef.nativeElement.querySelector('embed');
     this.mpvService.mpv.setPluginNode(this.embed);
   }
-  ngAfterViewInit(){
-    document.addEventListener("keydown", this.mpvService.handleKeyDown, false);
-  }
-  ngOnDestroy(){
-    document.removeEventListener("keydown", this.mpvService.handleKeyDown, false);
-  }
   ngDoCheck(){
     this.subtitlesService.findCurrentSubtitle();
   }

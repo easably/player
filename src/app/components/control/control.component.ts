@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { MpvService} from '../../services/mpv.service'
 import { SubtitlesService } from '../../services/subtitles.service';
 
@@ -9,6 +9,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./control.component.scss']
 })
 export class ControlComponent implements OnInit {
+  @Input() toggleOpenSideBar: any;
   constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService) {}
 
   handleSeekMouseUp = () => {
@@ -24,7 +25,7 @@ export class ControlComponent implements OnInit {
   }
   handleLoad(e){
     e.target.blur();
-    let file = this.mpvService.loadFile();
+    let file:any = this.mpvService.loadFile();
     file && this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
   }
   handleStop(e){
@@ -34,6 +35,9 @@ export class ControlComponent implements OnInit {
   togglePause(e){
     e.target.blur();
     this.mpvService.togglePause();
+  }
+  handleOpenSidebar(){
+    this.toggleOpenSideBar();
   }
   ngOnInit() {
   }

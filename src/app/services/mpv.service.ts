@@ -7,7 +7,7 @@ import {remote} from 'electron';
 })
 export class MpvService {
   public mpv: MpvJs;
-  public state: any =  {pause: false, "time-pos": 0, duration: 0, fullscreen: false};
+  public state: any =  {pause: false, "time-pos": 0, duration: 0, fullscreen: false, speed: 1};
   public seeking: boolean;
 
   constructor() {
@@ -20,7 +20,7 @@ export class MpvService {
   
   handleMPVReady = (mpv)=>{
     const observe = mpv.observe.bind(mpv);
-    ["pause", "time-pos", "duration", "eof-reached"].forEach(observe);
+    ["pause", "time-pos", "duration", "eof-reached","speed"].forEach(observe);
     this.mpv.property("hwdec", "auto");
   }
   handlePropertyChange = (name, value)=>{
@@ -33,10 +33,11 @@ export class MpvService {
     }
   }
   handleKeyDown=(e)=>{
-    e.preventDefault();
-    if (e.key === "f" || (e.key === "Escape" && this.state.fullscreen)) {
-      this.toggleFullscreen();
-    } else if (this.state.duration) {
+    // console.log(e);
+    // e.preventDefault();
+    // if (e.key === "f" || (e.key === "Escape" && this.state.fullscreen)) {
+    //   this.toggleFullscreen();
+    // } else if (this.state.duration) {
       // if (e.key === ' '){
       //   this.mpv.keypress(e);
       // }else if(e.keyCode === 82){
@@ -46,14 +47,18 @@ export class MpvService {
       // }else if(e.key === 'ArrowRight'){
       //   this.setSubtitleNext();
       // }
-    }
+    // }
   }
   toggleFullscreen(){
+    let win = remote.getCurrentWindow();
     if (this.state.fullscreen) {
-      document['webkitExitFullscreen']();
+      // document['webkitExitFullscreen']();
+      win.setFullScreen(false);
     } else {
-      this.mpv.fullscreen();
+      // this.mpv.fullscreen();
+      win.setFullScreen(true);
     }
+    console.log(win);
     this.state.fullscreen = !this.state.fullscreen;
   }
   togglePause(){
@@ -67,7 +72,7 @@ export class MpvService {
     this.state.duration = 0;
   }
   loadFile(){
-    const items = remote.dialog.showOpenDialog({
+    let items = remote.dialog.showOpenDialog({
       filters: [{
           name: "Videos",
           extensions: ["mkv", "webm", "mp4", "mov", "avi"]
@@ -77,11 +82,30 @@ export class MpvService {
           extensions: ["*"]
         },
       ]
-    });
+    })
     if (items) {
       this.mpv.command("loadfile", items[0]);
       this.mpv.property("pause", false);
+      this.speedReset();
       return items[0];
     }
+  }
+  speedUp(){
+    let speed =  +(this.state.speed * 1.5).toFixed(10);
+    if (speed > 100)
+      return
+    this.changeSpeed(speed);
+  }
+  speedDown(){
+    let speed = this.state.speed = +(this.state.speed / 1.5).toFixed(10);
+    if (speed < 0.01)
+      return;
+    this.changeSpeed(speed);
+  }
+  speedReset(){
+    this.changeSpeed(1);
+  }
+  changeSpeed(e){
+    this.mpv.property('speed',e);
   }
 }

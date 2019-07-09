@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, Input} from '@angular/core';
 import { MpvService} from '../../services/mpv.service'
 import { SubtitlesService } from '../../services/subtitles.service';
 
@@ -8,6 +8,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./subtitles-list.component.scss']
 })
 export class SubtitlesListComponent implements OnInit {
+  @Input() open;
   constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService, private changeDetectedRef: ChangeDetectorRef) { 
 
   }
@@ -15,7 +16,8 @@ export class SubtitlesListComponent implements OnInit {
   ngOnInit() { 
     this.subtitlesService.subtitleLoaded.subscribe(()=>{
       this.changeDetectedRef.detectChanges();
-    })
+    });
+
   }
   ngDoCheck(){
     // this.changeDetectedRef.detectChanges();

@@ -13,10 +13,12 @@ export class SubtitlesService {
   public currentSubtitleKey: number = 0;
   public subtitleLoaded: EventEmitter < any > = new EventEmitter();
   public currentSubtitleLanguageNumber: number = 0;
+  public shift: number = 0;
   constructor(private mpvService: MpvService) {}
+
   getCurrentSubtitles() {
     if (!this.subtitles) return [];
-    return this.subtitles.filter(e => e.number === this.currentSubtitleLanguageNumber)[0].subtitle
+    return this.subtitles.filter(e => e.number === this.currentSubtitleLanguageNumber)[0]
   }
   changeSubtitleFormat(subtitle, fileName){
     let newSubtitle = subtitle.map(e=>{
@@ -42,7 +44,8 @@ export class SubtitlesService {
     }
   }
   loadSubtitles(){
-    const items = remote.dialog.showOpenDialog({
+    if (this.mpvService.state.duration === 0) return;
+    let items = remote.dialog.showOpenDialog({
       filters: [{
           name: "Subtitles",
           extensions: ["srt","vtt"]
@@ -52,11 +55,11 @@ export class SubtitlesService {
           extensions: ["*"]
         },
       ]
-    });
+    })
     if (items) {
       let srt = fs.readFileSync(items[0],'utf8');
       let subtitle = this.changeSubtitleFormat(parser.fromSrt(srt,true),items[0]);
-      console.log(srt,subtitle)
+      subtitle['subtitleShift'] = 0;
       if (!this.subtitles) this.subtitles = [];
       this.subtitles.push(subtitle);
       this.currentSubtitleLanguageNumber = subtitle.number;
@@ -69,6 +72,10 @@ export class SubtitlesService {
       matroskaParser.once('tracks', (tracks) => {
         time = performance.now();
         this.subtitles = Object.assign(tracks);
+        this.subtitles.forEach(sub=>{
+          sub.subtitleShift = 0;
+        });
+        console.log(this.subtitles)
         this.currentSubtitleLanguageNumber = tracks[0].number;
       })
   
@@ -106,10 +113,10 @@ export class SubtitlesService {
     }
   }
   findCurrentSubtitle() {
-    if (this.subtitles && this.getCurrentSubtitles()) {
+    if (this.subtitles && this.getCurrentSubtitles().subtitle) {
       let videoTime = this.mpvService.state['time-pos'];
-      this.getCurrentSubtitles().forEach((t, key) => {
-        if (videoTime >= t.time && videoTime < t.time + t.duration) {
+      this.getCurrentSubtitles().subtitle.forEach((t, key) => {
+        if (videoTime >= t.time + this.getCurrentSubtitles().subtitleShift && videoTime < t.time + this.getCurrentSubtitles().subtitleShift + t.duration) {
           this.currentSubtitleKey = key;
           t.isCurrent = true;
         } else {
@@ -119,7 +126,7 @@ export class SubtitlesService {
     }
   }
   setSubtitleByKey(key) {
-    this.mpvService.setTimePos(this.getCurrentSubtitles()[key].time);
+    this.mpvService.setTimePos(this.getCurrentSubtitles().subtitle[key].time + this.getCurrentSubtitles().subtitleShift);
   }
   setSubtitleRepeat() {
     this.setSubtitleByKey(this.currentSubtitleKey);
@@ -140,10 +147,10 @@ export class SubtitlesService {
   }
   setSubtitleNext() {
     if (this.subtitles) {
-      if (this.currentSubtitleKey < this.getCurrentSubtitles().length - 1)
+      if (this.currentSubtitleKey < this.getCurrentSubtitles().subtitle.length - 1)
         this.setSubtitleByKey(this.currentSubtitleKey + 1)
       else
-        this.setSubtitleByKey(this.getCurrentSubtitles().length - 1)
+        this.setSubtitleByKey(this.getCurrentSubtitles().subtitle.length - 1)
     } else {
       let time = this.mpvService.state["time-pos"];
       if (time < this.mpvService.state.duration)
@@ -151,5 +158,18 @@ export class SubtitlesService {
       else
         this.mpvService.setTimePos(this.mpvService.state.duration)
     }
+  }
+  clearSubtitles(){
+    this.subtitleLoaded.emit(null);
+    this.subtitles= undefined;
+    this.currentSubtitleLanguageNumber = undefined;
+  }
+  changeSubtitleShift(time){
+    if (this.subtitles)
+      this.getCurrentSubtitles().subtitleShift += time;
+  }
+  resetSubtitleShift(){
+    if (this.subtitles)
+      this.getCurrentSubtitles().subtitleShift = 0;
   }
 }
