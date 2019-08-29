@@ -9,9 +9,9 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class VideoComponent implements OnInit {
   private embed;
-  private embedProps;
+  public embedProps;
   
-  constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService, public elRef: ElementRef){
+  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, public elRef: ElementRef){
     this.embedProps = this.mpvService.mpv.getDefProps();
   }
   ngOnInit(){

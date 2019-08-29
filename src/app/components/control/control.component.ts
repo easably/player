@@ -10,7 +10,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class ControlComponent implements OnInit {
   @Input() toggleOpenSideBar: any;
-  constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService) {}
+  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {}
 
   handleSeekMouseUp = () => {
     this.mpvService.seeking = false;

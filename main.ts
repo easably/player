@@ -14,16 +14,31 @@ import {
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-const pdir = path.join(path.dirname(require.resolve("mpv.js-vanilla")), 'build', 'Release');
+let pathToMpv, pdir;
+let win, serve, menu;
+const args = process.argv.slice(1);
+serve = args.some(val => val === '--serve');
+
+if (serve) {
+  pathToMpv = path.join(__dirname, 'mpv');
+}else{
+  pathToMpv = path.join(__dirname,'../','../','mpv')
+}
+switch (process.platform) {
+  case 'darwin':
+    pdir = path.join(pathToMpv, 'mac');
+    break;
+  case 'win32':
+    pdir = path.join(pathToMpv, 'win');
+    break;
+}
+
 if (process.platform !== 'linux') {
   process.chdir(pdir);
 }
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.commandLine.appendSwitch('register-pepper-plugins', getPluginEntry(pdir));
 
-let win, serve, menu;
-const args = process.argv.slice(1);
-serve = args.some(val => val === '--serve');
 
 
 function createWindow() {
@@ -101,7 +116,7 @@ try {
   // throw e;
 }
 
-function createMenu(){
+function createMenu() {
   let mApplication = {
     label: "Application",
     submenu: [{
@@ -117,7 +132,7 @@ function createMenu(){
       }
     ]
   }
-  
+
   let mFile = {
     label: "File",
     submenu: [{
@@ -145,7 +160,7 @@ function createMenu(){
       // },
     ]
   };
-  
+
   let mEdit = {
     label: "Edit",
     submenu: [{
@@ -180,7 +195,7 @@ function createMenu(){
       }
     ]
   };
-  
+
   let mPlayback = {
     label: "Playback",
     submenu: [{
@@ -248,7 +263,7 @@ function createMenu(){
       // },
     ]
   };
-  
+
   // let mLoop = {
   //   label: "Loop",
   //   submenu: [{
@@ -355,7 +370,7 @@ function createMenu(){
   //     },
   //   ]
   // };
-  
+
   let mSubtitle = {
     label: "Subtitle",
     submenu: [
@@ -440,7 +455,7 @@ function createMenu(){
       // }
     ]
   };
-  
+
   let mView = {
     label: "View",
     submenu: [{
@@ -501,7 +516,7 @@ function createMenu(){
       // },
     ]
   };
-  
+
   // let mWord = {
   //   label: "Word Book",
   //   submenu: [{
@@ -536,7 +551,7 @@ function createMenu(){
   //     },
   //   ]
   // };
-  
+
   // let mYouTube = {
   //   label: "YouTube",
   //   enabled: false,
@@ -574,7 +589,7 @@ function createMenu(){
   //     },
   //   ]
   // };
-  
+
   let mHelp = {
     role: 'help',
     // submenu: [{
@@ -610,7 +625,7 @@ function createMenu(){
     //       //var body = "%0D%0A%0D%0A%0D%0A" + os.type() + "-" + os.platform() + "-" + os.release();
     //       var playerName;
     //       playerName = "Source Player";
-  
+
     //       var address = `mailto:edwardweiliao@gmail.com?subject=Feedback for ${playerName}`;
     //       require('electron').shell.openExternal(address);
     //     }
@@ -623,8 +638,8 @@ function createMenu(){
     //   }
     // ]
   };
-  
-  
+
+
   let template = [
     mApplication,
     mFile,
@@ -637,7 +652,7 @@ function createMenu(){
     // mYouTube,
     mHelp,
   ];
-  
+
   menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 }

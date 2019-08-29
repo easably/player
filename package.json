@@ -61,7 +61,7 @@
     "conventional-changelog-cli": "2.0.11",
     "core-js": "2.6.1",
     "electron": "^3.1.11",
-    "electron-builder": "20.41.0",
+    "electron-builder": "^21.2.0",
     "electron-reload": "1.4.0",
     "jasmine-core": "3.3.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -86,7 +86,7 @@
   },
   "dependencies": {
     "matroska-subtitles": "^2.0.3",
-    "mpv.js-vanilla": "^0.3.1",
+    "mpv.js-vanilla": "^0.3.4",
     "subtitles-parser-vtt": "0.0.2"
   }
 }

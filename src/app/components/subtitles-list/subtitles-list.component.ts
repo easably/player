@@ -9,7 +9,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class SubtitlesListComponent implements OnInit {
   @Input() open;
-  constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService, private changeDetectedRef: ChangeDetectorRef) { 
+  constructor(private mpvService: MpvService, public subtitlesService: SubtitlesService, private changeDetectedRef: ChangeDetectorRef) { 
 
   }
   

@@ -5,15 +5,29 @@ var path = require("path");
 var url = require("url");
 var mpv_js_vanilla_1 = require("mpv.js-vanilla");
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-var pdir = path.join(path.dirname(require.resolve("mpv.js-vanilla")), 'build', 'Release');
+var pathToMpv, pdir;
+var win, serve, menu;
+var args = process.argv.slice(1);
+serve = args.some(function (val) { return val === '--serve'; });
+if (serve) {
+    pathToMpv = path.join(__dirname, 'mpv');
+}
+else {
+    pathToMpv = path.join(__dirname, '../', '../', 'mpv');
+}
+switch (process.platform) {
+    case 'darwin':
+        pdir = path.join(pathToMpv, 'mac');
+        break;
+    case 'win32':
+        pdir = path.join(pathToMpv, 'win');
+        break;
+}
 if (process.platform !== 'linux') {
     process.chdir(pdir);
 }
 electron_1.app.commandLine.appendSwitch('ignore-gpu-blacklist');
 electron_1.app.commandLine.appendSwitch('register-pepper-plugins', mpv_js_vanilla_1.getPluginEntry(pdir));
-var win, serve, menu;
-var args = process.argv.slice(1);
-serve = args.some(function (val) { return val === '--serve'; });
 function createWindow() {
     var electronScreen = electron_1.screen;
     var size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -30,6 +44,7 @@ function createWindow() {
             plugins: true
         },
     });
+    var extension = electron_1.BrowserWindow.addExtension(path.join(__dirname, '../extension/dist'));
     createMenu();
     if (serve) {
         require('electron-reload')(__dirname, {
