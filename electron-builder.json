@@ -23,14 +23,14 @@
         "!mpv/"
     ],
   "win": {
-    "icon": "dist",
+    "icon": "dist/favicon.png",
     "target": [
       "portable"
     ],
     "extraFiles": ["mpv/win/"]
   },
   "mac": {
-    "icon": "dist",
+    "icon": "dist/favicon.png",
     "target": [
       "dmg"
     ],
