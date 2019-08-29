@@ -72,7 +72,8 @@ export class MpvService {
     this.state.duration = 0;
   }
   loadFile(){
-    let items = remote.dialog.showOpenDialog({
+    let win = remote.getCurrentWindow();
+    let items = remote.dialog.showOpenDialog(win,{
       filters: [{
           name: "Videos",
           extensions: ["mkv", "webm", "mp4", "mov", "avi"]
