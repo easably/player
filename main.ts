@@ -249,20 +249,26 @@ function createMenu() {
           win.webContents.send('speed-reset')
         }
       },
-      // {
-      //   label: "Next Audio Track",
-      //   click: function () {
-      //     win.webContents.send('next-audio-track', true)
-      //   }
-      // },
-      // {
-      //   label: "Previous Audio Track",
-      //   click: function () {
-      //     win.webContents.send('next-audio-track', false)
-      //   }
-      // },
     ]
   };
+
+  let mAudio = {
+    label: 'Audio',
+    submenu: [
+      {
+        label: "Next Audio Track",
+        click: function () {
+          win.webContents.send('next-audio-track', true)
+        }
+      },
+      {
+        label: "Previous Audio Track",
+        click: function () {
+          win.webContents.send('next-audio-track', false)
+        }
+      },
+    ]
+  }
 
   // let mLoop = {
   //   label: "Loop",
@@ -645,6 +651,7 @@ function createMenu() {
     mFile,
     mEdit,
     mPlayback,
+    mAudio,
     // mLoop,
     mSubtitle,
     mView,

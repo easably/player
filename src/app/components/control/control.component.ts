@@ -2,7 +2,6 @@ import { Component, OnInit, Input} from '@angular/core';
 import { MpvService} from '../../services/mpv.service'
 import { SubtitlesService } from '../../services/subtitles.service';
 
-
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
@@ -25,8 +24,11 @@ export class ControlComponent implements OnInit {
   }
   handleLoad(e){
     e.target.blur();
-    let file:any = this.mpvService.loadFile();
-    file && this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
+    let file: any = this.mpvService.loadFile();
+      if (file) {
+        this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
+        this.toggleOpenSideBar(true);
+      }
   }
   handleStop(e){
     e.target.blur();
@@ -35,9 +37,6 @@ export class ControlComponent implements OnInit {
   togglePause(e){
     e.target.blur();
     this.mpvService.togglePause();
-  }
-  handleOpenSidebar(){
-    this.toggleOpenSideBar();
   }
   ngOnInit() {
   }
