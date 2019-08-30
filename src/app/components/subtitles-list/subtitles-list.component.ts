@@ -24,9 +24,7 @@ export class SubtitlesListComponent implements OnInit {
 
   }
   onChangeLang(e){
-    this.subtitlesService.currentSubtitleLanguageNumber = +e.target.value;
-    console.log(this.mpvService);
-
+    this.subtitlesService.currentSubtitleLanguageNumber = +e.target.id;
     // this.changeDetectedRef.detectChanges();
   }
 }
