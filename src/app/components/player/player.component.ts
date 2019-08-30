@@ -36,6 +36,9 @@ export class PlayerComponent implements OnInit {
     ipcRenderer.on('fast-backward', () => {
       this.subtitlesService.setSubtitlePrev();
     });
+    ipcRenderer.on('fast-repeat', () => {
+      this.subtitlesService.setSubtitleRepeat();
+    });
     ipcRenderer.on('speed-up', () => {
       this.mpvService.speedUp();
     });

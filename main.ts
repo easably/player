@@ -215,14 +215,21 @@ function createMenu() {
       //   }
       // },
       {
-        label: "Next Line",
+        label: "Repeat Subtitle",
+        accelerator: "Return",
+        click: function () {
+          win.webContents.send('fast-repeat')
+        }
+      },
+      {
+        label: "Next Subtitle",
         accelerator: "right",
         click: function () {
           win.webContents.send('fast-forward')
         }
       },
       {
-        label: "Previous Line",
+        label: "Previous Subtitle",
         accelerator: "left",
         click: function () {
           win.webContents.send('fast-backward')
