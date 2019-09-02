@@ -95,6 +95,21 @@ export class MpvService {
     this.state['time-pos'] = 0;
     this.state.duration = 0;
   }
+  playSomeTime(time, delay = 1){
+    const startTime = this.state['time-pos']
+    if (this.state.pause){
+      this.setTimePos(startTime - delay)
+      this.togglePause()
+    }
+    setTimeout(()=>{
+      if (!this.state.pause && 
+        Math.round(this.state['time-pos']) >= Math.round(startTime + time + delay) - 1 && 
+        Math.round(this.state['time-pos'])<= Math.round(startTime + time + delay)+1
+      ){
+        this.togglePause()
+      }
+    }, (time + 2*delay) * 1000)
+  }
   loadFile() {
     let win = remote.getCurrentWindow();
     let items = remote.dialog.showOpenDialog(win, {
@@ -109,6 +124,7 @@ export class MpvService {
       ]
     })
     if (items) {
+      this.stop();
       this.mpv.command("loadfile", items[0]);
       this.mpv.property("pause", false);
       this.speedReset();

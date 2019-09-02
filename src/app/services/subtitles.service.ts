@@ -125,11 +125,17 @@ export class SubtitlesService {
       })
     }
   }
+  getCurrentSubtitle(key = this.currentSubtitleKey){
+    return this.getCurrentSubtitles().subtitle[key]
+  }
   setSubtitleByKey(key) {
-    this.mpvService.setTimePos(this.getCurrentSubtitles().subtitle[key].time + this.getCurrentSubtitles().subtitleShift);
+    this.mpvService.setTimePos(this.getCurrentSubtitle(key).time + this.getCurrentSubtitles().subtitleShift);
   }
   setSubtitleRepeat() {
     this.setSubtitleByKey(this.currentSubtitleKey);
+    if(this.mpvService.state.pause){
+      this.mpvService.playSomeTime(this.getCurrentSubtitle().duration)
+    }
   }
   setSubtitlePrev() {
     if (this.subtitles) {

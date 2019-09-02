@@ -22,7 +22,9 @@ export class ItemSubtitlesListComponent implements OnInit {
   
   onGoToSubtitle(){
     this.mpvService.setTimePos(this.subtitle.time + this.shift);
-    console.log(this.subtitle.time)
+    if(this.mpvService.state.pause){
+      this.mpvService.playSomeTime(this.subtitle.duration)
+    }
   }
 
 }
