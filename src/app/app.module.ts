@@ -23,6 +23,7 @@ import { VideoComponent } from './components/video/video.component';
 import { SubtitlesListComponent } from './components/subtitles-list/subtitles-list.component';
 import { ItemSubtitlesListComponent } from './components/item-subtitles-list/item-subtitles-list.component';
 import { VideoSubtitleComponent } from './components/video-subtitle/video-subtitle.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -38,7 +39,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     VideoComponent,
     SubtitlesListComponent,
     ItemSubtitlesListComponent,
-    VideoSubtitleComponent
+    VideoSubtitleComponent,
+    SideBarComponent,
   ],
   imports: [
     BrowserModule,

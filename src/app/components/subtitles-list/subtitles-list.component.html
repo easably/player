@@ -1,23 +1,6 @@
-<div [ngClass]="open ? 'side-menu open' : 'side-menu'">
-  <div class="add-language">
-    <button (click)="subtitlesService.loadSubtitles()">+ Upload subtitles</button>
-  </div>
-  <div class="select-language" *ngIf="subtitlesService.subtitles">
-    <span class="select-language-title">Select subtitles: </span>
-    <ul class="select-language-list">
-      <li *ngFor="let lang of subtitlesService.subtitles"  [value]="lang.number">
-        <input type="radio" 
-          name="language-subtitle" 
-          [id]="lang.number" 
-          [checked]="lang.number === subtitlesService.currentSubtitleLanguageNumber" 
-          (change)="onChangeLang($event)">
-        <label [for]="lang.number">{{lang.language || 'eng'}}</label>
-      </li>
-    </ul>
-  </div>
-    <ul class="subtitle-list">
-      <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles().subtitle">
-        <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift"></app-item-subtitles-list>
-      </li>
-    </ul>
-</div>
+<ul class="subtitle-list">
+  <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles().subtitle">
+    <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift">
+    </app-item-subtitles-list>
+  </li>
+</ul>
