@@ -9,9 +9,10 @@ import { MpvService } from '../../services/mpv.service';
 export class ItemSubtitlesListComponent implements OnInit {
   @Input() subtitle
   @Input() shift;
+  @Input() isBetweenLine;
 
   private isAlreadyScroll:boolean = false;
-  constructor(private mpvService: MpvService, public elRef: ElementRef) { }
+  constructor(private mpvService: MpvService, public elRef: ElementRef) {   }
 
   ngOnInit() {
     

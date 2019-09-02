@@ -1,1 +1,1 @@
-<p [ngClass]="subtitle.isCurrent ? 'current subtitle' : 'subtitle'" [innerHTML]="subtitle.text" (click)="onGoToSubtitle()"></p>
+<p [ngClass]="(subtitle.isCurrent ? 'current subtitle' : 'subtitle') + (isBetweenLine ? '-between' : '')" [innerHTML]="subtitle.text" (click)="!isBetweenLine && onGoToSubtitle()"></p>
