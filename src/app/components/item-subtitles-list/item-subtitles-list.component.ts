@@ -10,6 +10,7 @@ export class ItemSubtitlesListComponent implements OnInit {
   @Input() subtitle
   @Input() shift;
 
+  private isAlreadyScroll:boolean = false;
   constructor(private mpvService: MpvService, public elRef: ElementRef) { }
 
   ngOnInit() {
@@ -17,7 +18,13 @@ export class ItemSubtitlesListComponent implements OnInit {
   }
   
   ngDoCheck(){
-    // this.subtitle.isCurrent && this.elRef.nativeElement.scrollIntoView({block: 'center', behacior: 'smooth'});
+    if (this.subtitle.isCurrent && !this.isAlreadyScroll)
+    {
+      this.elRef.nativeElement.scrollIntoView({block: 'center', behavior: 'smooth'});
+      this.isAlreadyScroll = true;
+    }else if (!this.subtitle.isCurrent && this.isAlreadyScroll){
+      this.isAlreadyScroll = false;
+    }
   }
   
   onGoToSubtitle(){
