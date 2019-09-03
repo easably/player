@@ -20,6 +20,7 @@ import {
 export class PlayerComponent implements OnInit {
   public openSideBar: boolean = false;
   constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService) {
+    this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
     ipcRenderer.on('open-file', () => {
       let file: any = this.mpvService.loadFile();
       if (file) {

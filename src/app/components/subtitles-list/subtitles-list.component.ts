@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input} from '@angular/core';
 import { SubtitlesService } from '../../services/subtitles.service';
 import { MpvService } from '../../services/mpv.service';
 
@@ -8,7 +8,7 @@ import { MpvService } from '../../services/mpv.service';
   styleUrls: ['./subtitles-list.component.scss']
 })
 export class SubtitlesListComponent implements OnInit {
-
+  @Input() filterText;
   constructor( public subtitlesService: SubtitlesService, private mpvService: MpvService, private changeDetectedRef: ChangeDetectorRef) { 
 
   }
@@ -34,6 +34,12 @@ export class SubtitlesListComponent implements OnInit {
       duration: duration,
       isCurrent:  curTime>= time && curTime< time+duration
     }
+  }
+  getSubtitleList(){
+    const subtitles = this.subtitlesService.getCurrentSubtitles().subtitle;
+    if (!subtitles) return [];
+    if (this.filterText != '') return subtitles.filter(s=>s.text.toUpperCase().indexOf(this.filterText.toUpperCase()) !== -1);
+    return subtitles;
   }
   ngDoCheck(){
     // this.changeDetectedRef.detectChanges();

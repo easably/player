@@ -9,13 +9,14 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class SideBarComponent implements OnInit {
   @Input() open;
+  public filterText: string = '';
   constructor(public mpvService: MpvService, public subtitlesService: SubtitlesService) { 
-    
+
   }
 
   ngOnInit() {
   }
-
+  
   onChangeLang(e){
     this.subtitlesService.currentSubtitleLanguageNumber = +e.target.id;
     // this.changeDetectedRef.detectChanges();

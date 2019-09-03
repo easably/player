@@ -1,5 +1,5 @@
 <ul class="subtitle-list">
-  <li *ngFor="let subtitle of subtitlesService.getCurrentSubtitles().subtitle; let i =index">
+  <li *ngFor="let subtitle of getSubtitleList(); let i =index">
     <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift"></app-item-subtitles-list>
     <app-item-subtitles-list *ngIf="generateBetweenSubtitlesComponent(i)" [subtitle]="generateBetweenSubtitlesComponent(i)" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift" [isBetweenLine] = "true"></app-item-subtitles-list>
   </li>

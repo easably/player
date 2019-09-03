@@ -23,7 +23,10 @@
         </li>
       </ul>
     </div>
-    
   </div>
-  <app-subtitles-list></app-subtitles-list>
+
+  <div class="filter-subtitles">
+      <input type="text" [(ngModel)]="filterText" placeholder="Search..." [disabled]="!subtitlesService.subtitles">
+    </div>
+  <app-subtitles-list [filterText]="filterText"></app-subtitles-list>
 </div>

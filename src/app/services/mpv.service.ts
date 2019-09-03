@@ -94,6 +94,10 @@ export class MpvService {
     this.mpv.command("stop");
     this.state['time-pos'] = 0;
     this.state.duration = 0;
+    this.stopAdditional();
+  }
+  stopAdditional(){
+
   }
   playSomeTime(time, delay = 1){
     const startTime = this.state['time-pos']
