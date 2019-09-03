@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef} from '@angular/core';
+import { Component, OnInit, ElementRef, Input} from '@angular/core';
 import { MpvService} from '../../services/mpv.service'
 import { SubtitlesService } from '../../services/subtitles.service';
 
@@ -8,6 +8,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./video.component.scss']
 })
 export class VideoComponent implements OnInit {
+  @Input() contextMenuEvent;
   private embed;
   public embedProps;
   

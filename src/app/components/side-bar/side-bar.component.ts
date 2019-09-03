@@ -9,6 +9,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class SideBarComponent implements OnInit {
   @Input() open;
+  @Input() contextMenuEvent;
   public filterText: string = '';
   constructor(public mpvService: MpvService, public subtitlesService: SubtitlesService) { 
 

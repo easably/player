@@ -1,2 +1,2 @@
 <embed [type] ="embedProps.type" (mousedown)="mpvService.togglePause()" [ngStyle]="embedProps.style">
-<app-video-subtitle></app-video-subtitle>
+<app-video-subtitle [contextMenuEvent]="contextMenuEvent"></app-video-subtitle>

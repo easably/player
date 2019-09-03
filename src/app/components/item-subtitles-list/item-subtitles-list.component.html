@@ -1,1 +1,3 @@
-<p [ngClass]="(subtitle.isCurrent ? 'current subtitle' : 'subtitle') + (isBetweenLine ? '-between' : '')" [innerHTML]="subtitle.text" (click)="!isBetweenLine && onGoToSubtitle()"></p>
+<div [ngClass]="(subtitle.isCurrent ? 'current subtitle' : 'subtitle') + (isBetweenLine ? '-between' : '')" (click)="!isBetweenLine && onGoToSubtitle()" (contextmenu)="contextMenuEvent($event,subtitle.text)">
+    <p *ngIf="!isBetweenLine" [innerHTML]="subtitle.text"></p>
+</div>

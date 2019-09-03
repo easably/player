@@ -9,6 +9,7 @@ import { MpvService } from '../../services/mpv.service';
 })
 export class SubtitlesListComponent implements OnInit {
   @Input() filterText;
+  @Input() contextMenuEvent;
   constructor( public subtitlesService: SubtitlesService, private mpvService: MpvService, private changeDetectedRef: ChangeDetectorRef) { 
 
   }

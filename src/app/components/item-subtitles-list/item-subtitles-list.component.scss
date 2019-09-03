@@ -3,8 +3,13 @@ $selectedColor : #45B8FF;
     &.current{
         background-color: $selectedColor;
     }
+    & p{
+        display: block;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+    }
     transition: background-color .2s ease-in-out;
-    display: block;
     height: 100%;
     margin: 0;
     padding: 20px;

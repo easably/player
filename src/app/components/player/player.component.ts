@@ -11,7 +11,6 @@ import {
 import {
   ipcRenderer
 } from 'electron';
-
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -71,13 +70,13 @@ export class PlayerComponent implements OnInit {
     ipcRenderer.on('toggle-side-bar', () => {
       this.toggleOpenSideBar();
     });
-    ipcRenderer.on('next-audio-track', ( e, isNext: boolean) => {
+    ipcRenderer.on('next-audio-track', (e, isNext: boolean) => {
       this.mpvService.nextAudioTrack(isNext);
     });
   }
   ngOnInit() {}
-  toggleOpenSideBar(state:boolean = undefined) {
-    switch(state){
+  toggleOpenSideBar(state: boolean = undefined) {
+    switch (state) {
       case undefined:
         this.openSideBar = !this.openSideBar;
         break;
@@ -88,5 +87,10 @@ export class PlayerComponent implements OnInit {
         this.openSideBar = false;
         break;
     }
+  }
+  contextMenuEvent(e, text) {
+    e.preventDefault();
+    e.stopPropagation();
+    ipcRenderer.send('openPopup', text)
   }
 }

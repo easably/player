@@ -4,7 +4,8 @@ import {
   screen,
   Menu,
   ipcMain,
-  shell
+  shell,
+  clipboard
 } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
@@ -21,8 +22,8 @@ serve = args.some(val => val === '--serve');
 
 if (serve) {
   pathToMpv = path.join(__dirname, 'mpv');
-}else{
-  pathToMpv = path.join(__dirname,'../','../','mpv')
+} else {
+  pathToMpv = path.join(__dirname, '../', '../', 'mpv')
 }
 switch (process.platform) {
   case 'darwin':
@@ -114,6 +115,30 @@ try {
 } catch (e) {
   // Catch Error
   // throw e;
+}
+ipcMain.on('openPopup', (ev, text) => {
+  createPopup(text).popup(win);
+})
+
+function createPopup(additionalText = undefined) {
+  if (additionalText) {
+    return Menu.buildFromTemplate([{
+        label: 'Copy',
+        role: 'copy',
+      },
+      {
+        label: 'Copy All',
+        click: function () {
+          clipboard.writeText(additionalText)
+        }
+      }
+    ]);
+  }
+  return Menu.buildFromTemplate([{
+      label: 'Copy',
+      role: 'copy',
+    }
+  ]);
 }
 
 function createMenu() {
@@ -261,8 +286,7 @@ function createMenu() {
 
   let mAudio = {
     label: 'Audio',
-    submenu: [
-      {
+    submenu: [{
         label: "Next Audio Track",
         click: function () {
           win.webContents.send('next-audio-track', true)

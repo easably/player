@@ -1,5 +1,12 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { MpvService } from '../../services/mpv.service';
+import {
+  Component,
+  OnInit,
+  Input,
+  ElementRef
+} from '@angular/core';
+import {
+  MpvService
+} from '../../services/mpv.service';
 
 @Component({
   selector: 'app-item-subtitles-list',
@@ -10,27 +17,32 @@ export class ItemSubtitlesListComponent implements OnInit {
   @Input() subtitle
   @Input() shift;
   @Input() isBetweenLine;
+  @Input() contextMenuEvent;
 
-  private isAlreadyScroll:boolean = false;
-  constructor(private mpvService: MpvService, public elRef: ElementRef) {   }
+  private isAlreadyScroll: boolean = false;
+  constructor(private mpvService: MpvService, public elRef: ElementRef) {
 
-  ngOnInit() {
-    
   }
   
-  ngDoCheck(){
-    if (this.subtitle.isCurrent && !this.isAlreadyScroll)
-    {
-      this.elRef.nativeElement.scrollIntoView({block: 'center', behavior: 'smooth'});
+  ngOnInit() {
+
+  }
+
+  ngDoCheck() {
+    if (this.subtitle.isCurrent && !this.isAlreadyScroll) {
+      this.elRef.nativeElement.scrollIntoView({
+        block: 'center',
+        behavior: 'smooth'
+      });
       this.isAlreadyScroll = true;
-    }else if (!this.subtitle.isCurrent && this.isAlreadyScroll){
+    } else if (!this.subtitle.isCurrent && this.isAlreadyScroll) {
       this.isAlreadyScroll = false;
     }
   }
-  
-  onGoToSubtitle(){
+
+  onGoToSubtitle() {
     this.mpvService.setTimePos(this.subtitle.time + this.shift);
-    if(this.mpvService.state.pause){
+    if (this.mpvService.state.pause) {
       this.mpvService.playSomeTime(this.subtitle.duration)
     }
   }
