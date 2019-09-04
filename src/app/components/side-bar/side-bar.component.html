@@ -9,7 +9,7 @@
         </option>
       </select>
     </div>
-    <div class="select-language" *ngIf="subtitlesService.subtitles">
+    <div class="select-language" *ngIf="mpvService.state.duration !== 0">
       <span class="select-language-title">Subtitles: </span>
       <ul class="select-language-list">
         <li *ngFor="let lang of subtitlesService.subtitles">
