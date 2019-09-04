@@ -26,7 +26,7 @@ export class SideBarComponent implements OnInit {
     return arr.filter(t=>t.type === 'audio')
   }
   onChangeAudioTrack(e){
-    this.mpvService.setAudioTrack(e.target.id);
+    this.mpvService.setAudioTrack(e.target.value);
     // this.changeDetectedRef.detectChanges();
   }
 }

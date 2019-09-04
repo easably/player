@@ -1,32 +1,33 @@
 <div [ngClass]="open ? 'side-menu open' : 'side-menu'">
-  <div class="add-language">
-    <button (click)="subtitlesService.loadSubtitles()">+ Upload subtitles</button>
-  </div>
   <div class="language-container">
-      <div class="select-language" *ngIf="mpvService.state.trackList.length !==0">
-          <span class="select-language-title">Select audio-track: </span>
-          <ul class="select-language-list">
-            <li *ngFor="let lang of filterAudioTrack(mpvService.state.trackList)" [value]="lang.id">
-              <input type="radio" name="language-audio" [id]="lang.id"
-                [checked]="lang.selected === true" (change)="onChangeAudioTrack($event)">
-              <label [for]="lang.id">{{(lang.title || '') + ' (' + (lang.lang || 'standart') + ')'}}</label>
-            </li>
-          </ul>
-        </div>
+    <div class="select-language" *ngIf="mpvService.state.trackList.length !==0">
+      <span class="select-language-title">Audio: </span>
+      <select class="select-language-list" (change)="onChangeAudioTrack($event)">
+        <option *ngFor="let lang of filterAudioTrack(mpvService.state.trackList)" [value]="lang.id"
+          [selected]="lang.selected === true">
+          {{(lang.title || '') + ' (' + (lang.lang || 'standart') + ')'}}
+        </option>
+      </select>
+    </div>
     <div class="select-language" *ngIf="subtitlesService.subtitles">
-      <span class="select-language-title">Select subtitles: </span>
+      <span class="select-language-title">Subtitles: </span>
       <ul class="select-language-list">
-        <li *ngFor="let lang of subtitlesService.subtitles" [value]="lang.number">
+        <li *ngFor="let lang of subtitlesService.subtitles">
           <input type="radio" name="language-subtitle" [id]="lang.number"
             [checked]="lang.number === subtitlesService.currentSubtitleLanguageNumber" (change)="onChangeLang($event)">
           <label [for]="lang.number">{{lang.language || 'eng'}}</label>
+        </li>
+        <li>
+          <div class="add-language">
+            <button (click)="subtitlesService.loadSubtitles()">Open subtitles</button>
+          </div>
         </li>
       </ul>
     </div>
   </div>
 
   <div class="filter-subtitles">
-      <input type="text" [(ngModel)]="filterText" placeholder="Search..." [disabled]="!subtitlesService.subtitles">
-    </div>
+    <input type="text" [(ngModel)]="filterText" placeholder="Search..." [disabled]="!subtitlesService.subtitles">
+  </div>
   <app-subtitles-list [filterText]="filterText" [contextMenuEvent]="contextMenuEvent"></app-subtitles-list>
 </div>
