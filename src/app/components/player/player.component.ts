@@ -12,6 +12,9 @@ import {
   ipcRenderer,
   remote
 } from 'electron';
+import {
+  videoExtensions
+} from '../../../static/config.js'
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -21,7 +24,7 @@ export class PlayerComponent implements OnInit {
   public openSideBar: boolean = false;
   constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService) {
     this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
-    ipcRenderer.on('open-file-with', (ev,arg) => {
+    ipcRenderer.on('open-file-with', (ev, arg) => {
       this.openFile(arg)
     });
     ipcRenderer.on('open-file', () => {
@@ -77,20 +80,20 @@ export class PlayerComponent implements OnInit {
   ngOnInit() {}
 
   openFile(existFile = undefined) {
-    let _openFile = (file)=>{
+    let _openFile = (file) => {
       this.mpvService.loadFile(file);
       this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
       this.toggleOpenSideBar(true)
     }
-    if (existFile){
-      
+    if (existFile) {
+
       _openFile(existFile);
-    }else{
+    } else {
       let win = remote.getCurrentWindow();
       let items = remote.dialog.showOpenDialog(win, {
         filters: [{
             name: "Videos",
-            extensions: ["mkv", "webm", "mp4", "mov", "avi"]
+            extensions: videoExtensions
           },
           {
             name: "All files",

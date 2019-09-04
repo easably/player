@@ -1,0 +1,50 @@
+$ghostColor: rgba(255, 255, 255, 0.63);
+
+:host {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 50%;
+    height: 25%;
+    z-index: 2;
+}
+
+.open-field {
+    width: 100%;
+    height: 100%;
+    border: 7px dotted $ghostColor;
+
+    & input {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background: none;
+        border: none;
+        opacity: 0;
+        &:focus {
+            outline: none
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+    }
+}
+
+.info-field {
+    color: $ghostColor;
+    font-family: sans-serif;
+    text-align: right;
+    font-size: 12px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
