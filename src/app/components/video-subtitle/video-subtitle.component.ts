@@ -15,7 +15,6 @@ export class VideoSubtitleComponent implements OnInit {
     
   }
   ngDoCheck(){
-    // console.log(this.mpvService.state['time-pos'])
     if (this.subtitlesService.subtitles && this.subtitlesService.getCurrentSubtitles().subtitle){
       let subtitle = this.subtitlesService.getCurrentSubtitles().subtitle.filter(t=>t.isCurrent)[0];
       this.currentSubtitle = subtitle ? subtitle.text : '';

@@ -40,6 +40,7 @@ export class MpvService {
       observe(`track-list/${i}/type`)
       observe(`track-list/${i}/lang`)
       observe(`track-list/${i}/selected`)
+      observe(`track-list/${i}/title`)
     }
     this.mpv.property("hwdec", "auto");
   }

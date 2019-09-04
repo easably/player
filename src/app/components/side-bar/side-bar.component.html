@@ -9,7 +9,7 @@
             <li *ngFor="let lang of filterAudioTrack(mpvService.state.trackList)" [value]="lang.id">
               <input type="radio" name="language-audio" [id]="lang.id"
                 [checked]="lang.selected === true" (change)="onChangeAudioTrack($event)">
-              <label [for]="lang.id">{{lang.lang || 'standart'}}</label>
+              <label [for]="lang.id">{{(lang.title || '') + ' (' + (lang.lang || 'standart') + ')'}}</label>
             </li>
           </ul>
         </div>
