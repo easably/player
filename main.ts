@@ -16,7 +16,7 @@ import {
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 let pathToMpv, pdir;
-let win, serve, menu;
+let win, serve, menu, openWithPath;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
@@ -53,7 +53,8 @@ function createWindow() {
     y: 0,
     width: size.width,
     height: size.height,
-    // titleBarStyle: 'hidden',
+    show:false,
+    titleBarStyle: 'hidden',
     title: 'Step-by-step movie',
     webPreferences: {
       nodeIntegration: true,
@@ -86,6 +87,14 @@ function createWindow() {
     win = null;
   });
 
+  win.once("ready-to-show", () => {
+    win.show();
+    if (openWithPath) {
+      setTimeout(()=>{
+        win.webContents.send("open-file-with", openWithPath);
+      },500)
+    }
+  });
 }
 
 try {
@@ -94,6 +103,15 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow);
+
+  app.on('open-file', function (event, filePath) {
+    event.preventDefault();
+    if (win) {
+      win.webContents.send('open-file-with', filePath);
+    } else {
+      openWithPath = filePath;
+    }
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -135,10 +153,9 @@ function createPopup(additionalText = undefined) {
     ]);
   }
   return Menu.buildFromTemplate([{
-      label: 'Copy',
-      role: 'copy',
-    }
-  ]);
+    label: 'Copy',
+    role: 'copy',
+  }]);
 }
 
 function createMenu() {

@@ -115,26 +115,12 @@ export class MpvService {
       }
     }, (time + 2*delay) * 1000)
   }
-  loadFile() {
-    let win = remote.getCurrentWindow();
-    let items = remote.dialog.showOpenDialog(win, {
-      filters: [{
-          name: "Videos",
-          extensions: ["mkv", "webm", "mp4", "mov", "avi"]
-        },
-        {
-          name: "All files",
-          extensions: ["*"]
-        },
-      ]
-    })
-    if (items) {
-      this.stop();
-      this.mpv.command("loadfile", items[0]);
-      this.mpv.property("pause", false);
-      this.speedReset();
-      return items[0];
-    }
+  loadFile(item) {
+    this.stop();
+    this.mpv.command("loadfile", item);
+    this.mpv.property("pause", false);
+    this.speedReset();
+    return item;
   }
   speedUp() {
     let speed = +(this.state.speed * 1.5).toFixed(10);

@@ -9,6 +9,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class ControlComponent implements OnInit {
   @Input() toggleOpenSideBar: any;
+  @Input() openFile;
   constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {}
 
   handleSeekMouseUp = () => {
@@ -24,11 +25,7 @@ export class ControlComponent implements OnInit {
   }
   handleLoad(e){
     e.target.blur();
-    let file: any = this.mpvService.loadFile();
-      if (file) {
-        this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
-        this.toggleOpenSideBar(true);
-      }
+    this.openFile();
   }
   handleStop(e){
     e.target.blur();

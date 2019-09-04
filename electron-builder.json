@@ -5,6 +5,15 @@
   },
   "asar": true,
   "asarUnpack": [],
+  "fileAssociations": {
+    "ext": [
+      "avi",
+      "mkv",
+      "mp4",
+      "webm",
+      "mov"
+    ]
+  },
   "files": [
         "**/*",
         "!**/*.ts",

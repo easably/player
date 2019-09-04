@@ -9,7 +9,8 @@ import {
   SubtitlesService
 } from '../../services/subtitles.service';
 import {
-  ipcRenderer
+  ipcRenderer,
+  remote
 } from 'electron';
 @Component({
   selector: 'app-player',
@@ -20,12 +21,11 @@ export class PlayerComponent implements OnInit {
   public openSideBar: boolean = false;
   constructor(private mpvService: MpvService, private subtitlesService: SubtitlesService) {
     this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
+    ipcRenderer.on('open-file-with', (ev,arg) => {
+      this.openFile(arg)
+    });
     ipcRenderer.on('open-file', () => {
-      let file: any = this.mpvService.loadFile();
-      if (file) {
-        this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
-        this.toggleOpenSideBar(true)
-      }
+      this.openFile()
     });
     ipcRenderer.on('toggle-pause', () => {
       this.mpvService.togglePause();
@@ -75,6 +75,34 @@ export class PlayerComponent implements OnInit {
     });
   }
   ngOnInit() {}
+
+  openFile(existFile = undefined) {
+    let _openFile = (file)=>{
+      this.mpvService.loadFile(file);
+      this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
+      this.toggleOpenSideBar(true)
+    }
+    if (existFile){
+      
+      _openFile(existFile);
+    }else{
+      let win = remote.getCurrentWindow();
+      let items = remote.dialog.showOpenDialog(win, {
+        filters: [{
+            name: "Videos",
+            extensions: ["mkv", "webm", "mp4", "mov", "avi"]
+          },
+          {
+            name: "All files",
+            extensions: ["*"]
+          },
+        ]
+      })
+      if (items) {
+        _openFile(items[0])
+      }
+    }
+  }
   toggleOpenSideBar(state: boolean = undefined) {
     switch (state) {
       case undefined:

@@ -1,7 +1,7 @@
 <div class="app">
   <div class="video-container">
     <app-video class="video" [contextMenuEvent]="contextMenuEvent"></app-video>
-    <app-control [toggleOpenSideBar]="toggleOpenSideBar.bind(this)"></app-control>
+    <app-control [toggleOpenSideBar]="toggleOpenSideBar.bind(this)" [openFile]="openFile"></app-control>
   </div>
   <app-side-bar [open]="openSideBar" [contextMenuEvent]="contextMenuEvent"></app-side-bar>
 </div>
