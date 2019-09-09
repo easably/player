@@ -25,6 +25,7 @@ import { ItemSubtitlesListComponent } from './components/item-subtitles-list/ite
 import { VideoSubtitleComponent } from './components/video-subtitle/video-subtitle.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { OpenFilePopupComponent } from './components/open-file-popup/open-file-popup.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -46,6 +47,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    ScrollingModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,

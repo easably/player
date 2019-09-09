@@ -88,6 +88,7 @@ export class SubtitlesService {
         subtitle.time = +(subtitle.time / 1000).toFixed(10);
         subtitle.duration = +(subtitle.duration / 1000).toFixed(10);
         oneSubtitle.subtitle.push(subtitle);
+        // oneSubtitle.subtitle=Object.assign({},oneSubtitle.subtitle,subtitle)
         this.subtitleLoaded.emit();
       })
       this.subtitleLoaded.subscribe(e => {
@@ -113,14 +114,21 @@ export class SubtitlesService {
     }
   }
   findCurrentSubtitle() {
-    if (this.subtitles && this.getCurrentSubtitles().subtitle) {
+    let subtitles = this.getCurrentSubtitles().subtitle
+    if (this.subtitles && subtitles) {
       let videoTime = this.mpvService.state['time-pos'];
-      this.getCurrentSubtitles().subtitle.forEach((t, key) => {
+      this.getCurrentSubtitles().subtitle = subtitles.map((t, key) => {
         if (videoTime >= t.time + this.getCurrentSubtitles().subtitleShift && videoTime < t.time + this.getCurrentSubtitles().subtitleShift + t.duration) {
-          this.currentSubtitleKey = key;
-          t.isCurrent = true;
-        } else {
-          t.isCurrent = false;
+          if (t.isCurrent !== true){
+            this.currentSubtitleKey = key;
+            return Object.assign({}, t, {isCurrent: true})
+          }else{
+            return t;
+          }
+        } else if(t.isCurrent !== false){
+          return Object.assign({}, t, {isCurrent: false})
+        }else{
+          return t;
         }
       })
     }
@@ -177,5 +185,45 @@ export class SubtitlesService {
   resetSubtitleShift(){
     if (this.subtitles)
       this.getCurrentSubtitles().subtitleShift = 0;
+  }
+  addLoopSubtitle(subtitle){
+    this.getCurrentSubtitle().isLoop = true;
+    this.getCurrentSubtitles().subtitle.forEach(s=>{
+      if (JSON.stringify(subtitle) === JSON.stringify(s)){
+        s.isLoop = true;
+      }
+    })
+    let [first,last] = this.getFirstAndLastLoopSubtitlesIndex();
+    this.getCurrentSubtitles().subtitle.forEach(s=>{
+      if (s.time>=first.time && s.time<=last.time){
+        s.isLoop = true
+      }else{
+        s.isLoop = false;
+      }
+    })
+  }
+  clearLoop(){
+    this.getCurrentSubtitles().subtitle.forEach(s=>{
+      s.isLoop = false
+    })
+  }
+  getFirstAndLastLoopSubtitlesIndex(){
+    let first,last;
+    let subtitles = this.getCurrentSubtitles().subtitle;
+    let loopSubtitles = subtitles.filter(s=>s.isLoop);
+    loopSubtitles && loopSubtitles.forEach((s,i)=>{
+      if (!first || s.time < first.time) first = s;
+      if (!last || (s.time+s.duration > last.time + last.duration)) last = s;
+    })
+    if (!first || !last) return;
+    return [first,last];
+  }
+  getLoopTime(){
+    let subtitles = this.getCurrentSubtitles().subtitle;
+    if (!subtitles) return;
+    let index = this.getFirstAndLastLoopSubtitlesIndex();
+    if (!index) return;
+    let [first,last] = index;
+    return {start: first.time, end: last.time + last.duration}
   }
 }

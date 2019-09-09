@@ -83,7 +83,6 @@ export class MpvService {
       this.mpv.fullscreen();
       // win.setFullScreen(true);
     }
-    console.log(win);
     this.state.fullscreen = !this.state.fullscreen;
   }
   togglePause() {
@@ -100,7 +99,7 @@ export class MpvService {
   stopAdditional(){
 
   }
-  playSomeTime(time, delay = 1){
+  playSomeTime(time, delay = 0){
     const startTime = this.state['time-pos']
     if (this.state.pause){
       this.setTimePos(startTime - delay)

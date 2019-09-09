@@ -7,8 +7,10 @@ li {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: auto;
 }
 
 :host{
-    overflow: auto;
+    height: 100%;
+    overflow: hidden;
 }

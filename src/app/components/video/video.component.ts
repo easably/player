@@ -21,5 +21,9 @@ export class VideoComponent implements OnInit {
   }
   ngDoCheck(){
     this.subtitlesService.findCurrentSubtitle();
+    const loopTime = this.subtitlesService.getLoopTime();
+    if (loopTime && this.mpvService.state['time-pos'] > loopTime.end){
+      this.mpvService.setTimePos(loopTime.start)
+    }
   }
 }

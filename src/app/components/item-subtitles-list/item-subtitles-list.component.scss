@@ -3,6 +3,9 @@ $selectedColor : #45B8FF;
     &.current{
         background-color: $selectedColor;
     }
+    &.loop{
+        border: 2px solid black;
+    }
     & p{
         display: block;
         height: 100%;
