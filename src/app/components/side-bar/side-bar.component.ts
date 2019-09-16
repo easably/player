@@ -8,7 +8,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./side-bar.component.scss']
 })
 export class SideBarComponent implements OnInit {
-  @Input() open;
+  @Input() open: boolean;
   @Input() contextMenuEvent;
   public filterText: string = '';
   constructor(public mpvService: MpvService, public subtitlesService: SubtitlesService) { 

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SubtitlesService} from '../../services/subtitles.service'
+import Subtitle from '../../interfaces/subtitle'
 
 @Component({
   selector: 'app-video-subtitle',
@@ -8,19 +9,22 @@ import { SubtitlesService} from '../../services/subtitles.service'
 })
 export class VideoSubtitleComponent implements OnInit {
   @Input() contextMenuEvent;
-  public currentSubtitle = '';
+  public currentSubtitle:string = '';
   constructor(private subtitlesService: SubtitlesService) { }
 
   ngOnInit() {
     
   }
-  ngDoCheck(){
+  updateCurrentSubtitle(){
     if (this.subtitlesService.subtitles && this.subtitlesService.getCurrentSubtitles().subtitle){
-      let subtitle = this.subtitlesService.getCurrentSubtitles().subtitle.filter(t=>t.isCurrent)[0];
+      let subtitle: Subtitle = this.subtitlesService.getCurrentSubtitles().subtitle.filter(t=>t.isCurrent)[0];
       this.currentSubtitle = subtitle ? subtitle.text : '';
     }else{
       this.currentSubtitle = '';
     }
+  }
+  ngDoCheck(){
+    this.updateCurrentSubtitle()
   }
 
 }

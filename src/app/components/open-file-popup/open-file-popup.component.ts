@@ -18,8 +18,8 @@ export class OpenFilePopupComponent implements OnInit {
     shell.openExternal(url)
   }
   openDropFile(e){
-    const file = e.dataTransfer.files[0].path;
-    const ext = file.split('.').pop();
+    const file: string = e.dataTransfer.files[0].path;
+    const ext: string = file.split('.').pop();
     if (videoExtensions.some(e=>e===ext)){
       this.openFile(file)
     }

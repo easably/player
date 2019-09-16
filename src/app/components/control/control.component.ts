@@ -8,7 +8,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./control.component.scss']
 })
 export class ControlComponent implements OnInit {
-  @Input() toggleOpenSideBar: any;
+  @Input() toggleOpenSideBar;
   @Input() openFile;
   constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {}
 
@@ -20,7 +20,7 @@ export class ControlComponent implements OnInit {
   }
   handleSeek = (e) => {
     e.target.blur();
-    const timePos = +e.target.value;
+    const timePos: number = +e.target.value;
     this.mpvService.setTimePos(timePos);
   }
   handleLoad(e){

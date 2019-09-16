@@ -7,13 +7,14 @@ import {
 import {
   remote
 } from 'electron';
+import mpvState from '../interfaces/mpv-state'
 
 @Injectable({
   providedIn: 'root'
 })
 export class MpvService {
   public mpv: MpvJs;
-  public state: any = {
+  public state: mpvState = {
     pause: false,
     "time-pos": 0,
     duration: 0,
@@ -28,7 +29,6 @@ export class MpvService {
     this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
   }
   setTimePos = (timePos) => {
-    this.state["time-pos"] = timePos;
     this.mpv.property("time-pos", timePos);
   }
 
@@ -67,7 +67,12 @@ export class MpvService {
       }else{
         let [ , index, type] = name.match(/[^//]+/g);
         if (!this.state.trackList[index])
-          this.state.trackList[index] = {}
+          this.state.trackList[index] = {
+            id: undefined,
+            lang: undefined,
+            selected: undefined,
+            type: undefined,
+          }
         this.state.trackList[index][type] = value;
       }
     } else {
@@ -99,20 +104,19 @@ export class MpvService {
   stopAdditional(){
 
   }
-  playSomeTime(time, delay = 0){
-    const startTime = this.state['time-pos']
+  playSomeTime(startTime = this.state['time-pos'], duration, delay = 0){
     if (this.state.pause){
       this.setTimePos(startTime - delay)
       this.togglePause()
     }
     setTimeout(()=>{
       if (!this.state.pause && 
-        Math.round(this.state['time-pos']) >= Math.round(startTime + time + delay) - 1 && 
-        Math.round(this.state['time-pos'])<= Math.round(startTime + time + delay)+1
+        Math.round(this.state['time-pos']) >= Math.round(startTime + duration + delay) - 1 && 
+        Math.round(this.state['time-pos'])<= Math.round(startTime + duration + delay)+1
       ){
         this.togglePause()
       }
-    }, (time + 2*delay) * 1000)
+    }, (duration + 2*delay) * 1000)
   }
   loadFile(item) {
     this.stop();

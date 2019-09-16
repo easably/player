@@ -1,6 +1,17 @@
-import { Component, OnInit, ElementRef, Input} from '@angular/core';
-import { MpvService} from '../../services/mpv.service'
-import { SubtitlesService } from '../../services/subtitles.service';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  Input,
+  ViewChild
+} from '@angular/core';
+import {
+  MpvService
+} from '../../services/mpv.service'
+import {
+  SubtitlesService
+} from '../../services/subtitles.service';
+import Subtitle from '../../interfaces/subtitle'
 
 @Component({
   selector: 'app-video',
@@ -8,22 +19,31 @@ import { SubtitlesService } from '../../services/subtitles.service';
   styleUrls: ['./video.component.scss']
 })
 export class VideoComponent implements OnInit {
+  @ViewChild('embed',undefined) embed : ElementRef;
   @Input() contextMenuEvent;
-  private embed;
-  public embedProps;
-  
-  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, public elRef: ElementRef){
+  public embedProps: string;
+
+  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {
     this.embedProps = this.mpvService.mpv.getDefProps();
   }
-  ngOnInit(){
-    this.embed = this.elRef.nativeElement.querySelector('embed');
-    this.mpvService.mpv.setPluginNode(this.embed);
+  ngOnInit() {
+    this.mpvService.mpv.setPluginNode(this.embed.nativeElement);
   }
-  ngDoCheck(){
-    this.subtitlesService.findCurrentSubtitle();
-    const loopTime = this.subtitlesService.getLoopTime();
-    if (loopTime && this.mpvService.state['time-pos'] > loopTime.end){
-      this.mpvService.setTimePos(loopTime.start)
+  loopBorderControl(){
+    const loopSubtitles: Subtitle[] = this.subtitlesService.getLoopSubtitles();
+    const curTime = this.mpvService.state['time-pos'];
+    if (loopSubtitles && loopSubtitles.length > 0) {
+      const [firstLoopSubtitle, lastLoopSubtitle] = [loopSubtitles[0], loopSubtitles[loopSubtitles.length - 1]]
+      if (curTime < firstLoopSubtitle.time) {
+        this.mpvService.setTimePos(lastLoopSubtitle.time)
+      } else if (curTime >= lastLoopSubtitle.time + lastLoopSubtitle.duration) {
+        this.mpvService.setTimePos(firstLoopSubtitle.time)
+      }
     }
+  }
+  ngDoCheck() {
+    this.embed.nativeElement.focus()
+    this.subtitlesService.findCurrentSubtitle();
+    this.loopBorderControl();
   }
 }

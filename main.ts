@@ -258,7 +258,7 @@ function createMenu() {
       // },
       {
         label: "Repeat Subtitle",
-        accelerator: "Return",
+        accelerator: "R",
         click: function () {
           win.webContents.send('fast-repeat')
         }
@@ -318,43 +318,43 @@ function createMenu() {
     ]
   }
 
-  // let mLoop = {
-  //   label: "Loop",
-  //   submenu: [{
-  //       label: "Toggle Loop",
-  //       accelerator: "enter",
-  //       click: function () {
-  //         win.webContents.send('toggle-loop')
-  //       }
-  //     },
-  //     {
-  //       label: "Extend Loop Left Range",
-  //       accelerator: "[",
-  //       click: function () {
-  //         win.webContents.send('extend-loop-prev')
-  //       }
-  //     },
-  //     {
-  //       label: "Extend Loop Right Range",
-  //       accelerator: "]",
-  //       click: function () {
-  //         win.webContents.send('extend-loop-next')
-  //       }
-  //     },
-  //     {
-  //       label: "Shrink Loop Left Range",
-  //       accelerator: "{",
-  //       click: function () {
-  //         win.webContents.send('shrink-loop-prev')
-  //       }
-  //     },
-  //     {
-  //       label: "Shrink Loop Right Range",
-  //       accelerator: "}",
-  //       click: function () {
-  //         win.webContents.send('shrink-loop-next')
-  //       }
-  //     },
+  let mLoop = {
+    label: "Loop",
+    submenu: [{
+        label: "Toggle Loop",
+        accelerator: "enter",
+        click: function () {
+          win.webContents.send('toggle-loop')
+        }
+      },
+      {
+        label: "Extend Loop Left Range",
+        accelerator: "Shift+left",
+        click: function () {
+          win.webContents.send('extend-loop-prev')
+        }
+      },
+      {
+        label: "Extend Loop Right Range",
+        accelerator: "Shift+right",
+        click: function () {
+          win.webContents.send('extend-loop-next')
+        }
+      },
+      {
+        label: "Shrink Loop Left Range",
+        accelerator: "CmdOrCtrl+Shift+left",
+        click: function () {
+          win.webContents.send('shrink-loop-prev')
+        }
+      },
+      {
+        label: "Shrink Loop Right Range",
+        accelerator: "CmdOrCtrl+Shift+right",
+        click: function () {
+          win.webContents.send('shrink-loop-next')
+        }
+      },
   //     {
   //       label: "Loop Current Line with Times",
   //       submenu: [{
@@ -419,11 +419,11 @@ function createMenu() {
   //           click: function () {
   //             win.webContents.send('loop-times', 0);
   //           }
-  //         },
-  //       ]
-  //     },
-  //   ]
-  // };
+          // },
+      //   ]
+      // },
+    ]
+  };
 
   let mSubtitle = {
     label: "Subtitle",
@@ -700,7 +700,7 @@ function createMenu() {
     mEdit,
     mPlayback,
     mAudio,
-    // mLoop,
+    mLoop,
     mSubtitle,
     mView,
     // mWord,

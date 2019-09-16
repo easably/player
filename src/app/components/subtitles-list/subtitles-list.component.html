@@ -1,8 +1,7 @@
 <ul class="subtitle-list" >
-  <cdk-virtual-scroll-viewport style="min-height: 100%" itemSize="0">
-      <li *cdkVirtualFor="let subtitle of getSubtitleList();">
-        <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift" [contextMenuEvent]="contextMenuEvent"></app-item-subtitles-list>
-        <app-item-subtitles-list *ngIf="generateBetweenSubtitlesComponent(subtitle)" [subtitle]="generateBetweenSubtitlesComponent(subtitle)" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift" [isBetweenLine] = "true"></app-item-subtitles-list>
+  <!-- <cdk-virtual-scroll-viewport style="min-height: 100%" itemSize="0"> -->
+      <li *ngFor="let subtitle of getSubtitleList(); let i = index">
+        <app-item-subtitles-list [subtitle]="subtitle" [shift]="subtitlesService.getCurrentSubtitles().subtitleShift" [contextMenuEvent]="contextMenuEvent" [index]="i"></app-item-subtitles-list>
       </li>
-  </cdk-virtual-scroll-viewport> 
+  <!-- </cdk-virtual-scroll-viewport>  -->
 </ul>

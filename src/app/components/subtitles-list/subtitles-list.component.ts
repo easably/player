@@ -3,8 +3,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   Input,
-  ViewChild,
-  ChangeDetectionStrategy
+  ViewChild
 } from '@angular/core';
 import {
   SubtitlesService
@@ -15,6 +14,7 @@ import {
 import {
   CdkVirtualScrollViewport
 } from '@angular/cdk/scrolling';
+import Subtitle from '../../interfaces/subtitle'
 
 @Component({
   selector: 'app-subtitles-list',
@@ -22,12 +22,12 @@ import {
   styleUrls: ['./subtitles-list.component.scss']
 })
 export class SubtitlesListComponent implements OnInit {
-  @Input() filterText;
+  @Input() filterText: string;
   @Input() contextMenuEvent;
-  @ViewChild(CdkVirtualScrollViewport, {
-    static: false
-  }) viewPort: CdkVirtualScrollViewport;
-  public currentBetweenSubtitlesComponent = {
+  // @ViewChild(CdkVirtualScrollViewport, {
+  //   static: false
+  // }) viewPort: CdkVirtualScrollViewport;
+  public currentBetweenSubtitlesComponent: {index:number,component: Subtitle} = {
     index: undefined,
     component: undefined
   };
@@ -40,59 +40,67 @@ export class SubtitlesListComponent implements OnInit {
       this.changeDetectedRef.detectChanges();
     });
   }
-  generateBetweenSubtitlesComponent(subtitle) {
-    
-    const curSubtitle = subtitle;
-    const index = this.subtitlesService.getCurrentSubtitles().subtitle.findIndex(e => e.time === subtitle.time);
+
+  generateBetweenSubtitlesComponent() {
+    if (!this.subtitlesService.currentSubtitleKey) return;
+    const curSubtitle: Subtitle = this.subtitlesService.getCurrentSubtitle();
+    if (!curSubtitle) return;
+    const index: number = this.subtitlesService.getCurrentSubtitles().subtitle.findIndex(e => e.time === curSubtitle.time);
     if (this.currentBetweenSubtitlesComponent.index === index) {
-      return this.currentBetweenSubtitlesComponent.component;
+      return;
     }
-    let nextSubtitle = this.subtitlesService.getCurrentSubtitles().subtitle[index + 1];
+    let nextSubtitle: Subtitle = this.subtitlesService.getCurrentSubtitles().subtitle[index + 1];
     if (!nextSubtitle) {
       nextSubtitle = {
-        time: this.mpvService.state.duration
+        time: this.mpvService.state.duration,
+        duration: 0,
+        text: '',
+        isCurrent:false,
+        isLoop:false
       }
     }
     if (!curSubtitle || !nextSubtitle) {
       this.currentBetweenSubtitlesComponent = {
-      index: undefined,
-      component: undefined
-    }
-      return
-    }
-    const time = curSubtitle.time + curSubtitle.duration;
-    const duration = nextSubtitle.time - time;
-    const curTime = this.mpvService.state['time-pos']
-    const isCurrent = curTime >= time && curTime < time + duration;
-    if (!isCurrent) {
-      this.currentBetweenSubtitlesComponent = {
-      index: undefined,
-      component: undefined
-    }
+        index: undefined,
+        component: undefined
+      }
       return;
     }
-    const component = {
+    const time:number = curSubtitle.time + curSubtitle.duration;
+    const duration:number = nextSubtitle.time - time;
+    const curTime:number = this.mpvService.state['time-pos']
+    const isCurrent: boolean = curTime >= time && curTime < time + duration;
+    if (!isCurrent) {
+      this.currentBetweenSubtitlesComponent = {
+        index: undefined,
+        component: undefined
+      }
+      return;
+    }
+    const component: Subtitle = {
       text: '',
       time: time,
       duration: duration,
-      isCurrent: isCurrent
+      isCurrent: isCurrent,
+      isLoop: false
     }
 
     this.currentBetweenSubtitlesComponent = {
       index: index,
       component: component
     }
-
     return component
   }
   getSubtitleList() {
-    const subtitles = this.subtitlesService.getCurrentSubtitles().subtitle;
+    if(!this.subtitlesService.getCurrentSubtitles()) return [];
+    const subtitles: Subtitle[] = this.subtitlesService.getCurrentSubtitles().subtitle;
     if (!subtitles) return [];
     if (this.filterText != '') return subtitles.filter(s => s.text.toUpperCase().indexOf(this.filterText.toUpperCase()) !== -1);
     return subtitles;
   }
   ngDoCheck() {
-    // this.changeDetectedRef.detectChanges();
+    
+    this.subtitlesService.subtitles && this.subtitlesService.subtitles.length !== 0 && this.generateBetweenSubtitlesComponent();
 
   }
 }

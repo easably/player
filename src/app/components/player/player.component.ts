@@ -76,6 +76,21 @@ export class PlayerComponent implements OnInit {
     ipcRenderer.on('next-audio-track', (e, isNext: boolean) => {
       this.mpvService.nextAudioTrack(isNext);
     });
+    ipcRenderer.on('toggle-loop', () => {
+      this.subtitlesService.toggleLoop();
+    });
+    ipcRenderer.on('extend-loop-prev', () => {
+      this.subtitlesService.extendLoop(-1);
+    });
+    ipcRenderer.on('extend-loop-next', () => {
+      this.subtitlesService.extendLoop(1);
+    });
+    ipcRenderer.on('shrink-loop-prev', () => {
+      this.subtitlesService.shrinkLoop(1);
+    });
+    ipcRenderer.on('shrink-loop-next', () => {
+      this.subtitlesService.shrinkLoop(-1);
+    });
   }
   ngOnInit() {}
 
@@ -90,7 +105,7 @@ export class PlayerComponent implements OnInit {
       _openFile(existFile);
     } else {
       let win = remote.getCurrentWindow();
-      let items = remote.dialog.showOpenDialog(win, {
+      let items: string[] = remote.dialog.showOpenDialog(win, {
         filters: [{
             name: "Videos",
             extensions: videoExtensions
