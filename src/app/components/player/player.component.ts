@@ -1,6 +1,7 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  NgZone
 } from '@angular/core';
 import {
   MpvService
@@ -22,7 +23,7 @@ import {
 })
 export class PlayerComponent implements OnInit {
   public openSideBar: boolean = false;
-  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {
+  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, private _ngZone: NgZone) {
     this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
     ipcRenderer.on('open-file-with', (ev, arg) => {
       this.openFile(arg)
@@ -77,19 +78,19 @@ export class PlayerComponent implements OnInit {
       this.mpvService.nextAudioTrack(isNext);
     });
     ipcRenderer.on('toggle-loop', () => {
-      this.subtitlesService.toggleLoop();
+      this._ngZone.run(() => this.subtitlesService.toggleLoop());
     });
     ipcRenderer.on('extend-loop-prev', () => {
-      this.subtitlesService.extendLoop(-1);
+      this._ngZone.run(() => this.subtitlesService.extendLoop(-1));
     });
     ipcRenderer.on('extend-loop-next', () => {
-      this.subtitlesService.extendLoop(1);
+      this._ngZone.run(() => this.subtitlesService.extendLoop(1));
     });
     ipcRenderer.on('shrink-loop-prev', () => {
-      this.subtitlesService.shrinkLoop(1);
+      this._ngZone.run(() => this.subtitlesService.shrinkLoop(1));
     });
     ipcRenderer.on('shrink-loop-next', () => {
-      this.subtitlesService.shrinkLoop(-1);
+      this._ngZone.run(() => this.subtitlesService.shrinkLoop(-1));
     });
   }
   ngOnInit() {}
