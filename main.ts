@@ -54,8 +54,10 @@ function createWindow() {
     width: size.width,
     height: size.height,
     show:false,
-    titleBarStyle: 'hidden',
-    title: 'Step-by-step movie',
+    // transparent:true,
+    // frame:false,
+    // titleBarStyle: 'hidden',
+    // title: 'Step-by-step movie',
     webPreferences: {
       nodeIntegration: true,
       plugins: true

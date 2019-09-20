@@ -20,7 +20,8 @@ export class MpvService {
     duration: 0,
     fullscreen: false,
     speed: 1,
-    trackList: []
+    trackList: [],
+    filename: ''
   };
   public seeking: boolean;
   private maxCountTrack: number = 100;
@@ -34,7 +35,7 @@ export class MpvService {
 
   handleMPVReady = (mpv) => {
     const observe = mpv.observe.bind(mpv);
-    ["pause", "time-pos", "duration", "eof-reached", "speed", "track-list/count", "options/aid"].forEach(observe);
+    ["pause", "time-pos", "duration", "eof-reached", "speed", "track-list/count", "options/aid","filename/no-ext"].forEach(observe);
     for (let i = 0; i < this.maxCountTrack; i++) {
       observe(`track-list/${i}/id`)
       observe(`track-list/${i}/type`)
@@ -76,23 +77,27 @@ export class MpvService {
         this.state.trackList[index][type] = value;
       }
     } else {
+      if (name === 'filename/no-ext') name = 'filename';
       this.state[name] = value;
     }
   }
   toggleFullscreen() {
     let win = remote.getCurrentWindow();
-    if (this.state.fullscreen) {
-      document['webkitExitFullscreen']();
-      // win.setFullScreen(false);
+    if (win.isFullScreen()) {
+      // document['webkitExitFullscreen']();
+      win.setFullScreen(false);
     } else {
-      this.mpv.fullscreen();
-      // win.setFullScreen(true);
+      // this.mpv.fullscreen();
+      win.setFullScreen(true);
     }
-    this.state.fullscreen = !this.state.fullscreen;
+    this.state.fullscreen = win.isFullScreen();
   }
   togglePause() {
+    this.setPause(!this.state.pause);
+  }
+  setPause(state = true){
     if (!this.state.duration) return;
-    this.mpv.property("pause", !this.state.pause);
+    this.mpv.property("pause", state);
   }
   stop() {
     this.mpv.property("pause", true);
@@ -105,14 +110,16 @@ export class MpvService {
 
   }
   playSomeTime(startTime = this.state['time-pos'], duration, delay = 0){
+    let error = 1;
     if (this.state.pause){
       this.setTimePos(startTime - delay)
       this.togglePause()
     }
     setTimeout(()=>{
+      const time = Math.round(this.state['time-pos'])
       if (!this.state.pause && 
-        Math.round(this.state['time-pos']) >= Math.round(startTime + duration + delay) - 1 && 
-        Math.round(this.state['time-pos'])<= Math.round(startTime + duration + delay)+1
+        time >= Math.round(startTime + duration + delay) - error && 
+        time <= Math.round(startTime + duration + delay) + error
       ){
         this.togglePause()
       }

@@ -1,37 +1,44 @@
-$selectedColor : #45B8FF;
+@import '~styles/variables';
 $selectedMarkColor: rgb(140, 255, 74);
 $betweenLineHeight: 3px;
 .subtitle{
     &.loop{
-        background-color: transparentize($selectedColor,.9);
-        border-right: 5px solid $selectedColor;
+        background-color: transparentize($mainColor,.9);
+        border-right: 5px solid $mainColor;
         &.current{
             border-right: 5px solid $selectedMarkColor;
         }
     }
     &.current{
-        background-color: $selectedColor;
+        background-color: $mainColor;
+        color: #fff;
     }
     & p{
         display: block;
         height: 100%;
-        width: 100%;
+        width: max-content;
+        max-width: 100%;
         margin: 0;
+        &:hover{
+            cursor: text;
+        }
     }
     transition: background-color .2s ease-in-out;
     height: 100%;
     margin: 0;
     padding: 20px;
-    &:hover{
+    border-radius: 5px;
+    &:hover:not(.between-line){
         cursor: pointer;
         &:not(.current){
-            background-color: #eee;
+            background-color: $hoverColor;
         }
     }
-    &.between{
-        border-bottom: $betweenLineHeight solid $selectedColor;
-    }
-    &:not(.between){
-        margin-bottom: $betweenLineHeight;
+    &.between-line{
+        height: 3px;
+        padding: 0;
+        &.show{
+            background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, $mainColor 50%, rgba(255,255,255,0) 100%);
+        }
     }
 }

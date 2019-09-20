@@ -5,5 +5,6 @@ export default interface MpvState {
         duration: number,
         fullscreen: boolean,
         speed: number,
-        trackList: Track[]
+        trackList: Track[],
+        filename: string
 }

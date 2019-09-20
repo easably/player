@@ -2,8 +2,8 @@ import {
   Component,
   OnInit,
   Input,
-  ElementRef
-} from '@angular/core';
+  ElementRef,
+  } from '@angular/core';
 import {
   MpvService
 } from '../../services/mpv.service';
@@ -54,10 +54,9 @@ export class ItemSubtitlesListComponent implements OnInit {
 
   ngDoCheck() {
     if (this.subtitle.isCurrent && !this.isAlreadyScroll){
-      this.elRef.nativeElement.scrollIntoView({
-        block: 'center',
-        behavior: 'smooth'
-      });
+      const el = this.elRef.nativeElement;
+      const parent = el.parentNode.parentNode;
+      parent.scrollTop = el.offsetTop - parent.offsetHeight/2 - parent.offsetTop;
       this.isAlreadyScroll = true;
     }else if (!this.subtitle.isCurrent && this.isAlreadyScroll){
       this.isAlreadyScroll = false;

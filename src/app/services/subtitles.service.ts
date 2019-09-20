@@ -100,12 +100,12 @@ export class SubtitlesService {
         // oneSubtitle.subtitle=Object.assign({},oneSubtitle.subtitle,subtitle)
         this.subtitleLoaded.emit();
       })
+      let stream = fs.createReadStream(file);
       this.subtitleLoaded.subscribe(e => {
         if (e === null) {
           stream.destroy();
         }
       });
-      let stream = fs.createReadStream(file);
       stream.pipe(matroskaParser)
       stream.on('end', () => {
         console.log(this.subtitles)
@@ -256,6 +256,7 @@ export class SubtitlesService {
     }
   }
   toggleLoop() {
+    if (!this.subtitles) return;
     const curSubtitle = this.getCurrentSubtitle();
     if (curSubtitle.isLoop) {
       this.clearLoop();
@@ -264,6 +265,7 @@ export class SubtitlesService {
     }
   }
   extendLoop(index = 0){
+    if (!this.subtitles) return;
     if (!this.getFirstAndLastLoopSubtitles()){
       this.changeLoopOnSubtitleIndex(this.currentSubtitleKey, true)
     }
@@ -275,6 +277,7 @@ export class SubtitlesService {
     }
   }
   shrinkLoop(index = 0){
+    if (!this.subtitles) return;
     if (!this.getFirstAndLastLoopSubtitles()){
       return
     }

@@ -86,6 +86,7 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "easylang-extension": "^0.2.2",
     "matroska-subtitles": "^2.0.3",
     "mpv.js-vanilla": "^0.3.4",
     "subtitles-parser-vtt": "0.0.2"

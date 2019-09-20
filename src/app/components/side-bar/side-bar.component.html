@@ -1,4 +1,4 @@
-<div [ngClass]="open ? 'side-menu open' : 'side-menu'">
+<div *ngIf="open === 'videoService'" class="video-service">
   <div class="language-container">
     <div class="select-language" *ngIf="mpvService.state.trackList.length !==0">
       <span class="select-language-title">Audio: </span>
@@ -19,7 +19,7 @@
         </li>
         <li>
           <div class="add-language">
-            <button (click)="subtitlesService.loadSubtitles()">Open subtitles</button>
+            <button (click)="onOpenSubtitles($event)">Open subtitles</button>
           </div>
         </li>
       </ul>
@@ -29,5 +29,13 @@
   <div class="filter-subtitles">
     <input type="text" [(ngModel)]="filterText" placeholder="Search..." [disabled]="!subtitlesService.subtitles">
   </div>
-  <app-subtitles-list [filterText]="filterText" [contextMenuEvent]="contextMenuEvent" ></app-subtitles-list>
+  <app-subtitles-list [filterText]="filterText"
+    [contextMenuEvent]="contextMenuEvent"></app-subtitles-list>
+</div>
+<div *ngIf="open === 'tutor'" class="tutor">
+  <iframe *ngIf="!iframeIsRefreshing" [src]="api" frameborder="0"></iframe>
+</div>
+<div class="tabs">
+  <div [ngClass]="'button' + (open === 'videoService' ? ' active' : '')" (click)="openTab('videoService')">S</div>
+  <div [ngClass]="'button' + (open === 'tutor' ? ' active' : '')" (click)="openTab('tutor')">T</div>
 </div>

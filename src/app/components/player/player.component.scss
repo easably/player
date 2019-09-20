@@ -1,16 +1,39 @@
+@import '~styles/variables';
 .video-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
   flex: 1;
+  height: 100%;
 }
+
 .video {
   flex: 1;
   min-height: 0;
   position: relative;
 }
-.app{
+
+.app {
   display: flex;
   height: 100%;
+}
+
+.side-menu {
+  $widthMenu: 300px;
+  background-color: $bgColor;
+  color: $textColor;
+  // transform: translateX($widthMenu);
+
+  width: $widthMenu;
+  margin-right: - $widthMenu;
+  transition: all .2s linear;
+  &.open {
+    margin-right: 0;
+  }
+
+  position: relative;
+  font-family: sans-serif;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

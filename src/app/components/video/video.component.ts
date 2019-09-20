@@ -12,6 +12,10 @@ import {
   SubtitlesService
 } from '../../services/subtitles.service';
 import Subtitle from '../../interfaces/subtitle'
+import {VideoSubtitleComponent} from '../video-subtitle/video-subtitle.component'
+
+
+import {video} from '../../../../../extension'
 
 @Component({
   selector: 'app-video',
@@ -20,14 +24,34 @@ import Subtitle from '../../interfaces/subtitle'
 })
 export class VideoComponent implements OnInit {
   @ViewChild('embed',undefined) embed : ElementRef;
+  @ViewChild(VideoSubtitleComponent,undefined) videoSubtitleComponent;
   @Input() contextMenuEvent;
-  public embedProps: string;
+  public embedProps: any;
 
   constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {
     this.embedProps = this.mpvService.mpv.getDefProps();
+    
   }
   ngOnInit() {
-    this.mpvService.mpv.setPluginNode(this.embed.nativeElement);
+    const element = this.embed.nativeElement;
+    this.mpvService.mpv.setPluginNode(element);
+  }
+  ngAfterViewInit(){
+    this.injectExtension();
+  }
+  injectExtension(){
+    const playerParameters = {
+      videoDOM: this.embed.nativeElement,
+      subtitlesDOM: this.videoSubtitleComponent.subtitleDOM.nativeElement,
+      pause: ()=>this.mpvService.setPause(true),
+      play: ()=>this.mpvService.setPause(false),
+      paused: ()=> this.mpvService.state.pause,
+      playRepeat: this.subtitlesService.setSubtitleRepeat.bind(this.subtitlesService),
+      playPrev: this.subtitlesService.setSubtitlePrev.bind(this.subtitlesService),
+      playNext: this.subtitlesService.setSubtitleNext.bind(this.subtitlesService),
+    }
+    
+    video(playerParameters);
   }
   loopBorderControl(){
     const loopSubtitles: Subtitle[] = this.subtitlesService.getLoopSubtitles();
@@ -41,8 +65,18 @@ export class VideoComponent implements OnInit {
       }
     }
   }
+  setDocumentTitle(){
+    const duration = this.mpvService.state.duration;
+    const filename = this.mpvService.state.filename;
+    if (duration && document.title !== filename){
+      document.title = filename;
+    }else if (!duration && document.title !== ''){
+      document.title = '';
+    }
+  }
   ngDoCheck() {
-    this.embed.nativeElement.focus()
+    this.setDocumentTitle();
+    // this.embed.nativeElement.focus()
     this.subtitlesService.findCurrentSubtitle();
     this.loopBorderControl();
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { SubtitlesService} from '../../services/subtitles.service'
 import Subtitle from '../../interfaces/subtitle'
 
@@ -8,6 +8,7 @@ import Subtitle from '../../interfaces/subtitle'
   styleUrls: ['./video-subtitle.component.scss']
 })
 export class VideoSubtitleComponent implements OnInit {
+  @ViewChild('subtitleDOM',undefined) subtitleDOM :ElementRef;
   @Input() contextMenuEvent;
   public currentSubtitle:string = '';
   constructor(private subtitlesService: SubtitlesService) { }

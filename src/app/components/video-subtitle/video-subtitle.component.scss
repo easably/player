@@ -6,6 +6,7 @@
     color: azure;
     transform: translateX(-50%);
     font-size: 25px;
-    width: 80%;
+    width: max-content;
+    max-width: 80%;
     text-align: center;
 }

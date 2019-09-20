@@ -1,3 +1,4 @@
-<div [ngClass]="(subtitle.isCurrent ? 'current subtitle' : 'subtitle') + (checkBetweenLineAfterComponent() ? ' between' : '') + (subtitle.isLoop ? ' loop' : '')" (click)="clickEvent($event)" (contextmenu)="contextMenuEvent($event,subtitle.text)">
+<div [ngClass]="(subtitle.isCurrent ? 'current subtitle' : 'subtitle') + (subtitle.isLoop ? ' loop' : '')" (click)="clickEvent($event)" (contextmenu)="contextMenuEvent($event,subtitle.text)">
     <p [innerHTML]="subtitle.text"></p>
 </div>
+<div [ngClass]="'subtitle between-line'  + (checkBetweenLineAfterComponent() ? ' show' : '') "></div>

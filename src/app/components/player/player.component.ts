@@ -1,7 +1,9 @@
 import {
   Component,
   OnInit,
-  NgZone
+  NgZone,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import {
   MpvService
@@ -16,13 +18,16 @@ import {
 import {
   videoExtensions
 } from '../../../static/config.js'
+import {SideBarComponent} from '../side-bar/side-bar.component'
+import {allPages, messageListener, tutor} from 'easylang-extension'
+
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
-  public openSideBar: boolean = false;
+  @ViewChild(SideBarComponent,undefined) sideBarComponent: SideBarComponent;
   constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, private _ngZone: NgZone) {
     this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
     ipcRenderer.on('open-file-with', (ev, arg) => {
@@ -93,7 +98,21 @@ export class PlayerComponent implements OnInit {
       this._ngZone.run(() => this.subtitlesService.shrinkLoop(-1));
     });
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.injectExtention();
+  }
+
+  injectExtention(){
+    messageListener();
+    window.addEventListener('message',(e)=>{
+      const msg = e.data;
+      if (msg.type === 'openPopup') {
+        this.sideBarComponent.open = 'tutor';
+      }
+    })
+    allPages();
+    tutor();
+  }
 
   openFile(existFile = undefined) {
     let _openFile = (file) => {
@@ -125,13 +144,18 @@ export class PlayerComponent implements OnInit {
   toggleOpenSideBar(state: boolean = undefined) {
     switch (state) {
       case undefined:
-        this.openSideBar = !this.openSideBar;
+        if (this.sideBarComponent.open === ''){
+          this.sideBarComponent.open = 'videoService';
+    
+        }else{
+          this.sideBarComponent.open = '';
+        }
         break;
       case true:
-        this.openSideBar = true;
+        this.sideBarComponent.open = 'videoService';
         break;
       case false:
-        this.openSideBar = false;
+        this.sideBarComponent.open = '';
         break;
     }
   }
