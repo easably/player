@@ -9,6 +9,7 @@ import { SubtitlesService } from '../../services/subtitles.service';
 })
 export class ControlComponent implements OnInit {
   @Input() openFile;
+  @Input() closeFile;
   constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService) {}
 
   handleSeekMouseUp(){
@@ -32,7 +33,7 @@ export class ControlComponent implements OnInit {
   }
   handleStop(e){
     e.target.blur();
-    this.mpvService.stop();
+    this.closeFile();
   }
   togglePause(e){
     e.target.blur();

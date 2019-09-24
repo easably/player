@@ -41,7 +41,6 @@ app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.commandLine.appendSwitch('register-pepper-plugins', getPluginEntry(pdir));
 
 
-
 function createWindow() {
 
   const electronScreen = screen;
@@ -82,12 +81,15 @@ function createWindow() {
   }
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  win.on('close', () => {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
+
+    win.webContents.send('window-closed');
     win = null;
   });
+
 
   win.once("ready-to-show", () => {
     win.show();
@@ -105,6 +107,10 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow);
+
+  ipcMain.on('openPopup', (ev, text) => {
+    createPopup(text).popup(win);
+  })
 
   app.on('open-file', function (event, filePath) {
     event.preventDefault();
@@ -136,9 +142,6 @@ try {
   // Catch Error
   // throw e;
 }
-ipcMain.on('openPopup', (ev, text) => {
-  createPopup(text).popup(win);
-})
 
 function createPopup(additionalText = undefined) {
   if (additionalText) {

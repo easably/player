@@ -52,6 +52,9 @@ export class SubtitlesService {
       number: genNewNumber(0)
     }
   }
+  clearEnterSymbol(text: string){
+    return text.replace(/[\r\n↵]/g,' ');
+  }
   loadSubtitles() {
     if (this.mpvService.state.duration === 0) return;
     let items: string[] = remote.dialog.showOpenDialog({
@@ -67,7 +70,10 @@ export class SubtitlesService {
     })
     if (items) {
       let srt:string = fs.readFileSync(items[0], 'utf8');
-      let subtitle: any = this.changeSubtitleFormat(parser.fromSrt(srt, true), items[0])
+      let subtitle: any = this.changeSubtitleFormat(parser.fromSrt(srt, true), items[0]);
+      subtitle.subtitle.forEach(s=>{
+        s.text = this.clearEnterSymbol(s.text)
+      })
       subtitle['subtitleShift'] = 0;
       if (!this.subtitles) this.subtitles = [];
       this.subtitles.push(subtitle);
@@ -76,51 +82,56 @@ export class SubtitlesService {
   }
   tryGetSubtitlesFromMkvFile(file) {
     let getSubtitles = () => {
-      let matroskaParser = new MatroskaSubtitles();
-      let time;
-      matroskaParser.once('tracks', (tracks) => {
-        time = performance.now();
-        this.subtitles = Object.assign(tracks);
-        this.subtitles.forEach(sub => {
-          sub.subtitleShift = 0;
+      return new Promise((resolve,reject)=>{
+        let matroskaParser = new MatroskaSubtitles();
+        let time;
+        matroskaParser.once('tracks', (tracks) => {
+          time = performance.now();
+          this.subtitles = Object.assign(tracks);
+          this.subtitles.forEach(sub => {
+            sub.subtitleShift = 0;
+          });
+          this.currentSubtitleLanguageNumber = tracks[0].number;
+        })
+  
+        // afterwards each subtitle is emitted
+        matroskaParser.on('subtitle', (subtitle, trackNumber) => {
+          let oneSubtitle: SubtitlesPack = this.subtitles.filter(e => e.number === trackNumber)[0];
+          if (!oneSubtitle.subtitle) {
+            oneSubtitle.subtitle = [];
+          }
+          subtitle.text = this.clearEnterSymbol(subtitle.text)
+          subtitle.time = +(subtitle.time / 1000).toFixed(10);
+          subtitle.duration = +(subtitle.duration / 1000).toFixed(10);
+          oneSubtitle.subtitle.push(subtitle);
+          // oneSubtitle.subtitle=Object.assign({},oneSubtitle.subtitle,subtitle)
+          this.subtitleLoaded.emit();
+        })
+        let stream = fs.createReadStream(file);
+        this.subtitleLoaded.subscribe(e => {
+          if (e === null) {
+            stream.destroy();
+          }
         });
-        console.log(this.subtitles)
-        this.currentSubtitleLanguageNumber = tracks[0].number;
-      })
-
-      // afterwards each subtitle is emitted
-      matroskaParser.on('subtitle', (subtitle, trackNumber) => {
-        let oneSubtitle: SubtitlesPack = this.subtitles.filter(e => e.number === trackNumber)[0];
-        if (!oneSubtitle.subtitle) {
-          oneSubtitle.subtitle = [];
-        }
-        subtitle.time = +(subtitle.time / 1000).toFixed(10);
-        subtitle.duration = +(subtitle.duration / 1000).toFixed(10);
-        oneSubtitle.subtitle.push(subtitle);
-        // oneSubtitle.subtitle=Object.assign({},oneSubtitle.subtitle,subtitle)
-        this.subtitleLoaded.emit();
-      })
-      let stream = fs.createReadStream(file);
-      this.subtitleLoaded.subscribe(e => {
-        if (e === null) {
-          stream.destroy();
-        }
-      });
-      stream.pipe(matroskaParser)
-      stream.on('end', () => {
-        console.log(this.subtitles)
-        time = performance.now() - time;
-        console.log(time);
+        stream.pipe(matroskaParser)
+        stream.on('end', () => {
+          time = performance.now() - time;
+          console.log(time);
+          resolve()
+        })
       })
     }
+    return new Promise((resolve,reject)=>{
+      if (file.split('.').pop() === 'mkv') {
+        getSubtitles().then(_=>resolve(this.subtitles));
+      } else {
+        this.subtitleLoaded.emit(null);
+        this.subtitles = undefined;
+        this.currentSubtitleLanguageNumber = undefined;
+        reject();
+      }
 
-    if (file.split('.').pop() === 'mkv') {
-      getSubtitles();
-    } else {
-      this.subtitleLoaded.emit(null);
-      this.subtitles = undefined;
-      this.currentSubtitleLanguageNumber = undefined;
-    }
+    })
   }
   findCurrentSubtitle() {
     if (this.subtitles) {

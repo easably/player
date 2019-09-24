@@ -3,7 +3,7 @@
     <app-open-file-popup *ngIf="this.mpvService.state.duration === 0" [openFile]="openFile.bind(this)">
     </app-open-file-popup>
     <app-video class="video" [contextMenuEvent]="contextMenuEvent"></app-video>
-    <app-control [openFile]="openFile.bind(this)"></app-control>
+    <app-control [openFile]="openFile.bind(this)" [closeFile]="closeFile.bind(this)"></app-control>
   </div>
   <app-side-bar [contextMenuEvent]="contextMenuEvent"
     [ngClass]="!sideBarComponent.open ? 'side-menu' : 'side-menu open' "></app-side-bar>

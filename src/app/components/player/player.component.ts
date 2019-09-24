@@ -2,8 +2,7 @@ import {
   Component,
   OnInit,
   NgZone,
-  ViewChild,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 import {
   MpvService
@@ -18,8 +17,16 @@ import {
 import {
   videoExtensions
 } from '../../../static/config.js'
-import {SideBarComponent} from '../side-bar/side-bar.component'
-import {allPages, messageListener, tutor} from 'easylang-extension'
+import {
+  SideBarComponent
+} from '../side-bar/side-bar.component'
+import {
+  allPages,
+  messageListener,
+  tutor
+} from 'easylang-extension'
+import {StoreService} from '../../services/store.service'
+
 
 @Component({
   selector: 'app-player',
@@ -27,8 +34,10 @@ import {allPages, messageListener, tutor} from 'easylang-extension'
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
-  @ViewChild(SideBarComponent,undefined) sideBarComponent: SideBarComponent;
-  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, private _ngZone: NgZone) {
+  @ViewChild(SideBarComponent, undefined) sideBarComponent: SideBarComponent;
+
+  constructor(public mpvService: MpvService, private subtitlesService: SubtitlesService, private _ngZone: NgZone, private storeService: StoreService) {
+    console.log(storeService)
     this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(this.subtitlesService)
     ipcRenderer.on('open-file-with', (ev, arg) => {
       this.openFile(arg)
@@ -97,14 +106,17 @@ export class PlayerComponent implements OnInit {
     ipcRenderer.on('shrink-loop-next', () => {
       this._ngZone.run(() => this.subtitlesService.shrinkLoop(-1));
     });
+    ipcRenderer.on('window-closed', () => {
+      this.closeFile();
+    });
   }
   ngOnInit() {
     this.injectExtention();
   }
 
-  injectExtention(){
+  injectExtention() {
     messageListener();
-    window.addEventListener('message',(e)=>{
+    window.addEventListener('message', (e) => {
       const msg = e.data;
       if (msg.type === 'openPopup') {
         this.sideBarComponent.open = 'tutor';
@@ -114,11 +126,56 @@ export class PlayerComponent implements OnInit {
     tutor();
   }
 
+  getCurrentAudioTrack(){
+    return this.mpvService.state.trackList.filter(t=>t.type === 'audio' && t.selected)[0].id;
+  }
+
+  getSubtitlesFromStoreOrMatroskaFile(file){
+    this.subtitlesService.tryGetSubtitlesFromMkvFile(file).then(subtitles=>{
+      this.storeService.set.subtitles(file,subtitles)
+    }).catch(e=>e);
+  }
+
+  closeFile() {
+    const mpvState = this.mpvService.state;
+    if (mpvState.duration !== 0) {
+      this.storeService.set.timePos(mpvState.path, mpvState['time-pos'])
+      this.storeService.set.audioTrackId(mpvState.path, this.getCurrentAudioTrack())
+      this.storeService.set.subtitlesId(mpvState.path, this.subtitlesService.currentSubtitleLanguageNumber);
+    }
+    this.mpvService.stop();
+  }
+
   openFile(existFile = undefined) {
     let _openFile = (file) => {
+      this.closeFile();
       this.mpvService.loadFile(file);
-      this.subtitlesService.tryGetSubtitlesFromMkvFile(file);
-      this.toggleOpenSideBar(true)
+      this.toggleOpenSideBar(true);
+      
+      if (this.storeService.isExist(file)) {
+        const savePos = this.storeService.get.timePos(file);
+        const audioTrack = this.storeService.get.audioTrackId(file);
+        const subtitles = this.storeService.get.subtitles(file);
+        const subtitlesId = this.storeService.get.subtitlesId(file);
+        const timeInterval = 100;
+        const there = this;
+        setTimeout(function tick(){
+          if(there.mpvService.state.duration !== 0 ){
+            savePos && there.mpvService.setTimePos(savePos)
+            audioTrack && there.mpvService.setAudioTrack(audioTrack);
+            if (subtitles){
+              there.subtitlesService.subtitles = subtitles;
+              there.subtitlesService.currentSubtitleLanguageNumber = subtitlesId ? subtitlesId : subtitles[0].number;
+            }else{
+              there.getSubtitlesFromStoreOrMatroskaFile(file);
+            }
+          }else{
+            setTimeout(tick,timeInterval)
+          }
+        },timeInterval)
+      }else{
+        this.getSubtitlesFromStoreOrMatroskaFile(file);
+      }
     }
     if (existFile) {
 
@@ -144,10 +201,10 @@ export class PlayerComponent implements OnInit {
   toggleOpenSideBar(state: boolean = undefined) {
     switch (state) {
       case undefined:
-        if (this.sideBarComponent.open === ''){
+        if (this.sideBarComponent.open === '') {
           this.sideBarComponent.open = 'videoService';
-    
-        }else{
+
+        } else {
           this.sideBarComponent.open = '';
         }
         break;

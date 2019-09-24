@@ -21,7 +21,8 @@ export class MpvService {
     fullscreen: false,
     speed: 1,
     trackList: [],
-    filename: ''
+    filename: '',
+    path: ''
   };
   public seeking: boolean;
   private maxCountTrack: number = 100;
@@ -35,7 +36,7 @@ export class MpvService {
 
   handleMPVReady = (mpv) => {
     const observe = mpv.observe.bind(mpv);
-    ["pause", "time-pos", "duration", "eof-reached", "speed", "track-list/count", "options/aid","filename/no-ext"].forEach(observe);
+    ["pause", "time-pos", "duration", "eof-reached", "speed", "track-list/count", "options/aid","filename/no-ext","path"].forEach(observe);
     for (let i = 0; i < this.maxCountTrack; i++) {
       observe(`track-list/${i}/id`)
       observe(`track-list/${i}/type`)
@@ -126,7 +127,6 @@ export class MpvService {
     }, (duration + 2*delay) * 1000)
   }
   loadFile(item) {
-    this.stop();
     this.mpv.command("loadfile", item);
     this.mpv.property("pause", false);
     this.speedReset();
