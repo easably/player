@@ -115,7 +115,15 @@ export class PlayerComponent implements OnInit {
   }
 
   injectExtention() {
-    messageListener();
+    let localStorage = {
+      set: (obj)=>{
+        this.storeService.set.extensionData(obj)
+      },
+      get: ()=>{
+        return this.storeService.get.extensionData()
+      }
+    }
+    messageListener(localStorage);
     window.addEventListener('message', (e) => {
       const msg = e.data;
       if (msg.type === 'openPopup') {

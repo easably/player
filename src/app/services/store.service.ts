@@ -20,7 +20,9 @@ export class StoreService {
     },
     subtitlesId: (path,id)=>{
       id && this.store.set(`${path}.subtitlesId`, id)
-
+    },
+    extensionData: (data)=>{
+      this.store.set(`extensionData`,data)
     }
   }
   public get: any = {
@@ -36,6 +38,16 @@ export class StoreService {
     },
     subtitlesId: (path)=>{
       return this.store.get(`${path}.subtitlesId`)
+    },
+    extensionData: ()=>{
+      const data = this.store.get(`extensionData`);
+      if (!data) return {
+        languageFrom: 'auto',
+        languageTo: 'ru',
+        localSentence:[],
+        exception: []
+      };
+      return this.store.get(`extensionData`)
     }
   }
 
