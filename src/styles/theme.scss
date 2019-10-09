@@ -1,0 +1,35 @@
+:root {
+    --background: #f2f2f2;
+    --select: #fff;
+    --main: #6178f5;
+    --active: #8cff4a;
+    --text: #000;
+    --textOnMainBg: #f6f6f6;
+    --hoverBg: #c0c0c0;
+    --hoverText: #494949;
+    
+    --sidebar-header: var(--main);
+    --sidebar-header-text: var(--select);
+    --sidebar-header-bg:var(--select);
+    --sidebar-header-bg-text:var(--main);
+    --sidebar-filter: var(--main);
+    --sidebar-scroll-bar:var(--hoverText);
+    
+    .dark-theme {
+        --background: #535353;
+        --select: #000;
+        --main: #6178f5;
+        --active: #8cff4a;
+        --text: #fff;
+        --textOnMainBg: #f6f6f6;
+        --hoverBg: #494949;
+        --hoverText: #c0c0c0;
+        
+        --sidebar-header: var(--select);
+        --sidebar-header-text: var(--text);
+        --sidebar-header-bg:var(--main);
+        --sidebar-header-bg-text:var(--text);
+        --sidebar-scroll-bar:var(--main);
+
+    }
+}

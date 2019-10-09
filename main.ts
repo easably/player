@@ -52,6 +52,8 @@ function createWindow() {
     y: 0,
     width: size.width,
     height: size.height,
+    minHeight:400,
+    minWidth:600,
     show:false,
     // transparent:true,
     // frame:false,

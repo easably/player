@@ -26,6 +26,7 @@ import { VideoSubtitleComponent } from './components/video-subtitle/video-subtit
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { OpenFilePopupComponent } from './components/open-file-popup/open-file-popup.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { AngularSvgIconModule} from 'angular-svg-icon'
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -51,6 +52,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    AngularSvgIconModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

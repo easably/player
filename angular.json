@@ -26,6 +26,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "src/styles/theme.scss",
               "node_modules/easylang-extension/src/styles/allPages.scss"
             ],
             "scripts": []

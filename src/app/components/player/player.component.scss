@@ -1,4 +1,3 @@
-@import '~styles/variables';
 .video-container {
   position: relative;
   display: flex;
@@ -11,6 +10,9 @@
   flex: 1;
   min-height: 0;
   position: relative;
+  &:hover{
+      cursor: pointer;
+  }
 }
 
 .app {
@@ -19,21 +21,29 @@
 }
 
 .side-menu {
-  $widthMenu: 300px;
-  background-color: $bgColor;
-  color: $textColor;
-  // transform: translateX($widthMenu);
-
-  width: $widthMenu;
-  margin-right: - $widthMenu;
-  transition: all .2s linear;
-  &.open {
-    margin-right: 0;
-  }
-
+  background-color: var(--background);
+  color: var(--text);
   position: relative;
-  font-family: sans-serif;
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.closeBtn{
+    position:absolute;
+    top: 10px;
+    right:10px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    outline: none;
+    margin: 5px;
+    --color1: #fff;
+    &:active {
+        transform: scale(1.1, 1.1);
+    }
+    &:hover {
+        --color1: var(--main);
+        cursor: pointer;
+    }
 }

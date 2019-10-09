@@ -1,10 +1,36 @@
 <div class="app">
-  <div class="video-container">
-    <app-open-file-popup *ngIf="this.mpvService.state.duration === 0" [openFile]="openFile.bind(this)">
-    </app-open-file-popup>
-    <app-video class="video" [contextMenuEvent]="contextMenuEvent"></app-video>
-    <app-control [openFile]="openFile.bind(this)" [closeFile]="closeFile.bind(this)"></app-control>
-  </div>
-  <app-side-bar [contextMenuEvent]="contextMenuEvent"
-    [ngClass]="!sideBarComponent.open ? 'side-menu' : 'side-menu open' "></app-side-bar>
+    <div class="video-container">
+        <app-open-file-popup
+            *ngIf="this.mpvService.state.duration === 0"
+            [openFile]="openFile.bind(this)"
+        >
+        </app-open-file-popup>
+        <app-video
+            class="video"
+            [contextMenuEvent]="contextMenuEvent"
+        ></app-video>
+        <app-control [openFile]="openFile.bind(this)"></app-control>
+        <div
+            *ngIf="mpvService.state.duration !== 0"
+            class="closeBtn"
+            (click)="closeFile($event)"
+        >
+            <svg-icon
+                src="assets/images/close.svg"
+                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+            ></svg-icon>
+        </div>
+    </div>
+    <app-side-bar
+        [contextMenuEvent]="contextMenuEvent"
+        class="side-menu"
+        [onChangeTheme]="onChangeTheme.bind(this)"
+        [ngStyle]="{
+            width: sideBarComponent.sideBarWidth + 'px',
+            'margin-right': sideBarComponent.calcMarginRight() + 'px',
+            transition: sideBarComponent.isOffTransition ? 'none' : ''
+        }"
+    >
+        ></app-side-bar
+    >
 </div>

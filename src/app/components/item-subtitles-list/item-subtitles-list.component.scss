@@ -1,17 +1,15 @@
-@import '~styles/variables';
-$selectedMarkColor: rgb(140, 255, 74);
 $betweenLineHeight: 3px;
 .subtitle{
     &.loop{
-        background-color: transparentize($mainColor,.9);
-        border-right: 5px solid $mainColor;
+        background-color: var(--hoverBg);
+        border-right: 5px solid var(--main);
         &.current{
-            border-right: 5px solid $selectedMarkColor;
+            border-right: 5px solid var(--active);
         }
     }
     &.current{
-        background-color: $mainColor;
-        color: #fff;
+        background-color: var(--select);
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     }
     & p{
         display: block;
@@ -23,22 +21,22 @@ $betweenLineHeight: 3px;
             cursor: text;
         }
     }
-    transition: background-color .2s ease-in-out;
     height: 100%;
     margin: 0;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 20px;
+    color: var(--text);
     &:hover:not(.between-line){
         cursor: pointer;
         &:not(.current){
-            background-color: $hoverColor;
+            background-color: var(--hoverBg);
         }
     }
     &.between-line{
         height: 3px;
         padding: 0;
         &.show{
-            background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, $mainColor 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, var(--select) 50%, rgba(255,255,255,0) 100%);
         }
     }
 }

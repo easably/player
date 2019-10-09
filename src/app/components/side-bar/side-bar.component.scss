@@ -1,131 +1,210 @@
-@import '~styles/variables';
+$changeThemeButtonSize: 30px;
 li {
     list-style: none;
     margin: 0;
 }
-
-
-    .video-service{
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        .add-language {
-            padding: 5px 0;
-            height: 100%;
-            width: 100%;
-            button {
-                background: none;
-                border: 1px solid $textColor;
-                color: $textColor;
-                border-radius: 5px;
-                width: 100%;
-                height: 40px;
-                transition: all .2s ease-in-out;
-                &:focus{
-                    outline:none;
-                }
-                &:hover{
-                    cursor: pointer;
-                    border:1px solid $mainColor;
-                    color:$mainColor;
-                }
-            }
-        }
-        
+.resize{
+    height: 100%;
+    position: absolute;
+    left: 0;
+    width: 10px;
+    background-color: none;
+    fill:var(--text);
+    &:hover{
+        cursor: ew-resize;
+    }
+}
+.video-service {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .language-container {
+        position: relative;
+        padding: 20px 5px;
+        background-color: var(--sidebar-header);
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
         .select-language {
             padding: 10px;
             display: flex;
-            border-bottom: 1px solid $textColor;
-            & select{
-                color:$textColor;
-                background-color: $bgColor;
-                width: 100px;
-                &:hover{
+            align-items: flex-start;
+            justify-content: space-between;
+            &-audio{
+                align-items: center;
+            }
+            select {
+                color: var(--sidebar-header-bg-text);
+                background-color: var(--sidebar-header-bg);
+                border: none;
+                height: 20px;
+                border-radius: 15px;
+                outline: none;
+                &:hover {
                     cursor: pointer;
                 }
             }
             &-list {
                 margin: 0 0 0 10px;
                 padding: 0;
-                flex: 1 0 auto;
+                flex: 1 1 auto;
                 height: 100%;
-                & li {
+                li {
                     width: 100%;
                     display: flex;
                     align-items: center;
-                    color:$textColor;
-                    background-color: $bgColor;
-                    & label {
+                    color: var(--sidebar-header-text);
+                    label {
+                        word-wrap: break-word;
+                        word-break: break-all;
                         width: 100%;
                         height: 100%;
                         padding: 5px 0 5px 10px;
                     }
                 }
             }
-    
+
             &-title {
-                font-size: 14px;
+                flex: 0 1 auto;
+                color: var(--sidebar-header-text);
+                font-size: 1rem;
             }
         }
-    
-        .filter-subtitles{
-            border-bottom: 1px solid $textColor;
-            padding: 5px;
-            display: flex;
-            flex: 0 0 auto;
-            margin-bottom: 3px;
-            input{
-                background-color: $bgColor;
-                color:$textColor;
-                flex: 1 0 auto;
-                border: 1px solid $textColor;
+        .add-language {
+            padding: 5px 0;
+            height: 100%;
+            width: 100%;
+            button {
+                background-color: var(--sidebar-header-bg);
+                color: var(--sidebar-header-bg-text);
                 border-radius: 10px;
-                padding: 5px;
-                transition: border .2s ease-in-out;
-                &:focus{
+                width: 100%;
+                height: 40px;
+                border: 0px solid #fff;
+                &:focus {
                     outline: none;
-                    border: 1px solid $mainColor;
+                }
+                &:hover {
+                    cursor: pointer;
+                    border: 1px solid var(--sidebar-header-bg);
+                    background-color: var(--sidebar-header-bg-text);
+                    color: var(--sidebar-header-bg);
                 }
             }
         }
-    }
-    .tutor{
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        iframe{
-            height: 100%;
-            width: 100%;
-        }
-    }
-    .tabs{
-        $width: 40px;
-        position: absolute;
-        bottom: 60px;
-        left: -$width;
-        width: $width;
-        color:$textColor;
-        text-align: center;
-        .button{
-            width: 100%;
-            line-height: 40px;
-            font-size: 20px;
-            &.active{
-                background-color: $bgColor;
+        .change-theme-button {
+            position: absolute;
+            height: $changeThemeButtonSize;
+            width: $changeThemeButtonSize;
+            bottom: 20px;
+            left: 20px;
+            --color1:var(--sidebar-header-bg);
+            --color2:var(--sidebar-header-bg-text);
+            &.only{
+                position: initial;
+                margin-left: 20px;
             }
-            &:not(.active){
-                background-color: transparentize($bgColor, .8);
-            }
-            &:hover{
-                background-color: $bgColor;
+            &:hover {
                 cursor: pointer;
-            }
-            &:first-child{
-                border-radius: 20px 0 0 0;
-            }
-            &:last-child{
-                border-radius: 0 0 0 20px;
-
+                transform: scale(1.1);
             }
         }
     }
+
+    .filter-subtitles {
+        margin: 5px 15px;
+        display: flex;
+        flex: 0 0 auto;
+        margin-bottom: 3px;
+        position: relative;
+        .search-icon{
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            bottom: 5px;
+            width: fit-content;
+        }
+        input {
+            background-color: var(--sidebar-filter);
+            color: var(--sidebar-header-text);
+            flex: 1 0 auto;
+            border: none;
+            border-radius: 10px;
+            padding: 5px 15px 5px 35px;
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+            font-size: 1rem;
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+    .word-counter{
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        height: 38.5px;
+        width: 30px;
+        &-icon{
+            position: absolute;
+            
+        }
+        &-text{
+            $size:1.5rem;
+            $half-size:0.75rem;
+            font-size: 1rem;
+            position: absolute;
+            right: - $half-size;
+            top: - $half-size;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: $size;
+            width: $size;
+            border-radius: $half-size;
+            background-color: var(--sidebar-header-text);
+            color: var(--main);
+
+        }
+    }
+}
+.tutor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    iframe {
+        height: 100%;
+        width: 100%;
+    }
+}
+.tabs {
+    $width: 40px;
+    position: absolute;
+    bottom: 60px;
+    left: -$width;
+    width: $width;
+    color: var(--background);
+    text-align: center;
+    .button {
+        width: 100%;
+        line-height: 3rem;
+        font-size: 1rem;
+        &.active {
+            background-color: var(--background);
+            color: var(--text);
+        }
+        &:not(.active) {
+            background-color: var(--text);
+            color: var(--background);
+        }
+        &:hover {
+            background-color: var(--background);
+            color: var(--text);
+            cursor: pointer;
+        }
+        &:first-child {
+            border-radius: 1.5rem 0 0 0;
+        }
+        &:last-child {
+            border-radius: 0 0 0 1.5rem;
+        }
+    }
+}
