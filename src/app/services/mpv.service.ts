@@ -85,11 +85,13 @@ export class MpvService {
   toggleFullscreen() {
     let win = remote.getCurrentWindow();
     if (win.isFullScreen()) {
-      // document['webkitExitFullscreen']();
+    //   document['webkitExitFullscreen']();
       win.setFullScreen(false);
+      win.setMenuBarVisibility(true);
     } else {
-      // this.mpv.fullscreen();
+    //   this.mpv.fullscreen();
       win.setFullScreen(true);
+      win.setMenuBarVisibility(false);
     }
     this.state.fullscreen = win.isFullScreen();
   }
