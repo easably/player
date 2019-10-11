@@ -9,7 +9,9 @@
     height: 25px;
     border: none;
     outline: none;
-    margin: 5px 10px;
+    padding: 5px 10px;
+    box-sizing: initial;
+    flex: 0 0 auto;
     --color1: var(--text);
     &:active {
         transform: scale(1.1, 1.1);
@@ -22,8 +24,8 @@
 
 input[type="range"].seek {
     -webkit-appearance: none;
-    flex: 1;
-    height: 40px;
+    flex: 1 1 auto;
+    width: 0;
     margin: 0;
     background: none;
     &:focus {
@@ -58,5 +60,57 @@ input[type="range"].seek {
             border-radius: 15px;
             margin-top: -5px;
         }
+    }
+}
+
+.time {
+    font-size: 0.8rem;
+    flex: 0 0 auto;
+    text-align: left;
+    margin-bottom: -1px;
+    display: flex;
+    color: var(--text);
+    &-current,
+    &-duration {
+        width: 55px;
+        flex: 0 0 auto;
+        margin: 0 5px;
+    }
+    &-current {
+        text-align: right;
+    }
+    &-duration {
+        text-align: left;
+    }
+}
+
+.popupTime {
+    $size: 30px;
+    $halfSize: 15px;
+    position: absolute;
+    height: $size;
+    width: max-content;
+    background-color: var(--text);
+    color: var(--background);
+    margin-top: -($size + 15px);
+    border-radius: 10px;
+    padding: 10px;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0.8;
+    transition: none;
+
+    &::after {
+        content: "";
+        display: block;
+        transform: translateX(-50%) translateY(40%) rotate(45deg);
+        left: 50%;
+        width: 15px;
+        height: 15px;
+        border-radius: 5px;
+        background-color: var(--text);
+        z-index: -1;
+        position: absolute;
+        bottom: 0;
     }
 }

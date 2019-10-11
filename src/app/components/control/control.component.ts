@@ -10,14 +10,21 @@ import { SubtitlesService } from "../../services/subtitles.service";
 })
 export class ControlComponent implements OnInit {
     @Input() openFile;
+    popupTime = {
+        time: 0,
+        show: false,
+        x: 0,
+        y:0
+    }
     constructor(
         public mpvService: MpvService,
         private subtitlesService: SubtitlesService,
         public sanitizer: DomSanitizer
     ) {}
 
-    handleSeekMouseUp() {
+    handleSeekMouseUp(e) {
         this.mpvService.seeking = false;
+        e.target.value = this.popupTime.time;
     }
     handleSeekMouseDown() {
         this.mpvService.seeking = true;
@@ -51,5 +58,21 @@ export class ControlComponent implements OnInit {
             curPercent +
             "%, var(--text) 100%"
         );
+    }
+    secondToHms(d){
+        d = Number(d);
+        var h = Math.floor(d / 3600);
+        var m = Math.floor(d % 3600 / 60);
+        var s = Math.floor(d % 3600 % 60);
+        return (h ? (('0' + h).slice(-2) + ":") : '') + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
+    }
+    handleMouseMove(e){
+        this.popupTime.x = e.x;
+        this.popupTime.y = e.target.offsetTop;
+        const timeS = this.calcRangeValueFromPx(e.offsetX, e.target.clientWidth, e.target.max, e.target.min);
+        this.popupTime.time = timeS;
+    }
+    calcRangeValueFromPx(curPx, width, maxValue, minValue=0){
+        return curPx/width * (maxValue-minValue);
     }
 }
