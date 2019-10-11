@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, ViewChild } from "@angular/core";
+import { Component, OnInit, NgZone, ViewChild, HostListener } from "@angular/core";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 import { ipcRenderer, remote } from "electron";
@@ -6,7 +6,7 @@ import { videoExtensions } from "../../../static/config.js";
 import { SideBarComponent } from "../side-bar/side-bar.component";
 import { allPages, messageListener, tutor } from "easylang-extension";
 import { StoreService } from "../../services/store.service";
-import { ThemeService } from '../../services/theme.service';
+import { ThemeService } from "../../services/theme.service";
 
 @Component({
     selector: "app-player",
@@ -15,6 +15,15 @@ import { ThemeService } from '../../services/theme.service';
 })
 export class PlayerComponent implements OnInit {
     @ViewChild(SideBarComponent, undefined) sideBarComponent: SideBarComponent;
+    @HostListener('document:keydown',['$event']) handleKeyEvent(e:KeyboardEvent){
+        if (e.keyCode === 27 && this.mpvService.state.fullscreen) {
+            this.mpvService.toggleFullscreen();
+        }else if (e.keyCode === 38){
+            this.subtitlesService.setSubtitlePrev();
+        }else if(e.keyCode === 40){
+            this.subtitlesService.setSubtitleNext();
+        }
+    }
     public themeName: string;
     constructor(
         public mpvService: MpvService,
@@ -24,7 +33,7 @@ export class PlayerComponent implements OnInit {
         private themeService: ThemeService
     ) {
         console.log(storeService);
-        this.onChangeTheme(storeService.store.get('theme') || 'dark');
+        this.onChangeTheme(storeService.store.get("theme") || "dark");
 
         this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(
             this.subtitlesService
@@ -230,18 +239,18 @@ export class PlayerComponent implements OnInit {
     }
 
     onChangeTheme(theme?: string) {
-        if(!theme){
-            theme = this.themeName === 'dark' ? 'light' : 'dark'
+        if (!theme) {
+            theme = this.themeName === "dark" ? "light" : "dark";
         }
-		if (theme === 'dark') {
-			this.themeService.addBodyClass('dark-theme');
-			this.themeName = 'dark';
-		}else if (theme === 'light')  {
-			this.themeService.removeBodyClass('dark-theme');
-			this.themeName = 'light';
-		} 
-		this.storeService.store.set('theme', this.themeName);
-	}
+        if (theme === "dark") {
+            this.themeService.addBodyClass("dark-theme");
+            this.themeName = "dark";
+        } else if (theme === "light") {
+            this.themeService.removeBodyClass("dark-theme");
+            this.themeName = "light";
+        }
+        this.storeService.store.set("theme", this.themeName);
+    }
     contextMenuEvent(e, text) {
         e.preventDefault();
         e.stopPropagation();
