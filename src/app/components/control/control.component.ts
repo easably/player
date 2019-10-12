@@ -1,3 +1,11 @@
+import {
+    Component,
+    OnInit,
+    Input,
+    ElementRef,
+    HostListener,
+    ViewChild
+} from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
@@ -9,6 +17,15 @@ import { SubtitlesService } from "../../services/subtitles.service";
 })
 export class ControlComponent implements OnInit {
     @Input() openFile;
+    @ViewChild("settings", null) settingsEl: ElementRef;
+    @HostListener("document:mousedown", ["$event"]) downEv(e) {
+        if (
+            this.showSettings &&
+            e.path.every(e => e !== this.settingsEl.nativeElement)
+        ) {
+            this.showSettings = false;
+        }
+    }
     @HostListener("document:mouseup", ["$event"]) upEv(e) {
         if (this.isHandleDownOnSeek) {
             document.removeEventListener("mousemove", this.changeSeekValue);
@@ -38,7 +55,6 @@ export class ControlComponent implements OnInit {
 
     popupTime = {
         time: 0,
-        show: false,
         x: 0,
         y: 0,
     };
@@ -51,6 +67,7 @@ export class ControlComponent implements OnInit {
     isHandleDownOnSeek = false;
     isMouseOnSeek = false;
     isPreventPlay = false;
+    showSettings = false;
     constructor(
         public mpvService: MpvService,
         private subtitlesService: SubtitlesService,
@@ -127,9 +144,11 @@ export class ControlComponent implements OnInit {
             return maxValue;
         }else{
             return range;
+        }
     }
-    }
-    calcRangeValueFromPx(curPx, width, maxValue, minValue=0){
-        return curPx/width * (maxValue-minValue);
+
+    toggleShowSittings(e) {
+        e.target.blur();
+        this.showSettings = !this.showSettings;
     }
 }

@@ -40,6 +40,21 @@
     >
         {{ popupTime.time ? secondToHms(popupTime.time) : "" }}
     </div>
+    <div #settings [class]="'control-settings' + (showSettings ? ' show' : '')">
+        <div class="control" (click)="toggleShowSittings($event)">
+            <svg-icon
+                src="assets/images/settings.svg"
+                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+            ></svg-icon>
+        </div>
+        <div class="settings">
+            <div class="settings-speed">
+                <p >
+                    Playback speed
+                </p>
+            </div>
+        </div>
+    </div>
     <div class="control" (click)="handleFullscreen($event)">
         <svg-icon
             [src]="
