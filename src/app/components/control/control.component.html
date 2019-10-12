@@ -24,12 +24,9 @@
         [step]="0.01"
         [max]="mpvService.state.duration"
         [value]="mpvService.state['time-pos']"
-        (change)="handleSeek($event)"
-        (mousedown)="handleSeekMouseDown()"
-        (mouseup)="handleSeekMouseUp($event)"
-        (mousemove)="handleMouseMove($event)"
-        (mouseenter)="popupTime.show = true"
-        (mouseleave)="popupTime.show = false"
+        (mousedown)="handleSeekMouseDown($event)"
+        (mouseenter)="mouseEnterSeek($event)"
+        (mouseleave)="mouseLeaveSeek()"
         [attr.style]="
             sanitizer.bypassSecurityTrustStyle(
                 '--lineBackground: ' + getGradientForRange()
@@ -38,7 +35,7 @@
     />
     <div
         class="popupTime"
-        *ngIf="popupTime.show && popupTime.time"
+        *ngIf="(isMouseOnSeek || isHandleDownOnSeek) && popupTime.time"
         [ngStyle]="{ top: popupTime.y + 'px', left: popupTime.x + 'px' }"
     >
         {{ popupTime.time ? secondToHms(popupTime.time) : "" }}

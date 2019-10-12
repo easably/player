@@ -22,8 +22,12 @@ export class PlayerComponent implements OnInit {
             this.subtitlesService.setSubtitlePrev();
         }else if(e.keyCode === 40){
             this.subtitlesService.setSubtitleNext();
-        }
+        }else if (e.keyCode === 32 && e.target === document.body) {
+            e.preventDefault();
+            this.mpvService.togglePause();
+          }
     }
+    
     public themeName: string;
     constructor(
         public mpvService: MpvService,

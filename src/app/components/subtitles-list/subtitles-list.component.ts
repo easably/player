@@ -45,21 +45,10 @@ export class SubtitlesListComponent implements OnInit {
     this.subscribeLoader = this.subtitlesService.subtitleLoaded.subscribe(() => {
         this.changeDetectedRef.detectChanges();
     });
-
-    this.addEventOnSpaceKey();
   }
   ngOnDestroy(){
     this.subscribeLoader.unsubscribe();
 
-  }
-
-  addEventOnSpaceKey() {
-    document.addEventListener('keydown', e => {
-      if (e.keyCode === 32 && e.target === document.body) {
-        e.preventDefault();
-        this.mpvService.togglePause();
-      }
-    })
   }
 
   getSubtitleList() {

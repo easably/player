@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Sanitizer } from "@angular/core";
-import {DomSanitizer} from '@angular/platform-browser'
+import { DomSanitizer } from "@angular/platform-browser";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 
@@ -10,29 +9,74 @@ import { SubtitlesService } from "../../services/subtitles.service";
 })
 export class ControlComponent implements OnInit {
     @Input() openFile;
+    @HostListener("document:mouseup", ["$event"]) upEv(e) {
+        if (this.isHandleDownOnSeek) {
+            document.removeEventListener("mousemove", this.changeSeekValue);
+            this.isHandleDownOnSeek = false;
+            if (this.isPreventPlay){
+                this.isPreventPlay = false;
+                this.mpvService.setPause(false)
+            }
+        }
+    }
+    @HostListener("document:mousemove", ["$event"]) moveEv(e) {
+        if (this.isMouseOnSeek || this.isHandleDownOnSeek) {
+            this.popupTime.x = e.x;
+            const timeS = this.calcRangeValueFromPx();
+            if (timeS === this.seek.min ){
+                this.popupTime.x = this.seek.left;
+            }else if (timeS === this.seek.max){
+                this.popupTime.x = this.seek.left + this.seek.width;
+            }
+            this.popupTime.time = timeS;
+        }
+        if(this.isHandleDownOnSeek && !this.mpvService.state.pause && !this.isPreventPlay){
+            this.isPreventPlay = true;
+            this.mpvService.setPause(true)
+        }
+    }
+
     popupTime = {
         time: 0,
         show: false,
         x: 0,
-        y:0
+        y: 0,
+    };
+    seek = {
+        width: 0,
+        max: 0,
+        min: 0,
+        left: 0        
     }
+    isHandleDownOnSeek = false;
+    isMouseOnSeek = false;
+    isPreventPlay = false;
     constructor(
         public mpvService: MpvService,
         private subtitlesService: SubtitlesService,
         public sanitizer: DomSanitizer
     ) {}
 
-    handleSeekMouseUp(e) {
-        this.mpvService.seeking = false;
-        e.target.value = this.popupTime.time;
+    changeSeekValue = e => {
+        this.mpvService.setTimePos(this.popupTime.time);
+    };
+    handleSeekMouseDown(e) {
+        e.preventDefault();
+        this.mpvService.setTimePos(this.popupTime.time);
+        this.isHandleDownOnSeek = true;
+        document.addEventListener("mousemove", this.changeSeekValue);
+        // this.mpvService.seeking = true;
     }
-    handleSeekMouseDown() {
-        this.mpvService.seeking = true;
+    mouseEnterSeek(e) {
+        this.popupTime.y = e.target.offsetTop;
+        this.seek.width = e.target.clientWidth;
+        this.seek.min = e.target.min;
+        this.seek.max = e.target.max;
+        this.seek.left = e.target.getBoundingClientRect().left;
+        this.isMouseOnSeek = true;
     }
-    handleSeek(e) {
-        e.target.blur();
-        const timePos: number = +e.target.value;
-        this.mpvService.setTimePos(timePos);
+    mouseLeaveSeek() {
+        this.isMouseOnSeek = false;
     }
     handleFullscreen(e) {
         e.target.blur();
@@ -44,8 +88,8 @@ export class ControlComponent implements OnInit {
     }
     ngOnInit() {}
     getGradientForRange() {
-        if(!this.mpvService.state.duration){
-            return 'var(--text)'
+        if (!this.mpvService.state.duration) {
+            return "var(--text)";
         }
         let curPercent =
             (this.mpvService.state["time-pos"] /
@@ -59,18 +103,31 @@ export class ControlComponent implements OnInit {
             "%, var(--text) 100%"
         );
     }
-    secondToHms(d){
+    secondToHms(d) {
         d = Number(d);
         var h = Math.floor(d / 3600);
-        var m = Math.floor(d % 3600 / 60);
-        var s = Math.floor(d % 3600 % 60);
-        return (h ? (('0' + h).slice(-2) + ":") : '') + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2)
+        var m = Math.floor((d % 3600) / 60);
+        var s = Math.floor((d % 3600) % 60);
+        return (
+            (h ? ("0" + h).slice(-2) + ":" : "") +
+            ("0" + m).slice(-2) +
+            ":" +
+            ("0" + s).slice(-2)
+        );
     }
-    handleMouseMove(e){
-        this.popupTime.x = e.x;
-        this.popupTime.y = e.target.offsetTop;
-        const timeS = this.calcRangeValueFromPx(e.offsetX, e.target.clientWidth, e.target.max, e.target.min);
-        this.popupTime.time = timeS;
+    calcRangeValueFromPx() {
+        const curPx = this.popupTime.x - this.seek.left;
+        const width = this.seek.width;
+        const maxValue = this.seek.max;
+        const minValue = this.seek.min;
+        const range = (curPx / width) * (maxValue - minValue);
+        if(range <= minValue){
+            return minValue;
+        }else if (range > maxValue){
+            return maxValue;
+        }else{
+            return range;
+    }
     }
     calcRangeValueFromPx(curPx, width, maxValue, minValue=0){
         return curPx/width * (maxValue-minValue);
