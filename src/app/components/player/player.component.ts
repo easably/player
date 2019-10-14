@@ -1,4 +1,10 @@
-import { Component, OnInit, NgZone, ViewChild, HostListener } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    NgZone,
+    ViewChild,
+    HostListener
+} from "@angular/core";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 import { ipcRenderer, remote } from "electron";
@@ -15,19 +21,21 @@ import { ThemeService } from "../../services/theme.service";
 })
 export class PlayerComponent implements OnInit {
     @ViewChild(SideBarComponent, undefined) sideBarComponent: SideBarComponent;
-    @HostListener('document:keydown',['$event']) handleKeyEvent(e:KeyboardEvent){
+    @HostListener("document:keydown", ["$event"]) handleKeyEvent(
+        e: KeyboardEvent
+    ) {
         if (e.keyCode === 27 && this.mpvService.state.fullscreen) {
             this.mpvService.toggleFullscreen();
-        }else if (e.keyCode === 38){
+        } else if (e.keyCode === 38) {
             this.subtitlesService.setSubtitlePrev();
-        }else if(e.keyCode === 40){
+        } else if (e.keyCode === 40) {
             this.subtitlesService.setSubtitleNext();
-        }else if (e.keyCode === 32 && e.target === document.body) {
+        } else if (e.keyCode === 32 && e.target === document.body) {
             e.preventDefault();
             this.mpvService.togglePause();
-          }
+        }
     }
-    
+
     public themeName: string;
     constructor(
         public mpvService: MpvService,
@@ -38,7 +46,10 @@ export class PlayerComponent implements OnInit {
     ) {
         console.log(storeService);
         this.onChangeTheme(storeService.store.get("theme") || "dark");
-
+        this.mpvService.mpvReadyHook= ()=>{
+            this.mpvService.setVolume(this.storeService.get.custom("volume"));
+            this.mpvService.toggleMute(this.storeService.get.custom("mute"));
+        }
         this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(
             this.subtitlesService
         );
@@ -111,6 +122,7 @@ export class PlayerComponent implements OnInit {
         });
         ipcRenderer.on("window-closed", () => {
             this.closeFile();
+            this.closeWindow();
         });
     }
     ngOnInit() {
@@ -167,6 +179,12 @@ export class PlayerComponent implements OnInit {
             );
         }
         this.mpvService.stop();
+    }
+
+    closeWindow() {
+        this.storeService.set.custom("theme", this.themeName);
+        this.storeService.set.custom("volume", this.mpvService.state.volume);
+        this.storeService.set.custom("mute", this.mpvService.state.mute);
     }
 
     openFile(existFile = undefined) {
@@ -253,7 +271,6 @@ export class PlayerComponent implements OnInit {
             this.themeService.removeBodyClass("dark-theme");
             this.themeName = "light";
         }
-        this.storeService.store.set("theme", this.themeName);
     }
     contextMenuEvent(e, text) {
         e.preventDefault();

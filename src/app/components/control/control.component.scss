@@ -22,7 +22,7 @@
     }
 }
 
-input[type="range"].seek {
+input[type="range"].range {
     -webkit-appearance: none;
     flex: 1 1 auto;
     width: 0;
@@ -41,7 +41,6 @@ input[type="range"].seek {
     }
     &:focus::-webkit-slider-runnable-track {
         -webkit-appearance: none;
-        background: var(--hoverText);
     }
     &::-webkit-slider-thumb {
         -webkit-appearance: none;
@@ -135,6 +134,20 @@ input[type="range"].seek {
         .settings {
             opacity: 1;
             visibility: visible;
+        }
+    }
+}
+
+.control-volume{
+    display: flex;
+    padding-right: 10px;
+    .range{
+        width: 0px;
+        flex: 0 0 auto;
+    }
+    &.show{
+        .range{
+            width: 80px;
         }
     }
 }

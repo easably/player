@@ -35,8 +35,8 @@ export class VideoComponent implements OnInit {
   ngOnInit() {
     const element = this.embed.nativeElement;
     this.mpvService.mpv.setPluginNode(element);
-  }
-  ngAfterViewInit(){
+}
+ngAfterViewInit(){
     this.injectExtension();
   }
   injectExtension(){

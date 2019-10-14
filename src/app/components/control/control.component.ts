@@ -18,6 +18,8 @@ import { SubtitlesService } from "../../services/subtitles.service";
 export class ControlComponent implements OnInit {
     @Input() openFile;
     @ViewChild("settings", null) settingsEl: ElementRef;
+    @ViewChild("timeRange", null) timeRangeEl: ElementRef;
+    @ViewChild("volumeRange", null) volumeRangeEl: ElementRef;
     @HostListener("document:mousedown", ["$event"]) downEv(e) {
         if (
             this.showSettings &&
@@ -27,73 +29,80 @@ export class ControlComponent implements OnInit {
         }
     }
     @HostListener("document:mouseup", ["$event"]) upEv(e) {
-        if (this.isHandleDownOnSeek) {
-            document.removeEventListener("mousemove", this.changeSeekValue);
-            this.isHandleDownOnSeek = false;
-            if (this.isPreventPlay){
+        if (this.isHandleDownOnRange) {
+            document.removeEventListener("mousemove", this.changeRangeValue);
+            this.isHandleDownOnRange = false;
+            if (this.isPreventPlay) {
                 this.isPreventPlay = false;
-                this.mpvService.setPause(false)
+                this.mpvService.setPause(false);
             }
         }
     }
     @HostListener("document:mousemove", ["$event"]) moveEv(e) {
-        if (this.isMouseOnSeek || this.isHandleDownOnSeek) {
+        if (this.isMouseOnRange || this.isHandleDownOnRange) {
             this.popupTime.x = e.x;
             const timeS = this.calcRangeValueFromPx();
-            if (timeS === this.seek.min ){
-                this.popupTime.x = this.seek.left;
-            }else if (timeS === this.seek.max){
-                this.popupTime.x = this.seek.left + this.seek.width;
+            if (timeS === this.range.min) {
+                this.popupTime.x = this.range.left;
+            } else if (timeS === this.range.max) {
+                this.popupTime.x = this.range.left + this.range.width;
             }
             this.popupTime.time = timeS;
         }
-        if(this.isHandleDownOnSeek && !this.mpvService.state.pause && !this.isPreventPlay){
+        if (
+            this.isHandleDownOnRange &&
+            !this.mpvService.state.pause &&
+            !this.isPreventPlay
+        ) {
             this.isPreventPlay = true;
-            this.mpvService.setPause(true)
+            this.mpvService.setPause(true);
         }
     }
 
     popupTime = {
         time: 0,
         x: 0,
-        y: 0,
+        y: 0
     };
-    seek = {
+    range = {
         width: 0,
         max: 0,
         min: 0,
-        left: 0        
-    }
-    isHandleDownOnSeek = false;
-    isMouseOnSeek = false;
+        left: 0
+    };
+    isHandleDownOnRange = false;
+    isMouseOnRange = false;
     isPreventPlay = false;
+
     showSettings = false;
+
+    showVolume = false;
     constructor(
         public mpvService: MpvService,
         private subtitlesService: SubtitlesService,
         public sanitizer: DomSanitizer
     ) {}
 
-    changeSeekValue = e => {
+    changeRangeValue = e => {
         this.mpvService.setTimePos(this.popupTime.time);
     };
-    handleSeekMouseDown(e) {
+    handleRangeMouseDown(e) {
         e.preventDefault();
         this.mpvService.setTimePos(this.popupTime.time);
-        this.isHandleDownOnSeek = true;
-        document.addEventListener("mousemove", this.changeSeekValue);
+        this.isHandleDownOnRange = true;
+        document.addEventListener("mousemove", this.changeRangeValue);
         // this.mpvService.seeking = true;
     }
-    mouseEnterSeek(e) {
+    mouseEnterRange(e) {
         this.popupTime.y = e.target.offsetTop;
-        this.seek.width = e.target.clientWidth;
-        this.seek.min = e.target.min;
-        this.seek.max = e.target.max;
-        this.seek.left = e.target.getBoundingClientRect().left;
-        this.isMouseOnSeek = true;
+        this.range.width = e.target.clientWidth;
+        this.range.min = e.target.min;
+        this.range.max = e.target.max;
+        this.range.left = e.target.getBoundingClientRect().left;
+        this.isMouseOnRange = true;
     }
-    mouseLeaveSeek() {
-        this.isMouseOnSeek = false;
+    mouseLeaveRange() {
+        this.isMouseOnRange = false;
     }
     handleFullscreen(e) {
         e.target.blur();
@@ -104,14 +113,11 @@ export class ControlComponent implements OnInit {
         this.mpvService.togglePause();
     }
     ngOnInit() {}
-    getGradientForRange() {
-        if (!this.mpvService.state.duration) {
+    getGradientForRange(range) {
+        if (range.max == 0) {
             return "var(--text)";
         }
-        let curPercent =
-            (this.mpvService.state["time-pos"] /
-                this.mpvService.state.duration) *
-            100;
+        let curPercent = (range.value / range.max - range.min) * 100;
         return (
             "linear-gradient(to right,var(--main) 0%, var(--main) " +
             curPercent +
@@ -133,16 +139,16 @@ export class ControlComponent implements OnInit {
         );
     }
     calcRangeValueFromPx() {
-        const curPx = this.popupTime.x - this.seek.left;
-        const width = this.seek.width;
-        const maxValue = this.seek.max;
-        const minValue = this.seek.min;
+        const curPx = this.popupTime.x - this.range.left;
+        const width = this.range.width;
+        const maxValue = this.range.max;
+        const minValue = this.range.min;
         const range = (curPx / width) * (maxValue - minValue);
-        if(range <= minValue){
+        if (range <= minValue) {
             return minValue;
-        }else if (range > maxValue){
+        } else if (range > maxValue) {
             return maxValue;
-        }else{
+        } else {
             return range;
         }
     }
@@ -150,5 +156,41 @@ export class ControlComponent implements OnInit {
     toggleShowSittings(e) {
         e.target.blur();
         this.showSettings = !this.showSettings;
+    }
+
+    mouseEnterVolume() {
+        this.showVolume = true;
+    }
+
+    mouseLeaveVolume() {
+        this.showVolume = false;
+    }
+
+    toggleMute() {
+        if (this.mpvService.state.volume === 0) {
+            this.mpvService.setVolume(50);
+            this.mpvService.toggleMute(false);
+        } else {
+            this.mpvService.toggleMute();
+        }
+    }
+
+    handleInputVolume(e) {
+        if (this.mpvService.state.mute) this.mpvService.toggleMute(false);
+        this.mpvService.setVolume(e.target.value);
+    }
+
+    getIconPathForControlVolume() {
+        let typeVolume;
+        const volume = this.mpvService.state.volume;
+        const mute = this.mpvService.state.mute;
+        if (mute || volume <= 0) {
+            typeVolume = "volume-mute";
+        } else if (volume > 50) {
+            typeVolume = "volume-max";
+        } else if (volume > 0) {
+            typeVolume = "volume-min";
+        }
+        return "assets/images/" + typeVolume + ".svg";
     }
 }

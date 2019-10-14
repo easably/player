@@ -7,5 +7,7 @@ export default interface MpvState {
         speed: number,
         trackList: Track[],
         filename: string,
-        path: string
+        path: string,
+        volume: number,
+        mute: boolean
 }

@@ -16,7 +16,9 @@ export class MpvService {
         speed: 1,
         trackList: [],
         filename: "",
-        path: ""
+        path: "",
+        volume: 100,
+        mute: false
     };
     public seeking: boolean;
     private maxCountTrack: number = 100;
@@ -28,7 +30,21 @@ export class MpvService {
         this.mpv.property("time-pos", timePos);
     };
 
+    setVolume = volume => {
+        this.mpv.property("volume", volume);
+    };
+
+    toggleMute(state?) {
+        if (state === undefined) {
+            state = !this.state.mute;
+        }
+        this.mpv.property("mute", state);
+    }
+
+    mpvReadyHook(){}
+
     handleMPVReady = mpv => {
+        this.mpvReadyHook();
         const observe = mpv.observe.bind(mpv);
         [
             "pause",
@@ -39,7 +55,9 @@ export class MpvService {
             "track-list/count",
             "options/aid",
             "filename/no-ext",
-            "path"
+            "path",
+            "volume",
+            "mute"
         ].forEach(observe);
         for (let i = 0; i < this.maxCountTrack; i++) {
             observe(`track-list/${i}/id`);
@@ -83,7 +101,7 @@ export class MpvService {
             }
         } else {
             if (name === "filename/no-ext") name = "filename";
-            if (name === 'time-pos' && !this.state.duration) return;
+            if (name === "time-pos" && !this.state.duration) return;
             this.state[name] = value;
         }
     };
