@@ -3,14 +3,14 @@ li {
     list-style: none;
     margin: 0;
 }
-.resize{
+.resize {
     height: 100%;
     position: absolute;
     left: 0;
     width: 10px;
     background-color: none;
-    fill:var(--text);
-    &:hover{
+    fill: var(--text);
+    &:hover {
         cursor: ew-resize;
     }
 }
@@ -29,7 +29,7 @@ li {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            &-audio{
+            &-audio {
                 align-items: center;
             }
             select {
@@ -97,9 +97,9 @@ li {
             width: $changeThemeButtonSize;
             bottom: 20px;
             left: 20px;
-            --color1:var(--sidebar-header-bg);
-            --color2:var(--sidebar-header-bg-text);
-            &.only{
+            --color1: var(--sidebar-header-bg);
+            --color2: var(--sidebar-header-bg-text);
+            &.only {
                 position: initial;
                 margin-left: 20px;
             }
@@ -116,7 +116,7 @@ li {
         flex: 0 0 auto;
         margin-bottom: 3px;
         position: relative;
-        .search-icon{
+        .search-icon {
             position: absolute;
             left: 5px;
             top: 5px;
@@ -137,23 +137,22 @@ li {
             }
         }
     }
-    .word-counter{
+    .word-counter {
         position: absolute;
         bottom: 10px;
         right: 20px;
         height: 38.5px;
         width: 30px;
-        &-icon{
+        &-icon {
             position: absolute;
-            
         }
-        &-text{
-            $size:1.5rem;
-            $half-size:0.75rem;
+        &-text {
+            $size: 1.5rem;
+            $half-size: 0.75rem;
             font-size: 1rem;
             position: absolute;
-            right: - $half-size;
-            top: - $half-size;
+            right: -$half-size;
+            top: -$half-size;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -162,7 +161,6 @@ li {
             border-radius: $half-size;
             background-color: var(--sidebar-header-text);
             color: var(--main);
-
         }
     }
 }
@@ -181,24 +179,22 @@ li {
     bottom: 60px;
     left: -$width;
     width: $width;
-    color: var(--background);
     text-align: center;
     .button {
         width: 100%;
         line-height: 3rem;
         font-size: 1rem;
+        background-color: var(--background);
+        color: var(--text);
+        opacity: 0.5;
         &.active {
-            background-color: var(--background);
-            color: var(--text);
-        }
-        &:not(.active) {
-            background-color: var(--text);
-            color: var(--background);
+            opacity: 1;
         }
         &:hover {
-            background-color: var(--background);
-            color: var(--text);
             cursor: pointer;
+            &:not(.active) {
+                opacity: 0.75;
+            }
         }
         &:first-child {
             border-radius: 1.5rem 0 0 0;
