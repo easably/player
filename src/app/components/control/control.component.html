@@ -1,50 +1,4 @@
-<div class="controls">
-    <div class="control" (click)="togglePause($event)">
-        <svg-icon
-            [src]="
-                'assets/images/' +
-                (mpvService.state.pause ? 'play.svg' : 'pause.svg')
-            "
-            [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
-        ></svg-icon>
-    </div>
-    <div
-        [class]="'control-volume' + (showVolume ? ' show' : '')"
-        (mouseenter)="mouseEnterVolume()"
-        (mouseleave)="mouseLeaveVolume()"
-    >
-        <div class="control" (click)="toggleMute()">
-            <svg-icon
-                [src]="getIconPathForControlVolume()"
-                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
-            ></svg-icon>
-        </div>
-        <input
-            #volumeRange
-            class="range"
-            type="range"
-            [min]="0"
-            [step]="1"
-            [max]="100"
-            [value]="!mpvService.state.mute ? mpvService.state.volume : 0"
-            (input)="handleInputVolume($event)"
-            [attr.style]="
-                sanitizer.bypassSecurityTrustStyle(
-                    '--lineBackground: ' +
-                        getGradientForRange(volumeRangeEl.nativeElement)
-                )
-            "
-        />
-    </div>
-    <div class="time">
-        <span class="time-current">{{
-            secondToHms(mpvService.state["time-pos"])
-        }}</span>
-        <span> / </span>
-        <span class="time-duration">{{
-            secondToHms(mpvService.state.duration)
-        }}</span>
-    </div>
+<div class="time-range">
     <input
         #timeRange
         class="range"
@@ -64,36 +18,100 @@
         "
     />
     <div
-        class="popupTime"
-        *ngIf="(isMouseOnRange || isHandleDownOnRange) && popupTime.time"
+        #popupTimeEl
+        [class]="
+            'popupTime' +
+            ((isMouseOnRange || isHandleDownOnRange) && popupTime.time
+                ? ' show'
+                : '')
+        "
         [ngStyle]="{ top: popupTime.y + 'px', left: popupTime.x + 'px' }"
     >
         {{ popupTime.time ? secondToHms(popupTime.time) : "" }}
+        <div
+            class="arrow"
+            [ngStyle]="{ 'margin-left': popupTime.arrowOffset + 'px' }"
+        ></div>
     </div>
-    <div #settings [class]="'control-settings' + (showSettings ? ' show' : '')">
-        <div class="control" (click)="toggleShowSittings($event)">
+</div>
+<div class="controls">
+    <div class="controls-left">
+        <div class="control" (click)="togglePause($event)">
             <svg-icon
-                src="assets/images/settings.svg"
+                [src]="
+                    'assets/images/' +
+                    (mpvService.state.pause ? 'play.svg' : 'pause.svg')
+                "
                 [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
             ></svg-icon>
         </div>
-        <div class="settings">
-            <div class="settings-speed">
-                <p>
-                    Playback speed
-                </p>
+        <div
+            [class]="'control-volume' + (showVolume ? ' show' : '')"
+            (mouseenter)="mouseEnterVolume()"
+            (mouseleave)="mouseLeaveVolume()"
+        >
+            <div class="control" (click)="toggleMute()">
+                <svg-icon
+                    [src]="getIconPathForControlVolume()"
+                    [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+                ></svg-icon>
             </div>
+            <input
+                #volumeRange
+                class="range"
+                type="range"
+                [min]="0"
+                [step]="1"
+                [max]="100"
+                [value]="!mpvService.state.mute ? mpvService.state.volume : 0"
+                (input)="handleInputVolume($event)"
+                [attr.style]="
+                    sanitizer.bypassSecurityTrustStyle(
+                        '--lineBackground: ' +
+                            getGradientForRange(volumeRangeEl.nativeElement)
+                    )
+                "
+            />
+        </div>
+        <div class="time">
+            <span class="time-current">{{
+                secondToHms(mpvService.state["time-pos"])
+            }}</span>
+            <span> / </span>
+            <span class="time-duration">{{
+                secondToHms(mpvService.state.duration)
+            }}</span>
         </div>
     </div>
-    <div class="control" (click)="handleFullscreen($event)">
-        <svg-icon
-            [src]="
-                'assets/images/' +
-                (mpvService.state.fullscreen
-                    ? 'fullscreen-back.svg'
-                    : 'fullscreen.svg')
-            "
-            [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
-        ></svg-icon>
+    <div class="controls-right">
+        <div
+            #settings
+            [class]="'control-settings' + (showSettings ? ' show' : '')"
+        >
+            <div class="control" (click)="toggleShowSittings($event)">
+                <svg-icon
+                    src="assets/images/settings.svg"
+                    [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+                ></svg-icon>
+            </div>
+            <div class="settings">
+                <div class="settings-speed">
+                    <p>
+                        Playback speed
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="control" (click)="handleFullscreen($event)">
+            <svg-icon
+                [src]="
+                    'assets/images/' +
+                    (mpvService.state.fullscreen
+                        ? 'fullscreen-back.svg'
+                        : 'fullscreen.svg')
+                "
+                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+            ></svg-icon>
+        </div>
     </div>
 </div>

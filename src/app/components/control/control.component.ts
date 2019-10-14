@@ -19,6 +19,7 @@ export class ControlComponent implements OnInit {
     @Input() openFile;
     @ViewChild("settings", null) settingsEl: ElementRef;
     @ViewChild("timeRange", null) timeRangeEl: ElementRef;
+    @ViewChild("popupTimeEl", null) popupTimeEl: ElementRef;
     @ViewChild("volumeRange", null) volumeRangeEl: ElementRef;
     @HostListener("document:mousedown", ["$event"]) downEv(e) {
         if (
@@ -47,6 +48,20 @@ export class ControlComponent implements OnInit {
             } else if (timeS === this.range.max) {
                 this.popupTime.x = this.range.left + this.range.width;
             }
+
+            let offsetLeft = this.popupTime.x - this.popupTimeEl.nativeElement.clientWidth/2;
+            let offsetRight = this.popupTime.x + this.popupTimeEl.nativeElement.clientWidth/2;
+            const windowWidth = document.documentElement.clientWidth;
+            if (offsetLeft < 0){
+                this.popupTime.x += -offsetLeft;
+                this.popupTime.arrowOffset = offsetLeft;
+            }else if(offsetRight > windowWidth){
+                this.popupTime.x -=  offsetRight - windowWidth ;
+                this.popupTime.arrowOffset = offsetRight - windowWidth;
+            }else{
+                this.popupTime.arrowOffset = 0;
+            }
+
             this.popupTime.time = timeS;
         }
         if (
@@ -62,7 +77,8 @@ export class ControlComponent implements OnInit {
     popupTime = {
         time: 0,
         x: 0,
-        y: 0
+        y: 0,
+        arrowOffset: 0
     };
     range = {
         width: 0,

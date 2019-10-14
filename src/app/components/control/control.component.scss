@@ -1,7 +1,16 @@
 .controls {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    &-left{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    &-right{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 }
 
 .control {
@@ -24,8 +33,7 @@
 
 input[type="range"].range {
     -webkit-appearance: none;
-    flex: 1 1 auto;
-    width: 0;
+    width: 100%;
     margin: 0;
     background: none;
     &:focus {
@@ -96,12 +104,14 @@ input[type="range"].range {
     padding: 10px;
     transform: translateX(-50%);
     z-index: 1;
-    opacity: 0.8;
-    transition: none;
-
-    &::after {
-        content: "";
-        display: block;
+    opacity: 0;
+    visibility: none;
+    transition: opacity .2s ease-in-out;
+    &.show{
+        visibility: visible;
+        opacity: 0.8;
+    }
+    & .arrow {
         transform: translateX(-50%) translateY(40%) rotate(45deg);
         left: 50%;
         width: 15px;
@@ -115,6 +125,9 @@ input[type="range"].range {
 }
 .control-settings {
     position: relative;
+    .control{
+        transform: rotate(0deg);
+    }
     .settings {
         opacity: 0;
         position: absolute;
@@ -129,6 +142,7 @@ input[type="range"].range {
     }
     &.show {
         .control {
+            transform: rotate(45deg);
             --color1: var(--main);
         }
         .settings {
@@ -149,5 +163,16 @@ input[type="range"].range {
         .range{
             width: 80px;
         }
+    }
+}
+
+.time-range{
+    position: relative;
+    height: 5px;
+    .range{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
     }
 }
