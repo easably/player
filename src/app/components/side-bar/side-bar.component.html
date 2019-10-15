@@ -73,6 +73,48 @@
                 [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
             ></svg-icon>
         </div>
+
+        <div
+            class="settingsForSelectedSubtitles"
+            *ngIf="showSettingsForSelectedSubtitles()"
+        >
+            <div
+                class="icon btn"
+                (click)="subtitlesListComponent.playChecked()"
+            >
+                <svg-icon
+                    src="assets/images/play-fill.svg"
+                    [svgStyle]="{ 'height.%': 100, 'width.%': 100 }"
+                ></svg-icon>
+            </div>
+            <div
+                class="icon btn"
+                (click)="subtitlesListComponent.loopChecked()"
+            >
+                <svg-icon
+                    src="assets/images/loop.svg"
+                    [svgStyle]="{ 'height.%': 100, 'width.%': 100 }"
+                ></svg-icon>
+            </div>
+            <div class="playback-speed btn">
+                <div
+                    class="icon"
+                >
+                    <svg-icon
+                        src="assets/images/speed.svg"
+                        [svgStyle]="{ 'height.%': 100, 'width.%': 100 }"
+                    ></svg-icon>
+                </div>
+                <ul class="playback-speed-popup">
+                    <li
+                        *ngFor="let speed of mpvService.playbackSpeedList"
+                        (click)="subtitlesListComponent.playbackSpeedChecked(speed)"
+                    >
+                        <p>{{ speed === 1 ? "Ordinary" : speed }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="filter-subtitles">
@@ -92,7 +134,7 @@
         [filterText]="filterText"
         [contextMenuEvent]="contextMenuEvent"
     ></app-subtitles-list>
-    <div class="word-counter">
+    <div class="word-counter" *ngIf="showSettingsForSelectedSubtitles">
         <div class="word-counter-icon">
             <svg-icon
                 src="assets/images/word-counter.svg"

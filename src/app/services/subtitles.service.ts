@@ -83,7 +83,6 @@ export class SubtitlesService {
         if (items) {
             let srt = fs.readFileSync(items[0],'utf8');
             // let srt = iconv.decode(buff,'win1251');
-            console.log(srt);
             let subtitle: any = this.changeSubtitleFormat(
                 parser.fromSrt(srt, true),
                 items[0]
@@ -234,13 +233,9 @@ export class SubtitlesService {
     resetSubtitleShift() {
         if (this.subtitles) this.getCurrentSubtitles().subtitleShift = 0;
     }
-    addLoopRangeSubtitle(subtitle) {
-        this.getCurrentSubtitle().isLoop = true;
-        this.getCurrentSubtitles().subtitle.forEach(s => {
-            if (subtitle.time === s.time) {
-                s.isLoop = true;
-            }
-        });
+    addLoopRangeSubtitle(endIndex, startIndex = this.currentSubtitleKey) {
+        this.getCurrentSubtitles().subtitle[startIndex].isLoop = true;
+        this.getCurrentSubtitles().subtitle[endIndex].isLoop = true;
         let [first, last] = this.getFirstAndLastLoopSubtitles();
         this.getCurrentSubtitles().subtitle.forEach(s => {
             if (s.time >= first.time && s.time <= last.time) {

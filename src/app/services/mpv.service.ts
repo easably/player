@@ -134,8 +134,8 @@ export class MpvService {
     stopAdditional() {}
     playSomeTime(startTime = this.state["time-pos"], duration, delay = 0) {
         let error = 1;
+        this.setTimePos(startTime - delay);
         if (this.state.pause) {
-            this.setTimePos(startTime - delay);
             this.togglePause();
         }
         setTimeout(() => {
@@ -148,6 +148,25 @@ export class MpvService {
                 this.togglePause();
             }
         }, (duration + 2 * delay) * 1000);
+    }
+    playSomeTimeWithPlaybackSpeed(startTime = this.state["time-pos"], duration, speed, delay = 0) {
+        let error = 1;
+        this.setTimePos(startTime - delay);
+        if (this.state.pause) {
+            this.togglePause();
+        }
+        this.changeSpeed(speed);
+        setTimeout(() => {
+            this.speedReset();
+            const time = Math.round(this.state["time-pos"]);
+            if (
+                !this.state.pause &&
+                time >= Math.round(startTime + duration + delay) - error &&
+                time <= Math.round(startTime + duration + delay) + error
+            ) {
+                this.togglePause();
+            }
+        }, (duration/speed + 2 * delay) * 1000);
     }
     loadFile(item) {
         this.mpv.command("loadfile", item);

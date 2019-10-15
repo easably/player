@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 import { serverApi } from "easylang-extension";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { SubtitlesListComponent} from '../subtitles-list/subtitles-list.component'
 
 @Component({
     selector: "app-side-bar",
@@ -10,6 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
     styleUrls: ["./side-bar.component.scss"]
 })
 export class SideBarComponent implements OnInit {
+    @ViewChild(SubtitlesListComponent, null) subtitlesListComponent:SubtitlesListComponent;
     @Input() contextMenuEvent;
     @Input() onChangeTheme;
     public open: string;
@@ -92,5 +94,11 @@ export class SideBarComponent implements OnInit {
         if (this.sideBarWidth > maxWidth){
             this.sideBarWidth = maxWidth;
         }
+    }
+    showSettingsForSelectedSubtitles(){
+        if (this.subtitlesListComponent){
+            return this.subtitlesListComponent.checkedList.length !== 0
+        }
+        return false;
     }
 }

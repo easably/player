@@ -6,6 +6,14 @@
     (click)="clickEvent($event)"
     (contextmenu)="contextMenuEvent($event, subtitle.text)"
 >
+    <div [class]="'checkbox' + (checked ? ' checked' : '')" (click)="clickCheckbox($event,index)">
+        <div class="checkbox-check" *ngIf="checked">
+            <svg-icon
+                src="assets/images/check.svg"
+                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+            ></svg-icon>
+        </div>
+    </div>
     <p [innerHTML]="subtitle.text"></p>
 </div>
 <div

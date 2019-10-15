@@ -1,6 +1,35 @@
 $betweenLineHeight: 3px;
 .subtitle{
     border-right: 0px solid var(--main);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    padding: 20px 20px 20px 0px;
+    border-radius: 20px;
+    color: var(--text);
+    cursor: pointer;
+    .checkbox{
+        flex: 0 0 auto;
+        height: 20px;
+        width: 20px;
+        margin: 0 10px;
+        border-radius: 10px;
+        border:1px solid var(--text);
+        --color1: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        &.checked{
+            opacity: 1;
+        }
+        &-check{
+            width: 80%;
+            height: 80%;
+
+        }
+    }
     &.loop{
         background-color: var(--hoverBg);
         border-right: 5px solid var(--main);
@@ -22,13 +51,10 @@ $betweenLineHeight: 3px;
             cursor: text;
         }
     }
-    height: 100%;
-    margin: 0;
-    padding: 20px;
-    border-radius: 20px;
-    color: var(--text);
-    cursor: pointer;
     &:hover:not(.between-line){
+        .checkbox{
+            opacity: 1;
+        }
         &:not(.current){
             background-color: var(--hoverBg);
         }

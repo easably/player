@@ -13,6 +13,7 @@
     --sidebar-header-bg:var(--select);
     --sidebar-header-bg-text:var(--main);
     --sidebar-filter: var(--main);
+    --sidebar-icons: var(--hoverBg);
     --sidebar-scroll-bar:var(--hoverText);
     
     .dark-theme {
@@ -29,6 +30,7 @@
         --sidebar-header-text: var(--text);
         --sidebar-header-bg:var(--main);
         --sidebar-header-bg-text:var(--text);
+        --sidebar-icons: var(--main);
         --sidebar-scroll-bar:var(--main);
 
     }

@@ -6,6 +6,8 @@
             [shift]="subtitlesService.getCurrentSubtitles().subtitleShift"
             [contextMenuEvent]="contextMenuEvent"
             [index]="i"
+            [checked]="checkChecked(i)"
+            [clickChecked]="clickChecked.bind(this)"
         ></app-item-subtitles-list>
     </li>
     <!-- </cdk-virtual-scroll-viewport>  -->

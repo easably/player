@@ -43,12 +43,12 @@ li {
                     cursor: pointer;
                 }
             }
-            &-wrapper{
+            &-wrapper {
                 flex: 1 1 auto;
                 margin: 0 0 0 10px;
                 height: 100%;
             }
-            ul{
+            ul {
                 height: 100%;
                 max-height: 30vh;
                 overflow: auto;
@@ -116,6 +116,66 @@ li {
             &:hover {
                 cursor: pointer;
                 transform: scale(1.1);
+            }
+        }
+    }
+    .settingsForSelectedSubtitles {
+        margin: 5px 0;
+        display: flex;
+        flex: 0 0 auto;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 3px;
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        right: 15px;
+        height: 40px;
+        background-color: var(--sidebar-header);
+        border-radius: 10px;
+        z-index: 2;
+        .icon {
+            padding: 5px;
+            height: 100%;
+            --color1: var(--textOnMainBg);
+        }
+        .btn {
+            cursor: pointer;
+            &:hover {
+                --color1: var(--sidebar-icons);
+            }
+        }
+        .playback-speed {
+            height: 100%;
+            &:hover {
+                .icon {
+                    --color1: var(--sidebar-icons);
+                }
+                .playback-speed-popup {
+                    opacity: 0.99;
+                    visibility: visible;
+                }
+            }
+            &-popup {
+                position: absolute;
+                top: 100%;
+                margin-top: 1px;
+                right: 0;
+                background-color: var(--sidebar-header);
+                border-radius: 10px;
+                opacity: 0;
+                visibility: hidden;
+                li {
+                    padding: 10px;
+                    p {
+                        color: var(--textOnMainBg);
+                    }
+                    &:hover {
+                        p {
+                            color: var(--sidebar-icons);
+                        }
+                    }
+                }
             }
         }
     }
