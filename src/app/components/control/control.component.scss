@@ -22,12 +22,12 @@
     box-sizing: initial;
     flex: 0 0 auto;
     --color1: var(--text);
+    cursor: pointer;
     &:active {
         transform: scale(1.1, 1.1);
     }
     &:hover {
         --color1: var(--main);
-        cursor: pointer;
     }
 }
 
@@ -107,6 +107,7 @@ input[type="range"].range {
     opacity: 0;
     visibility: none;
     transition: opacity .2s ease-in-out;
+    z-index: 101;
     &.show{
         visibility: visible;
         opacity: 0.8;
@@ -132,21 +133,22 @@ input[type="range"].range {
         opacity: 0;
         position: absolute;
         bottom: 100%;
+        margin-bottom: 5px;
         background-color: var(--background);
         color: var(--text);
         right: 0;
-        padding: 20px;
-        border-radius: 20px 20px 0 20px;
+        border-radius: 5px 5px 0 0;
         visibility: hidden;
         width: max-content;
+        z-index: 100;
     }
     &.show {
         .control {
-            transform: rotate(45deg);
+            transform: rotate(-45deg);
             --color1: var(--main);
         }
         .settings {
-            opacity: 1;
+            opacity: 0.99;
             visibility: visible;
         }
     }

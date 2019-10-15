@@ -1,0 +1,60 @@
+<div class="first-page" *ngIf="page === 'home'">
+    <div class="item subtitles" (click)="toggleShowSubtitles()">
+        <div class="name">
+            <p>Subtitles</p>
+        </div>
+        <div class="current-state">
+            <p>
+                {{ subtitlesService.showOnVideo ? "On" : "Off" }}
+            </p>
+        </div>
+    </div>
+    <div class="item speed" (click)="page = 'speed'">
+        <div class="name">
+            <p>Playback speed</p>
+        </div>
+        <div class="current-state">
+            <p>
+                {{
+                    mpvService.state.speed === 1
+                        ? "Ordinary"
+                        : mpvService.state.speed
+                }}
+            </p>
+            <div class="icon">
+                <svg-icon
+                    src="assets/images/arrow-right.svg"
+                    [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+                ></svg-icon>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="second-page" *ngIf="page === 'speed'">
+    <div class="header">
+        <div class="btn-back" (click)="page = 'home'">
+            <div class="icon">
+                <svg-icon
+                    src="assets/images/arrow-right.svg"
+                    [svgStyle]="{ 'width.%': 100}"
+                ></svg-icon>
+            </div>
+            <p>Playback speed</p>
+        </div>
+    </div>
+    <ul>
+        <li
+            *ngFor="let speed of mpvService.playbackSpeedList"
+            (click)="selectSpeed(speed)"
+        >
+            <div class="icon" >
+                <svg-icon
+                *ngIf="mpvService.state.speed === speed"
+                    src="assets/images/check.svg"
+                    [svgStyle]="{ 'width.%': 100 }"
+                ></svg-icon>
+            </div>
+            <p>{{ speed === 1 ? "Ordinary" : speed }}</p>
+        </li>
+    </ul>
+</div>

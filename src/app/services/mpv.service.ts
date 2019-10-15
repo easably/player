@@ -22,6 +22,7 @@ export class MpvService {
     };
     public seeking: boolean;
     private maxCountTrack: number = 100;
+    public playbackSpeedList = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
     constructor() {
         this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
@@ -41,7 +42,7 @@ export class MpvService {
         this.mpv.property("mute", state);
     }
 
-    mpvReadyHook(){}
+    mpvReadyHook() {}
 
     handleMPVReady = mpv => {
         this.mpvReadyHook();
@@ -155,14 +156,20 @@ export class MpvService {
         return item;
     }
     speedUp() {
-        let speed = +(this.state.speed * 1.5).toFixed(10);
-        if (speed > 100) return;
-        this.changeSpeed(speed);
+        this.changeSpeedStepByStep(true);
     }
     speedDown() {
-        let speed = (this.state.speed = +(this.state.speed / 1.5).toFixed(10));
-        if (speed < 0.01) return;
-        this.changeSpeed(speed);
+        this.changeSpeedStepByStep(false);
+        
+    }
+    changeSpeedStepByStep(isSpeedUp?){
+        this.playbackSpeedList.forEach((e,index)=>{
+            if (e===this.state.speed){
+                const nextIndex = isSpeedUp ? index+1 : index-1;
+                const nextSpeed = this.playbackSpeedList[nextIndex];
+                nextSpeed && this.changeSpeed(nextSpeed)
+            }
+        })
     }
     speedReset() {
         this.changeSpeed(1);

@@ -36,30 +36,30 @@
             *ngIf="mpvService.state.duration !== 0"
         >
             <span class="select-language-title">Subtitles: </span>
-            <ul class="select-language-list">
-                <li *ngFor="let lang of subtitlesService.subtitles">
-                    <input
-                        type="radio"
-                        name="language-subtitle"
-                        [id]="lang.number"
-                        [checked]="
-                            lang.number ===
-                            subtitlesService.currentSubtitleLanguageNumber
-                        "
-                        (change)="onChangeLang($event)"
-                    />
-                    <label [for]="lang.number">{{
-                        lang.language || "eng"
-                    }}</label>
-                </li>
-                <li>
-                    <div class="add-language">
-                        <button (click)="onOpenSubtitles($event)">
-                            Load subtitles
-                        </button>
-                    </div>
-                </li>
-            </ul>
+            <div class="select-language-wrapper">
+                <ul>
+                    <li *ngFor="let lang of subtitlesService.subtitles">
+                        <input
+                            type="radio"
+                            name="language-subtitle"
+                            [id]="lang.number"
+                            [checked]="
+                                lang.number ===
+                                subtitlesService.currentSubtitleLanguageNumber
+                            "
+                            (change)="onChangeLang($event)"
+                        />
+                        <label [for]="lang.number">{{
+                            lang.language || "eng"
+                        }}</label>
+                    </li>
+                </ul>
+                <div class="add-language">
+                    <button (click)="onOpenSubtitles($event)">
+                        Load subtitles
+                    </button>
+                </div>
+            </div>
         </div>
         <div
             [class]="

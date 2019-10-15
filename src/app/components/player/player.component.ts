@@ -49,6 +49,8 @@ export class PlayerComponent implements OnInit {
         this.mpvService.mpvReadyHook= ()=>{
             this.mpvService.setVolume(this.storeService.get.custom("volume"));
             this.mpvService.toggleMute(this.storeService.get.custom("mute"));
+            this.mpvService.changeSpeed(this.storeService.get.custom("speed"));
+            this.subtitlesService.showOnVideo = this.storeService.get.custom("showSubtitlesOnVideo");
         }
         this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(
             this.subtitlesService
@@ -185,6 +187,8 @@ export class PlayerComponent implements OnInit {
         this.storeService.set.custom("theme", this.themeName);
         this.storeService.set.custom("volume", this.mpvService.state.volume);
         this.storeService.set.custom("mute", this.mpvService.state.mute);
+        this.storeService.set.custom("speed", this.mpvService.state.speed);
+        this.storeService.set.custom("showSubtitlesOnVideo", this.subtitlesService.showOnVideo);
     }
 
     openFile(existFile = undefined) {

@@ -1,0 +1,80 @@
+p {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text);
+}
+.icon {
+    --color1: var(--text);
+    flex: 0 0 0.5rem;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    .current-state {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 3rem;
+        .icon {
+            margin-left: 0.5rem;
+        }
+    }
+    &:first-child {
+        border-radius: 5px 5px 0 0;
+    }
+    &:hover {
+        p {
+            color: var(--main);
+        }
+        .icon {
+            --color1: var(--main);
+        }
+    }
+}
+.second-page {
+    .header {
+        border-bottom: 1px solid var(--text);
+        cursor: pointer;
+        .btn-back {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 5px 5px 0 0;
+            &:hover {
+                p {
+                    color: var(--main);
+                }
+                .icon {
+                    --color1: var(--main);
+                }
+            }
+            .icon {
+                margin-right: 0.5rem;
+                transform: rotate(180deg);
+            }
+        }
+    }
+    li {
+        list-style: none;
+        padding: 0.5rem 0 0.5rem 1rem;
+        display: flex;
+        align-items:center;
+        cursor: pointer;
+        .icon{
+            margin-right: 0.5rem;
+        }
+        &:hover {
+            p {
+                color: var(--main);
+            }
+            .icon {
+                --color1: var(--main);
+            }
+        }
+    }
+}

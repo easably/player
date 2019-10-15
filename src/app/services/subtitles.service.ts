@@ -19,7 +19,15 @@ export class SubtitlesService {
     public subtitleLoaded: EventEmitter<any> = new EventEmitter();
     public currentSubtitleLanguageNumber: number = 0;
     public shift: number = 0;
+    public showOnVideo = true;
     constructor(private mpvService: MpvService) {}
+
+    toggleShowOnVideo(state?){
+        if (state === undefined){
+            state = !this.showOnVideo
+        }
+        this.showOnVideo = state;
+    }
 
     getCurrentSubtitles() {
         if (!this.subtitles) return;

@@ -1,1 +1,7 @@
-<div #subtitleDOM class="video-subtitle" [style.display]="currentSubtitle === '' ? 'none' : ''" [innerHTML]="currentSubtitle" (contextmenu)="contextMenuEvent($event,currentSubtitle)"></div>
+<div
+    #subtitleDOM
+    class="video-subtitle"
+    [style.display]="currentSubtitle === '' || !subtitlesService.showOnVideo ? 'none' : ''"
+    [innerHTML]="currentSubtitle"
+    (contextmenu)="contextMenuEvent($event, currentSubtitle)"
+></div>

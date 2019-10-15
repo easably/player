@@ -1,5 +1,6 @@
 $betweenLineHeight: 3px;
 .subtitle{
+    border-right: 0px solid var(--main);
     &.loop{
         background-color: var(--hoverBg);
         border-right: 5px solid var(--main);
@@ -26,8 +27,8 @@ $betweenLineHeight: 3px;
     padding: 20px;
     border-radius: 20px;
     color: var(--text);
+    cursor: pointer;
     &:hover:not(.between-line){
-        cursor: pointer;
         &:not(.current){
             background-color: var(--hoverBg);
         }
