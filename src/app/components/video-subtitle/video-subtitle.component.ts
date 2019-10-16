@@ -11,7 +11,7 @@ export class VideoSubtitleComponent implements OnInit {
   @ViewChild('subtitleDOM',undefined) subtitleDOM :ElementRef;
   @Input() contextMenuEvent;
   public currentSubtitle:string = '';
-  constructor(private subtitlesService: SubtitlesService) { }
+  constructor(public subtitlesService: SubtitlesService) { }
 
   ngOnInit() {
     

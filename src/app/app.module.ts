@@ -28,6 +28,7 @@ import { OpenFilePopupComponent } from './components/open-file-popup/open-file-p
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AngularSvgIconModule} from 'angular-svg-icon';
 import { SettingsPopupComponent } from './components/settings-popup/settings-popup.component';
+import { WordCounterComponent } from './components/word-counter/word-counter.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -47,6 +48,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SideBarComponent,
     OpenFilePopupComponent,
     SettingsPopupComponent,
+    WordCounterComponent,
   ],
   imports: [
     BrowserModule,
