@@ -4,12 +4,13 @@ import {
     ChangeDetectorRef,
     Input,
     ViewChild,
-    ElementRef
+    ElementRef,
+    SimpleChanges
 } from "@angular/core";
 import { SubtitlesService } from "../../services/subtitles.service";
 import { MpvService } from "../../services/mpv.service";
-import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import Subtitle from "../../interfaces/subtitle";
+import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 
 @Component({
     selector: "app-subtitles-list",
@@ -20,31 +21,28 @@ export class SubtitlesListComponent implements OnInit {
     @ViewChild("list", undefined) list: ElementRef;
     @Input() filterText: string;
     @Input() contextMenuEvent;
-    // @ViewChild(CdkVirtualScrollViewport, {
-    //   static: false
-    // }) viewPort: CdkVirtualScrollViewport;
-    public currentBetweenSubtitlesComponent: {
-        index: number;
-        component: Subtitle;
+    @Input() subtitles: Subtitle[];
+    @Input() subtitleShift;
+    @ViewChild(VirtualScrollerComponent, null) private virtualScroller: VirtualScrollerComponent;
+    public currentBetweenSubtitlesComponent = {
+        index: undefined,
+        component: undefined
     };
-    public checkedList: number[];
+    public checkedList: number[] = [];
     private subscribeLoader;
+    public curSubtitles: any;
     constructor(
         public subtitlesService: SubtitlesService,
-        private changeDetectedRef: ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
         private mpvService: MpvService
-    ) {
-        this.checkedList = [];
-        this.currentBetweenSubtitlesComponent = {
-            index: undefined,
-            component: undefined
-        };
+    ) {}
+    ngOnChanges(changes: SimpleChanges) {
+        this.curSubtitles = this.getSubtitleList();
     }
-
     ngOnInit() {
         this.subscribeLoader = this.subtitlesService.subtitleLoaded.subscribe(
             () => {
-                this.changeDetectedRef.detectChanges();
+                this.changeDetectorRef.detectChanges();
             }
         );
     }
@@ -52,19 +50,22 @@ export class SubtitlesListComponent implements OnInit {
         this.subscribeLoader.unsubscribe();
     }
 
+    scrollToSubtitle(index){
+        this.virtualScroller.scrollToIndex(index,true, - this.list.nativeElement.offsetHeight / 2);
+    }
+
     getSubtitleList() {
-        if (!this.subtitlesService.getCurrentSubtitles()) return [];
-        const subtitles: Subtitle[] = this.subtitlesService.getCurrentSubtitles()
-            .subtitle;
-        if (!subtitles) return [];
+        if (!this.subtitles) return false;
         if (this.filterText != "")
-            return subtitles.filter(
+            return this.subtitles.filter(
                 s =>
                     s.text
                         .toUpperCase()
                         .indexOf(this.filterText.toUpperCase()) !== -1
             );
-        return subtitles;
+        return this.subtitles.map((s, i) => {
+            return { index: i, subtitle: s };
+        });
     }
     checkChecked(id) {
         return this.checkedList.some(e => e === id);
@@ -73,6 +74,9 @@ export class SubtitlesListComponent implements OnInit {
         const checkedList = this.checkedList;
         if (!checkedList.some(e => e == id)) {
             checkedList.push(id);
+            if (checkedList.length === 1) {
+                this.mpvService.setPause(true);
+            }
             let min = Math.min(...checkedList);
             let max = Math.max(...checkedList);
             let newCheckedList = [];
@@ -88,7 +92,7 @@ export class SubtitlesListComponent implements OnInit {
             }
         }
     }
-    _getStartAndDurationChecked(){
+    _getStartAndDurationChecked() {
         const start = this.subtitlesService.getCurrentSubtitles().subtitle[
             this.checkedList[0]
         ].time;
@@ -96,12 +100,11 @@ export class SubtitlesListComponent implements OnInit {
             this.checkedList[this.checkedList.length - 1]
         ];
         const dur = lastSub.time + lastSub.duration - start;
-        return {start: start, dur: dur}
+        return { start: start, dur: dur };
     }
     playChecked() {
-        let {start,dur} = this._getStartAndDurationChecked()
+        let { start, dur } = this._getStartAndDurationChecked();
         this.mpvService.playSomeTime(start, dur);
-        this.checkedList = [];
     }
     loopChecked() {
         this.subtitlesService.clearLoop();
@@ -109,11 +112,9 @@ export class SubtitlesListComponent implements OnInit {
             this.checkedList[this.checkedList.length - 1],
             this.checkedList[0]
         );
-        this.checkedList = [];
     }
-    playbackSpeedChecked(speed){
-        let {start,dur} = this._getStartAndDurationChecked()
-        this.mpvService.playSomeTimeWithPlaybackSpeed(start,dur,speed)
-        this.checkedList = [];
+    playbackSpeedChecked(speed) {
+        let { start, dur } = this._getStartAndDurationChecked();
+        this.mpvService.playSomeTimeWithPlaybackSpeed(start, dur, speed);
     }
 }

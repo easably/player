@@ -25,10 +25,10 @@ import { ItemSubtitlesListComponent } from './components/item-subtitles-list/ite
 import { VideoSubtitleComponent } from './components/video-subtitle/video-subtitle.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { OpenFilePopupComponent } from './components/open-file-popup/open-file-popup.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AngularSvgIconModule} from 'angular-svg-icon';
 import { SettingsPopupComponent } from './components/settings-popup/settings-popup.component';
 import { WordCounterComponent } from './components/word-counter/word-counter.component';
+import {VirtualScrollerModule} from 'ngx-virtual-scroller'
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -52,11 +52,11 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
-    ScrollingModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
     AngularSvgIconModule,
+    VirtualScrollerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

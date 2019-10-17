@@ -8,19 +8,21 @@
         </div>
         <input type="file" (drop)="openDropFile($event)" (click)="openFile()" />
     </div>
-    <div class="recentFiles">
+    <div class="recentFiles" *ngIf="recentFiles && recentFiles.length > 0">
         <h2>Recent files</h2>
         <ul>
-            <li *ngFor="let i of recentFiles" (click)="openFile(i.path)">{{i.name}}</li>
+            <li *ngFor="let i of recentFiles" (click)="openFile(i.path)">
+                {{ i.name }}
+            </li>
         </ul>
     </div>
 </div>
 <div class="info-field" (click)="openUrl('https://www.wikipedia.org/')">
+    <p>How to get video files with embedded subtitles</p>
     <div class="question-icon">
         <svg-icon
             src="assets/images/question.svg"
             [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
         ></svg-icon>
     </div>
-    <p>How to get video files with embedded subtitles</p>
 </div>

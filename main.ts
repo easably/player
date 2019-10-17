@@ -200,14 +200,16 @@ function createMenu() {
                 }
             },
             {
-              role: "recentDocuments",
-              submenu: [{
-                label: 'Clear Recent',
-                click() {
-                  app.clearRecentDocuments();
-                }
-              }]
-            },
+                role: "recentDocuments",
+                submenu: [
+                    {
+                        label: "Clear Recent",
+                        click() {
+                            win.webContents.send("clearRecentDocuments");
+                        }
+                    }
+                ]
+            }
             // {
             //   label: "Open YouTube Video",
             //   accelerator: "CmdOrCtrl++L",

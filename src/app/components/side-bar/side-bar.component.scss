@@ -58,6 +58,9 @@ li {
                     display: flex;
                     align-items: center;
                     color: var(--sidebar-header-text);
+                    input{
+                        margin-left: 3px;
+                    }
                     label {
                         word-wrap: break-word;
                         word-break: break-all;

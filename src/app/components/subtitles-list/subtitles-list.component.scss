@@ -3,13 +3,19 @@ li {
     margin: 0;
 }
 
+.virtual-scroller{
+    height:100%;
+    width: 100%;
+}
+
 .subtitle-list {
-    scroll-behavior: smooth;
     height: 100%;
+    width: 100%;
     margin: 0;
-    margin-left: 10px;
     padding: 0;
+    padding-left: 10px;
     overflow: auto;
+    scroll-behavior: smooth;
     &::-webkit-scrollbar {
         width: 10px;
     }

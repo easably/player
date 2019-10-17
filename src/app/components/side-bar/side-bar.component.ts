@@ -101,4 +101,12 @@ export class SideBarComponent implements OnInit {
         }
         return false;
     }
+    getSubtitleShift(){
+        let curSub = this.subtitlesService.getCurrentSubtitles();
+        if (curSub){
+            return curSub.subtitleShift;
+        }else{
+            return 0
+        }
+    }
 }

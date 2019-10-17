@@ -124,6 +124,11 @@ export class PlayerComponent implements OnInit {
         ipcRenderer.on("shrink-loop-next", () => {
             this._ngZone.run(() => this.subtitlesService.shrinkLoop(-1));
         });
+        ipcRenderer.on("clearRecentDocuments", () => {
+            this.recentFiles = [];
+            this.storeService.set.custom('recentFiles', this.recentFiles)
+            remote.app.clearRecentDocuments();
+        });
         ipcRenderer.on("window-closed", () => {
             this.closeFile();
             this.closeWindow();

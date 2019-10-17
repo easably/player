@@ -1,14 +1,15 @@
-<ul #list class="subtitle-list">
-    <!-- <cdk-virtual-scroll-viewport style="min-height: 100%" itemSize="0"> -->
-    <li *ngFor="let subtitle of getSubtitleList(); let i = index">
-        <app-item-subtitles-list
-            [subtitle]="subtitle"
-            [shift]="subtitlesService.getCurrentSubtitles().subtitleShift"
-            [contextMenuEvent]="contextMenuEvent"
-            [index]="i"
-            [checked]="checkChecked(i)"
-            [clickChecked]="clickChecked.bind(this)"
-        ></app-item-subtitles-list>
-    </li>
-    <!-- </cdk-virtual-scroll-viewport>  -->
+<ul #list class="subtitle-list" *ngIf="curSubtitles.length !== 0">
+    <virtual-scroller #scroll class="virtual-scroller" [items]="curSubtitles" [enableUnequalChildrenSizes]="true" [parentScroll]="list">
+        <li *ngFor="let curSubtitle of scroll.viewPortItems;">
+            <app-item-subtitles-list
+                [subtitle]="curSubtitle.subtitle"
+                [shift]="subtitleShift"
+                [contextMenuEvent]="contextMenuEvent"
+                [index]="curSubtitle.index"
+                [checked]="checkChecked(curSubtitle.index)"
+                [clickChecked]="clickChecked.bind(this)"
+                [scrollToSubtitle]="scrollToSubtitle.bind(this)"
+            ></app-item-subtitles-list>
+        </li>
+    </virtual-scroller>
 </ul>

@@ -132,7 +132,9 @@
     </div>
     <app-subtitles-list
         [filterText]="filterText"
+        [subtitles]="subtitlesService.getCurrentSubtitles() && subtitlesService.getCurrentSubtitles().subtitle"
         [contextMenuEvent]="contextMenuEvent"
+        [subtitleShift] = "getSubtitleShift()"
     ></app-subtitles-list>
     <app-word-counter>
 
