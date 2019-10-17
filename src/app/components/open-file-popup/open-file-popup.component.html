@@ -1,11 +1,19 @@
 <div class="open-field">
-    <div class="upload-icon">
-        <svg-icon
-            src="assets/images/upload.svg"
-            [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
-        ></svg-icon>
+    <div class="upload">
+        <div class="upload-icon">
+            <svg-icon
+                src="assets/images/upload.svg"
+                [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+            ></svg-icon>
+        </div>
+        <input type="file" (drop)="openDropFile($event)" (click)="openFile()" />
     </div>
-    <input type="file" (drop)="openDropFile($event)" (click)="openFile()" />
+    <div class="recentFiles">
+        <h2>Recent files</h2>
+        <ul>
+            <li *ngFor="let i of recentFiles" (click)="openFile(i.path)">{{i.name}}</li>
+        </ul>
+    </div>
 </div>
 <div class="info-field" (click)="openUrl('https://www.wikipedia.org/')">
     <div class="question-icon">

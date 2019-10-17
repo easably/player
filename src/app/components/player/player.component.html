@@ -3,6 +3,7 @@
         <app-open-file-popup
             *ngIf="this.mpvService.state.duration === 0"
             [openFile]="openFile.bind(this)"
+            [recentFiles]= "recentFiles"
         >
         </app-open-file-popup>
         <app-video

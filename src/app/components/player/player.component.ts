@@ -21,9 +21,7 @@ import { ThemeService } from "../../services/theme.service";
 })
 export class PlayerComponent implements OnInit {
     @ViewChild(SideBarComponent, undefined) sideBarComponent: SideBarComponent;
-    @HostListener("document:keydown", ["$event"]) handleKeyEvent(
-        e: KeyboardEvent
-    ) {
+    @HostListener("document:keydown", ["$event"]) handleKeyEvent(e) {
         if (e.keyCode === 27 && this.mpvService.state.fullscreen) {
             this.mpvService.toggleFullscreen();
         } else if (e.keyCode === 38) {
@@ -37,6 +35,7 @@ export class PlayerComponent implements OnInit {
     }
 
     public themeName: string;
+    public recentFiles = this.storeService.get.custom("recentFiles") || [];
     constructor(
         public mpvService: MpvService,
         private subtitlesService: SubtitlesService,
@@ -46,12 +45,15 @@ export class PlayerComponent implements OnInit {
     ) {
         console.log(storeService);
         this.onChangeTheme(storeService.store.get("theme") || "dark");
-        this.mpvService.mpvReadyHook= ()=>{
+        this.mpvService.mpvReadyHook = () => {
+            ipcRenderer.send("appReady");
             this.mpvService.setVolume(this.storeService.get.custom("volume"));
             this.mpvService.toggleMute(this.storeService.get.custom("mute"));
             this.mpvService.changeSpeed(this.storeService.get.custom("speed"));
-            this.subtitlesService.showOnVideo = this.storeService.get.custom("showSubtitlesOnVideo");
-        }
+            this.subtitlesService.showOnVideo = this.storeService.get.custom(
+                "showSubtitlesOnVideo"
+            );
+        };
         this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(
             this.subtitlesService
         );
@@ -179,6 +181,9 @@ export class PlayerComponent implements OnInit {
                 mpvState.path,
                 this.subtitlesService.currentSubtitleLanguageNumber
             );
+            this.addRecentFile(mpvState.path, mpvState.filename);
+            this.storeService.set.custom("recentFiles", this.recentFiles);
+            ipcRenderer.send("addRecentFile", mpvState.path);
         }
         this.mpvService.stop();
     }
@@ -188,7 +193,24 @@ export class PlayerComponent implements OnInit {
         this.storeService.set.custom("volume", this.mpvService.state.volume);
         this.storeService.set.custom("mute", this.mpvService.state.mute);
         this.storeService.set.custom("speed", this.mpvService.state.speed);
-        this.storeService.set.custom("showSubtitlesOnVideo", this.subtitlesService.showOnVideo);
+        this.storeService.set.custom(
+            "showSubtitlesOnVideo",
+            this.subtitlesService.showOnVideo
+        );
+    }
+
+    addRecentFile(path: string, name: string) {
+        let recentFiles = [...this.recentFiles];
+        recentFiles.forEach((f, i) => {
+            if (f.path === path) {
+                recentFiles.splice(i, 1);
+            }
+        });
+        recentFiles.unshift({ path, name });
+        if (recentFiles.length > 5) {
+            recentFiles.pop();
+        }
+        this.recentFiles = recentFiles;
     }
 
     openFile(existFile = undefined) {
