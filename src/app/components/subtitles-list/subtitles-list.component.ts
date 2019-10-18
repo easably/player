@@ -5,12 +5,13 @@ import {
     Input,
     ViewChild,
     ElementRef,
-    SimpleChanges
+    SimpleChanges,
+    OnChanges
 } from "@angular/core";
 import { SubtitlesService } from "../../services/subtitles.service";
 import { MpvService } from "../../services/mpv.service";
 import Subtitle from "../../interfaces/subtitle";
-import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
+import { VirtualScrollerComponent } from "ngx-virtual-scroller";
 
 @Component({
     selector: "app-subtitles-list",
@@ -23,7 +24,9 @@ export class SubtitlesListComponent implements OnInit {
     @Input() contextMenuEvent;
     @Input() subtitles: Subtitle[];
     @Input() subtitleShift;
-    @ViewChild(VirtualScrollerComponent, null) private virtualScroller: VirtualScrollerComponent;
+    @Input() currentSubtitle;
+    @ViewChild(VirtualScrollerComponent, null)
+    private virtualScroller: VirtualScrollerComponent;
     public currentBetweenSubtitlesComponent = {
         index: undefined,
         component: undefined
@@ -31,32 +34,63 @@ export class SubtitlesListComponent implements OnInit {
     public checkedList: number[] = [];
     private subscribeLoader;
     public curSubtitles: any;
+    private loading: boolean;
     constructor(
         public subtitlesService: SubtitlesService,
-        private changeDetectorRef: ChangeDetectorRef,
+
         private mpvService: MpvService
     ) {}
-    ngOnChanges(changes: SimpleChanges) {
-        this.curSubtitles = this.getSubtitleList();
-    }
     ngOnInit() {
         this.subscribeLoader = this.subtitlesService.subtitleLoaded.subscribe(
             () => {
-                this.changeDetectorRef.detectChanges();
+                this.curSubtitles = this.getSubtitleList();
             }
         );
     }
     ngOnDestroy() {
         this.subscribeLoader.unsubscribe();
     }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.subtitles) {
+            this.curSubtitles = this.getSubtitleList();
+        }
+        if (changes.currentSubtitle && changes.currentSubtitle.currentValue){
+            this.scrollToSubtitle(changes.currentSubtitle.currentValue.time)
+        }
+    }
 
-    scrollToSubtitle(index){
-        this.virtualScroller.scrollToIndex(index,true, - this.list.nativeElement.offsetHeight / 2);
+    fetchMore(event) {
+        if (event.endIndex !== this.curSubtitles.length - 1) return;
+        this.loading = true;
+        this.fetchNextChunk(this.curSubtitles.length, 20).then(
+            chunk => {
+                this.curSubtitles = this.curSubtitles.concat(chunk);
+                this.loading = false;
+            },
+            () => (this.loading = false)
+        );
+    }
+
+    fetchNextChunk(skip: number, limit: number) {
+        return new Promise((resolve, reject) => {
+            resolve(this.getSubtitleList().slice(skip, skip + limit));
+        });
+    }
+
+    scrollToSubtitle(time) {
+        let timeFilterSubtitle = this.curSubtitles.filter(s=>s.subtitle.time===time);
+        if (!timeFilterSubtitle || timeFilterSubtitle.length===0 || !this.virtualScroller) return;
+        let index = timeFilterSubtitle[0].index;
+        this.virtualScroller.scrollToIndex(
+            index,
+            true,
+            -this.list.nativeElement.offsetHeight / 2
+        );
     }
 
     getSubtitleList() {
         let subtitles = this.subtitles;
-        if (!subtitles) return false;
+        if (!subtitles) return [];
         if (this.filterText != "")
             subtitles = subtitles.filter(
                 s =>

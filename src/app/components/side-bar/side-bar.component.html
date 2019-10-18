@@ -135,6 +135,7 @@
         [subtitles]="subtitlesService.getCurrentSubtitles() && subtitlesService.getCurrentSubtitles().subtitle"
         [contextMenuEvent]="contextMenuEvent"
         [subtitleShift] = "getSubtitleShift()"
+        [currentSubtitle]="subtitlesService.subtitles && subtitlesService.getCurrentSubtitle()"
     ></app-subtitles-list>
     <app-word-counter>
 

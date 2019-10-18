@@ -87,7 +87,10 @@ export class VideoComponent implements OnInit {
         if (changes.time) {
             this.subtitlesService.findCurrentSubtitle();
             this.loopBorderControl();
-            if(changes.time.currentValue === 0 && this.mpvService.state.duration === 0){
+            if (
+                changes.time.currentValue === 0 &&
+                this.mpvService.state.duration === 0
+            ) {
                 this.setDocumentTitle(this.standartTitle);
             }
         } else if (changes.filename) {

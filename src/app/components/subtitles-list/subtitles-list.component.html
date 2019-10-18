@@ -1,6 +1,13 @@
-<ul #list class="subtitle-list" *ngIf="curSubtitles">
-    <virtual-scroller #scroll class="virtual-scroller" [items]="curSubtitles" [enableUnequalChildrenSizes]="true" [parentScroll]="list">
-        <li *ngFor="let curSubtitle of scroll.viewPortItems;">
+<ul #list class="subtitle-list" *ngIf="curSubtitles.length !== 0">
+    <virtual-scroller
+        #scroll
+        class="virtual-scroller"
+        [items]="curSubtitles"
+        [enableUnequalChildrenSizes]="true"
+        [parentScroll]="list"
+        (vsEnd)="fetchMore($event)"
+    >
+        <li *ngFor="let curSubtitle of scroll.viewPortItems">
             <app-item-subtitles-list
                 [subtitle]="curSubtitle.subtitle"
                 [shift]="subtitleShift"
@@ -8,7 +15,6 @@
                 [index]="curSubtitle.index"
                 [checked]="checkChecked(curSubtitle.index)"
                 [clickChecked]="clickChecked.bind(this)"
-                [scrollToSubtitle]="scrollToSubtitle.bind(this)"
             ></app-item-subtitles-list>
         </li>
     </virtual-scroller>

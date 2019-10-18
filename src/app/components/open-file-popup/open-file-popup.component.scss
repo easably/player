@@ -23,10 +23,16 @@ $ghostColor: rgba(255, 255, 255, 0.63);
 
 .upload {
     min-width: 200px;
-    flex: 1 1 auto;
-    border: 7px dotted $ghostColor;
-    border-right: none;
+    flex: 1 1 50%;
+    border: 3px solid $ghostColor;
+    // border-right: none;
+
     position: relative;
+    border-radius: 50px 0 0 50px;
+    &.no-recent{
+        border-radius: 50px;
+
+    }
     &-icon {
         position: absolute;
         height: 50%;
@@ -61,10 +67,12 @@ $ghostColor: rgba(255, 255, 255, 0.63);
     color: $ghostColor;
     font-size: 0.8rem;
     margin-top: 0.5rem;
+    margin-left: 50px;
     position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    flex: 1 1 50%;
     .question-icon {
         height: 0.8rem;
         width: 0.8rem;
@@ -78,6 +86,7 @@ $ghostColor: rgba(255, 255, 255, 0.63);
 
 .recentFiles {
     background-color: $ghostColor;
+    // border: 3px solid #000;
     flex: 1 1 auto;
     border-radius: 0 50px 50px 0;
     max-width: 500px;

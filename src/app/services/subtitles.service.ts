@@ -122,8 +122,7 @@ export class SubtitlesService {
                     subtitle.time = +(subtitle.time / 1000).toFixed(10);
                     subtitle.duration = +(subtitle.duration / 1000).toFixed(10);
                     oneSubtitle.subtitle.push(subtitle);
-                    // oneSubtitle.subtitle=Object.assign({},oneSubtitle.subtitle,subtitle)
-                    this.subtitleLoaded.emit();
+                    // this.subtitleLoaded.emit();
                 });
                 let stream = fs.createReadStream(file);
                 this.subtitleLoaded.subscribe(e => {
@@ -133,6 +132,7 @@ export class SubtitlesService {
                 });
                 stream.pipe(matroskaParser);
                 stream.on("end", () => {
+                    this.subtitleLoaded.emit();
                     time = performance.now() - time;
                     console.log(time);
                     resolve();
@@ -156,6 +156,8 @@ export class SubtitlesService {
             let videoTime: number = this.mpvService.state["time-pos"];
             const curSub = this.getCurrentSubtitle();
             if (
+                curSub &&
+                curSub.isCurrent &&
                 videoTime >= curSub.time &&
                 videoTime < curSub.time + curSub.duration
             )
@@ -185,6 +187,7 @@ export class SubtitlesService {
         }
     }
     getCurrentSubtitle(key = this.currentSubtitleKey) {
+        if (!this.getCurrentSubtitles().subtitle) return;
         return this.getCurrentSubtitles().subtitle[key];
     }
     setSubtitleByKey(key) {
@@ -209,6 +212,7 @@ export class SubtitlesService {
             if (this.currentSubtitleKey > 0)
                 this.setSubtitleByKey(this.currentSubtitleKey - 1);
             else this.setSubtitleByKey(this.currentSubtitleKey);
+            if (this.getLoopSubtitles().length ===1) this.clearLoop();
         } else {
             let time: number = this.mpvService.state["time-pos"];
             if (time >= 5) this.mpvService.setTimePos(time - 5);
@@ -226,6 +230,7 @@ export class SubtitlesService {
                 this.setSubtitleByKey(
                     this.getCurrentSubtitles().subtitle.length - 1
                 );
+                if (this.getLoopSubtitles().length ===1) this.clearLoop();
         } else {
             let time: number = this.mpvService.state["time-pos"];
             if (time < this.mpvService.state.duration)

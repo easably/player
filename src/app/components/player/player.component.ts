@@ -50,9 +50,12 @@ export class PlayerComponent implements OnInit {
             this.mpvService.setVolume(this.storeService.get.custom("volume"));
             this.mpvService.toggleMute(this.storeService.get.custom("mute"));
             this.mpvService.changeSpeed(this.storeService.get.custom("speed"));
-            this.subtitlesService.showOnVideo = this.storeService.get.custom(
+            const showOnVideo = this.storeService.get.custom(
                 "showSubtitlesOnVideo"
             );
+            if (showOnVideo !== undefined) {
+                this.subtitlesService.showOnVideo = showOnVideo;
+            }
         };
         this.mpvService.stopAdditional = this.subtitlesService.clearSubtitles.bind(
             this.subtitlesService
@@ -126,7 +129,7 @@ export class PlayerComponent implements OnInit {
         });
         ipcRenderer.on("clearRecentDocuments", () => {
             this.recentFiles = [];
-            this.storeService.set.custom('recentFiles', this.recentFiles)
+            this.storeService.set.custom("recentFiles", this.recentFiles);
             remote.app.clearRecentDocuments();
         });
         ipcRenderer.on("window-closed", () => {
@@ -303,7 +306,7 @@ export class PlayerComponent implements OnInit {
             this.themeName = "light";
         }
     }
-    
+
     contextMenuEvent(e, text) {
         e.preventDefault();
         e.stopPropagation();

@@ -20,16 +20,14 @@ export class SideBarComponent implements OnInit {
     public api: SafeResourceUrl;
     public filterText: string = "";
     public iframeIsRefreshing: boolean = false;
-
     constructor(
         public mpvService: MpvService,
         public subtitlesService: SubtitlesService,
-        public sanitizer: DomSanitizer
+        public sanitizer: DomSanitizer,
     ) {
         window.addEventListener('resize',this.handleResizeWindow.bind(this));
         this.api = this.sanitizer.bypassSecurityTrustResourceUrl(serverApi);
     }
-
     ngOnInit() {}
 
     calcMarginRight() {

@@ -21,7 +21,6 @@ export class ItemSubtitlesListComponent implements OnInit {
     @Input() index: number;
     @Input() checked: boolean;
     @Input() clickChecked: any;
-    @Input() scrollToSubtitle: any;
 
     private isAlreadyScroll: boolean = false;
     constructor(
@@ -56,7 +55,7 @@ export class ItemSubtitlesListComponent implements OnInit {
 
     ngDoCheck() {
         if (this.subtitle.isCurrent && !this.isAlreadyScroll) {
-            this.scrollToSubtitle(this.index);
+            // this.scrollToSubtitle(this.index);
             this.isAlreadyScroll = true;
         } else if (!this.subtitle.isCurrent && this.isAlreadyScroll) {
             this.isAlreadyScroll = false;

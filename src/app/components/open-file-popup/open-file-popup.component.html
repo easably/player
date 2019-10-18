@@ -1,5 +1,5 @@
 <div class="open-field">
-    <div class="upload">
+    <div [class]="'upload' + (!recentFiles || recentFiles.length===0 ? ' no-recent' : '')">
         <div class="upload-icon">
             <svg-icon
                 src="assets/images/upload.svg"
