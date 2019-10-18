@@ -303,6 +303,7 @@ export class PlayerComponent implements OnInit {
             this.themeName = "light";
         }
     }
+    
     contextMenuEvent(e, text) {
         e.preventDefault();
         e.stopPropagation();

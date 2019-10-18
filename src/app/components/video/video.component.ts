@@ -1,4 +1,11 @@
-import { Component, OnInit, ElementRef, Input, ViewChild } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    Input,
+    ViewChild,
+    SimpleChanges
+} from "@angular/core";
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
@@ -15,8 +22,11 @@ export class VideoComponent implements OnInit {
     @ViewChild("embed", undefined) embed: ElementRef;
     @ViewChild(VideoSubtitleComponent, undefined) videoSubtitleComponent;
     @Input() contextMenuEvent;
+    @Input() time;
+    @Input() filename;
     public embedProps: any;
     private isHandleClick = false;
+    private standartTitle = document.title;
 
     constructor(
         public mpvService: MpvService,
@@ -69,31 +79,31 @@ export class VideoComponent implements OnInit {
             }
         }
     }
-    setDocumentTitle() {
-        const duration = this.mpvService.state.duration;
-        const filename = this.mpvService.state.filename;
-        if (duration && document.title !== filename) {
-            document.title = filename;
-        } else if (!duration && document.title !== "") {
-            document.title = "";
-        }
+    setDocumentTitle(filename) {
+        document.title = filename;
     }
-    ngDoCheck() {
-        this.setDocumentTitle();
-        this.subtitlesService.findCurrentSubtitle();
-        this.loopBorderControl();
+    ngDoCheck() {}
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.time) {
+            this.subtitlesService.findCurrentSubtitle();
+            this.loopBorderControl();
+            if(changes.time.currentValue === 0 && this.mpvService.state.duration === 0){
+                this.setDocumentTitle(this.standartTitle);
+            }
+        } else if (changes.filename) {
+            this.setDocumentTitle(changes.filename.currentValue);
+        }
     }
     handleClick() {
         this.mpvService.togglePause();
-        if (!this.isHandleClick){
-            this.isHandleClick =  true;
-            setTimeout(()=>{
+        if (!this.isHandleClick) {
+            this.isHandleClick = true;
+            setTimeout(() => {
                 this.isHandleClick = false;
-            }, 500)
-        }else{
+            }, 500);
+        } else {
             this.mpvService.togglePause();
             this.mpvService.toggleFullscreen();
         }
-
     }
 }

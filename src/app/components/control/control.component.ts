@@ -195,6 +195,10 @@ export class ControlComponent implements OnInit {
         if (this.mpvService.state.mute) this.mpvService.toggleMute(false);
         this.mpvService.setVolume(e.target.value);
     }
+    
+    handleClickVolume(e){
+        e.target.blur();
+    }
 
     getIconPathForControlVolume() {
         let typeVolume;

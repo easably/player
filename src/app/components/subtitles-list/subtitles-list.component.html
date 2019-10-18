@@ -1,4 +1,4 @@
-<ul #list class="subtitle-list" *ngIf="curSubtitles.length !== 0">
+<ul #list class="subtitle-list" *ngIf="curSubtitles">
     <virtual-scroller #scroll class="virtual-scroller" [items]="curSubtitles" [enableUnequalChildrenSizes]="true" [parentScroll]="list">
         <li *ngFor="let curSubtitle of scroll.viewPortItems;">
             <app-item-subtitles-list

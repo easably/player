@@ -68,6 +68,7 @@
                         !mpvService.state.mute ? mpvService.state.volume : 0
                     "
                     (input)="handleInputVolume($event)"
+                    (click)="handleClickVolume($event)"
                     [attr.style]="
                         sanitizer.bypassSecurityTrustStyle(
                             '--lineBackground: ' +

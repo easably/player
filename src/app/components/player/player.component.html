@@ -8,6 +8,8 @@
         </app-open-file-popup>
         <app-video
             class="video"
+            [time]="mpvService.state['time-pos']"
+            [filename]="mpvService.state.filename"
             [contextMenuEvent]="contextMenuEvent"
         ></app-video>
         <app-control [openFile]="openFile.bind(this)"></app-control>

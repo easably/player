@@ -22,9 +22,9 @@ export class SubtitlesService {
     public showOnVideo = true;
     constructor(private mpvService: MpvService) {}
 
-    toggleShowOnVideo(state?){
-        if (state === undefined){
-            state = !this.showOnVideo
+    toggleShowOnVideo(state?) {
+        if (state === undefined) {
+            state = !this.showOnVideo;
         }
         this.showOnVideo = state;
     }
@@ -54,7 +54,7 @@ export class SubtitlesService {
         name = name[name.length - 1];
         let nameArr: string[] = name.split("\\");
         name = nameArr[nameArr.length - 1];
-        nameArr = name.split('.');
+        nameArr = name.split(".");
         name = nameArr[nameArr.length - 2];
         return {
             language: name,
@@ -65,7 +65,7 @@ export class SubtitlesService {
     clearEnterSymbol(text: string) {
         return text.replace(/[\r\n↵]/g, " ");
     }
-    
+
     loadSubtitles() {
         if (this.mpvService.state.duration === 0) return;
         let items: string[] = remote.dialog.showOpenDialog({
@@ -81,7 +81,7 @@ export class SubtitlesService {
             ]
         });
         if (items) {
-            let srt = fs.readFileSync(items[0],'utf8');
+            let srt = fs.readFileSync(items[0], "utf8");
             // let srt = iconv.decode(buff,'win1251');
             let subtitle: any = this.changeSubtitleFormat(
                 parser.fromSrt(srt, true),
@@ -154,7 +154,19 @@ export class SubtitlesService {
         if (this.subtitles) {
             if (!this.getCurrentSubtitles().subtitle) return;
             let videoTime: number = this.mpvService.state["time-pos"];
+            const curSub = this.getCurrentSubtitle();
+            if (
+                videoTime >= curSub.time &&
+                videoTime < curSub.time + curSub.duration
+            )
+                return;
             this.getCurrentSubtitles().subtitle.forEach((t, key) => {
+                if (
+                    videoTime >=
+                    t.time + this.getCurrentSubtitles().subtitleShift
+                ) {
+                    this.currentSubtitleKey = key;
+                }
                 if (
                     videoTime >=
                         t.time + this.getCurrentSubtitles().subtitleShift &&
@@ -164,7 +176,6 @@ export class SubtitlesService {
                             t.duration
                 ) {
                     if (t.isCurrent !== true) {
-                        this.currentSubtitleKey = key;
                         t.isCurrent = true;
                     }
                 } else if (t.isCurrent !== false) {
@@ -183,7 +194,7 @@ export class SubtitlesService {
         );
     }
     setSubtitleRepeat() {
-        if (this.subtitles){
+        if (this.subtitles) {
             this.setSubtitleByKey(this.currentSubtitleKey);
             if (this.mpvService.state.pause) {
                 this.mpvService.playSomeTime(
