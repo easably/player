@@ -55,15 +55,16 @@ export class SubtitlesListComponent implements OnInit {
     }
 
     getSubtitleList() {
-        if (!this.subtitles) return false;
+        let subtitles = this.subtitles;
+        if (!subtitles) return false;
         if (this.filterText != "")
-            return this.subtitles.filter(
+            subtitles = subtitles.filter(
                 s =>
                     s.text
                         .toUpperCase()
                         .indexOf(this.filterText.toUpperCase()) !== -1
             );
-        return this.subtitles.map((s, i) => {
+        return subtitles.map((s, i) => {
             return { index: i, subtitle: s };
         });
     }

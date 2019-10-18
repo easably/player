@@ -87,7 +87,7 @@
     },
     "dependencies": {
         "angular-svg-icon": "^8.0.0",
-        "easylang-extension": "^0.2.3",
+        "easylang-extension": "^0.2.4",
         "electron-store": "^5.0.0",
         "matroska-subtitles": "^2.0.3",
         "mpv.js-vanilla": "^0.3.4",

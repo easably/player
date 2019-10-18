@@ -11,7 +11,7 @@ import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
 import { VideoSubtitleComponent } from "../video-subtitle/video-subtitle.component";
 
-import { video } from "../../../../../extension";
+import { video } from "easylang-extension";
 
 @Component({
     selector: "app-video",

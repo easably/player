@@ -135,10 +135,10 @@ export class PlayerComponent implements OnInit {
         });
     }
     ngOnInit() {
-        this.injectExtention();
+        this.injectExtension();
     }
 
-    injectExtention() {
+    injectExtension() {
         let localStorage = {
             set: obj => {
                 this.storeService.set.extensionData(obj);

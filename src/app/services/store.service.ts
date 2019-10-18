@@ -43,20 +43,21 @@ export class StoreService {
             return this.store.get(`${path}.subtitlesId`);
         },
         extensionData: () => {
-            const data = this.store.get(`extensionData`);
-            if (!data)
-                return {
-                    languageFrom: "auto",
-                    languageTo: "ru",
-                    localSentence: [],
-                    exception: []
-                };
             return this.store.get(`extensionData`);
         }
     };
 
     constructor() {
         this.store = new Store();
+        const data = this.store.get(`extensionData`);
+        if (!data){
+            this.set.extensionData({
+                languageFrom: "auto",
+                languageTo: "ru",
+                localSentence: [],
+                exception: []
+            });
+        }
     }
     isExist(path) {
         return this.store.has(path);

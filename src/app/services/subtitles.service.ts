@@ -198,7 +198,7 @@ export class SubtitlesService {
             this.setSubtitleByKey(this.currentSubtitleKey);
             if (this.mpvService.state.pause) {
                 this.mpvService.playSomeTime(
-                    undefined,
+                    this.getCurrentSubtitle().time,
                     this.getCurrentSubtitle().duration
                 );
             }
