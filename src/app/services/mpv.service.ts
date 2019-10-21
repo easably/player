@@ -23,7 +23,7 @@ export class MpvService {
     public seeking: boolean;
     private maxCountTrack: number = 100;
     public playbackSpeedList = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-
+    private powerSaveBlocker;
     constructor() {
         this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
     }
@@ -120,12 +120,22 @@ export class MpvService {
     togglePause() {
         this.setPause(!this.state.pause);
     }
-    setPause(state = true) {
-        if (!this.state.duration) return;
+    setPause(state = true, ignore = false) {
+        if (!this.state.duration && !ignore) return;
         this.mpv.property("pause", state);
+        if (state === false) {
+            this.powerSaveBlocker = remote.powerSaveBlocker.start(
+                "prevent-display-sleep"
+            );
+        } else if (
+            this.powerSaveBlocker &&
+            remote.powerSaveBlocker.isStarted(this.powerSaveBlocker)
+        ) {
+            remote.powerSaveBlocker.stop(this.powerSaveBlocker);
+        }
     }
     stop() {
-        this.mpv.property("pause", true);
+        this.setPause(true);
         this.mpv.command("stop");
         this.state["time-pos"] = 0;
         this.state.duration = 0;
@@ -149,7 +159,12 @@ export class MpvService {
             }
         }, (duration + 2 * delay) * 1000);
     }
-    playSomeTimeWithPlaybackSpeed(startTime = this.state["time-pos"], duration, speed, delay = 0) {
+    playSomeTimeWithPlaybackSpeed(
+        startTime = this.state["time-pos"],
+        duration,
+        speed,
+        delay = 0
+    ) {
         let error = 1;
         this.setTimePos(startTime - delay);
         if (this.state.pause) {
@@ -166,11 +181,11 @@ export class MpvService {
             ) {
                 this.togglePause();
             }
-        }, (duration/speed + 2 * delay) * 1000);
+        }, (duration / speed + 2 * delay) * 1000);
     }
     loadFile(item) {
         this.mpv.command("loadfile", item);
-        this.mpv.property("pause", false);
+        this.setPause(false, true);
         this.speedReset();
         return item;
     }
@@ -179,16 +194,15 @@ export class MpvService {
     }
     speedDown() {
         this.changeSpeedStepByStep(false);
-        
     }
-    changeSpeedStepByStep(isSpeedUp?){
-        this.playbackSpeedList.forEach((e,index)=>{
-            if (e===this.state.speed){
-                const nextIndex = isSpeedUp ? index+1 : index-1;
+    changeSpeedStepByStep(isSpeedUp?) {
+        this.playbackSpeedList.forEach((e, index) => {
+            if (e === this.state.speed) {
+                const nextIndex = isSpeedUp ? index + 1 : index - 1;
                 const nextSpeed = this.playbackSpeedList[nextIndex];
-                nextSpeed && this.changeSpeed(nextSpeed)
+                nextSpeed && this.changeSpeed(nextSpeed);
             }
-        })
+        });
     }
     speedReset() {
         this.changeSpeed(1);
