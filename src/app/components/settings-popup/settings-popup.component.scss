@@ -22,6 +22,9 @@ p {
         .icon {
             margin-left: 0.5rem;
         }
+        &-text{
+            width: 25px;
+        }
     }
     &:first-child {
         border-radius: 5px 5px 0 0;

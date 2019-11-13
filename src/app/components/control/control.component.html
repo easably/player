@@ -99,7 +99,7 @@
                     ></svg-icon>
                 </div>
                 <div class="settings" *ngIf="showSettings">
-                    <app-settings-popup></app-settings-popup>
+                    <app-settings-popup [getGradientForRange]="getGradientForRange"></app-settings-popup>
                 </div>
             </div>
             <div class="control" (click)="handleFullscreen($event)">

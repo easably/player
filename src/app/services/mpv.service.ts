@@ -22,8 +22,9 @@ export class MpvService {
     };
     public seeking: boolean;
     private maxCountTrack: number = 100;
-    public playbackSpeedList = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+    public playbackSpeedList = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5];
     private powerSaveBlocker;
+    public speedLimits = [0.5, 1.5]
     constructor() {
         this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
     }

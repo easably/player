@@ -49,16 +49,20 @@ export class ControlComponent implements OnInit {
                 this.popupTime.x = this.range.left + this.range.width;
             }
 
-            let offsetLeft = this.popupTime.x - this.popupTimeEl.nativeElement.clientWidth/2;
-            let offsetRight = this.popupTime.x + this.popupTimeEl.nativeElement.clientWidth/2;
+            let offsetLeft =
+                this.popupTime.x -
+                this.popupTimeEl.nativeElement.clientWidth / 2;
+            let offsetRight =
+                this.popupTime.x +
+                this.popupTimeEl.nativeElement.clientWidth / 2;
             const windowWidth = document.documentElement.clientWidth;
-            if (offsetLeft < 0){
+            if (offsetLeft < 0) {
                 this.popupTime.x += -offsetLeft;
                 this.popupTime.arrowOffset = offsetLeft;
-            }else if(offsetRight > windowWidth){
-                this.popupTime.x -=  offsetRight - windowWidth ;
+            } else if (offsetRight > windowWidth) {
+                this.popupTime.x -= offsetRight - windowWidth;
                 this.popupTime.arrowOffset = offsetRight - windowWidth;
-            }else{
+            } else {
                 this.popupTime.arrowOffset = 0;
             }
 
@@ -128,12 +132,17 @@ export class ControlComponent implements OnInit {
         e.target.blur();
         this.mpvService.togglePause();
     }
+
     ngOnInit() {}
+
     getGradientForRange(range) {
         if (range.max == 0) {
             return "var(--text)";
         }
-        let curPercent = (range.value / range.max - range.min) * 100;
+        const value = +range.value;
+        const max = +range.max;
+        const min = +range.min;
+        let curPercent = ((value-min) / (max-min)) * 100;
         return (
             "linear-gradient(to right,var(--main) 0%, var(--main) " +
             curPercent +
@@ -195,8 +204,8 @@ export class ControlComponent implements OnInit {
         if (this.mpvService.state.mute) this.mpvService.toggleMute(false);
         this.mpvService.setVolume(e.target.value);
     }
-    
-    handleClickVolume(e){
+
+    handleClickVolume(e) {
         e.target.blur();
     }
 

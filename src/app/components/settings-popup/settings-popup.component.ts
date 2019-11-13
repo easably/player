@@ -1,25 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import {SubtitlesService} from '../../services/subtitles.service'
-import { MpvService } from '../../services/mpv.service';
+import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
+import { SubtitlesService } from "../../services/subtitles.service";
+import { MpvService } from "../../services/mpv.service";
+import { DomSanitizer } from "@angular/platform-browser";
 @Component({
-  selector: 'app-settings-popup',
-  templateUrl: './settings-popup.component.html',
-  styleUrls: ['./settings-popup.component.scss']
+    selector: "app-settings-popup",
+    templateUrl: "./settings-popup.component.html",
+    styleUrls: ["./settings-popup.component.scss"]
 })
 export class SettingsPopupComponent implements OnInit {
-    public page: string;
-  constructor(public subtitlesService: SubtitlesService, public mpvService: MpvService) { 
-      this.page = 'home';
-  }
+    @Input() getGradientForRange;
+    @ViewChild("speedRange", null) speedRangeEl: ElementRef;
+    constructor(
+        public subtitlesService: SubtitlesService,
+        public mpvService: MpvService,
+        public sanitizer: DomSanitizer
+    ) {   }
 
-  ngOnInit() {
-  }
+    ngOnInit() {}
 
-  toggleShowSubtitles(state?){
-    this.subtitlesService.toggleShowOnVideo(state)
-  }
-  selectSpeed(speed){
-    this.mpvService.changeSpeed(speed);
-    this.page = 'home';
-  }
+    toggleShowSubtitles(state?) {
+        this.subtitlesService.toggleShowOnVideo(state);
+    }
+    selectSpeed(speed) {
+        this.mpvService.changeSpeed(speed);
+    }
+
+    handleInputSpeed(e) {
+        console.log(e.target.value)
+        this.mpvService.changeSpeed(e.target.value);
+    }
+    handleClickSpeed(e) {
+        e.target.blur();
+    }
 }
