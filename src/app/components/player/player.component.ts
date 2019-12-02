@@ -33,7 +33,10 @@ export class PlayerComponent implements OnInit {
             this.mpvService.togglePause();
         }
     }
-
+		@HostListener("window:beforeunload", ["$event"]) beforeUnload(e){
+			this.closeFile();
+			this.closeWindow();
+		}
     public themeName: string;
     public recentFiles = this.storeService.get.custom("recentFiles") || [];
     constructor(
@@ -132,10 +135,6 @@ export class PlayerComponent implements OnInit {
             this.storeService.set.custom("recentFiles", this.recentFiles);
             remote.app.clearRecentDocuments();
         });
-        ipcRenderer.on("window-closed", () => {
-            this.closeFile();
-            this.closeWindow();
-        });
     }
     ngOnInit() {
         this.injectExtension();
@@ -162,9 +161,10 @@ export class PlayerComponent implements OnInit {
     }
 
     getCurrentAudioTrack() {
-        return this.mpvService.state.trackList.filter(
-            t => t.type === "audio" && t.selected
-        )[0].id;
+			let track = this.mpvService.state.trackList.filter(
+				t => t.type === "audio" && t.selected
+			)[0]
+        return track&&track.id;
     }
 
     getSubtitlesFromStoreOrMatroskaFile(file) {
