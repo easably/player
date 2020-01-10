@@ -46,7 +46,6 @@ li {
             }
             &-wrapper {
                 flex: 1 1 auto;
-                margin: 0 0 0 10px;
                 height: 100%;
             }
             ul {
@@ -71,7 +70,6 @@ li {
                 }
             }
             &-list {
-                margin: 0 0 0 10px;
                 padding: 0;
                 flex: 1 1 auto;
                 height: 100%;
@@ -80,7 +78,8 @@ li {
             &-title {
                 flex: 0 1 auto;
                 color: var(--sidebar-header-text);
-                font-size: 1rem;
+								font-size: 1rem;
+								margin-right: 10px;
             }
         }
         .add-language {

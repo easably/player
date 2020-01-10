@@ -6,6 +6,7 @@ import * as MatroskaSubtitles from "matroska-subtitles";
 import * as parser from "subtitles-parser-vtt";
 import SubtitlesPack from "../interfaces/subtitles-pack";
 import { subtitleExtension } from "../../static/config.js";
+import * as isoLanguages from '@cospired/i18n-iso-languages'
 // import detectEncoding from "node-autodetect-utf8-cp1251-cp866";
 
 // import * as iconv from 'iconv-lite'
@@ -17,7 +18,8 @@ export class SubtitlesService {
     public subtitles: SubtitlesPack[];
     public currentSubtitleKey: number = 0;
     public subtitleLoaded: EventEmitter<any> = new EventEmitter();
-    public currentSubtitleLanguageNumber: number = 0;
+		public currentSubtitleLanguageNumber: number = 0;
+		public secondSubtitleLanguageNumber: number = 0;
     public shift: number = 0;
     public showOnVideo = true;
     constructor(private mpvService: MpvService) {}
@@ -30,11 +32,27 @@ export class SubtitlesService {
     }
 
     getCurrentSubtitles() {
-        if (!this.subtitles) return;
+			return this.getSubtitlesByNumber(this.currentSubtitleLanguageNumber)
+		}
+		
+    getSecondSubtitles() {
+			return this.getSubtitlesByNumber(this.secondSubtitleLanguageNumber)
+		}
+		
+		getSubtitlesByNumber(number){
+			if (!this.subtitles) return;
         return this.subtitles.filter(
-            e => e.number === this.currentSubtitleLanguageNumber
+            e => e.number === number
         )[0];
-    }
+		}
+
+		getLangCodeByNumber(number){
+			if (!this.subtitles) return;
+			const curSub = this.subtitles.filter(s=>s.number===number)[0]
+			if (!curSub) return;
+			return curSub.language;
+		}
+
     changeSubtitleFormat(subtitle, fileName) {
         let newSubtitle: SubtitlesPack = subtitle.map(e => {
             return {
@@ -93,7 +111,8 @@ export class SubtitlesService {
             subtitle["subtitleShift"] = 0;
             if (!this.subtitles) this.subtitles = [];
             this.subtitles.push(subtitle);
-            this.currentSubtitleLanguageNumber = subtitle.number;
+            // this.currentSubtitleLanguageNumber = subtitle.number;
+            this.secondSubtitleLanguageNumber = subtitle.number;
         }
     }
     tryGetSubtitlesFromMkvFile(file) {
@@ -102,12 +121,17 @@ export class SubtitlesService {
                 let matroskaParser = new MatroskaSubtitles();
                 let time;
                 matroskaParser.once("tracks", tracks => {
-                    time = performance.now();
+									time = performance.now();
+									tracks.forEach(s=>{
+										if (!s.language) s.language='eng';
+										s.language = isoLanguages.toAlpha2(s.language);
+										})
                     this.subtitles = Object.assign(tracks);
                     this.subtitles.forEach(sub => {
                         sub.subtitleShift = 0;
                     });
                     this.currentSubtitleLanguageNumber = tracks[0].number;
+                    this.secondSubtitleLanguageNumber = tracks[tracks.length>0 ? 1 : 0].number;
                 });
 
                 // afterwards each subtitle is emitted
@@ -146,13 +170,16 @@ export class SubtitlesService {
                 this.subtitleLoaded.emit(null);
                 this.subtitles = undefined;
                 this.currentSubtitleLanguageNumber = undefined;
+                this.secondSubtitleLanguageNumber = undefined;
                 reject();
             }
         });
     }
     findCurrentSubtitle() {
         if (this.subtitles) {
-            if (!this.getCurrentSubtitles().subtitle) return;
+					const currentSubtitle = this.getCurrentSubtitles().subtitle;
+					const secondSubtitle = this.getSecondSubtitles().subtitle;
+            if (!currentSubtitle) return;
             let videoTime: number = this.mpvService.state["time-pos"];
             const curSub = this.getCurrentSubtitle();
             if (
@@ -162,28 +189,30 @@ export class SubtitlesService {
                 videoTime < curSub.time + curSub.duration
             )
                 return;
-            this.getCurrentSubtitles().subtitle.forEach((t, key) => {
-                if (
-                    videoTime >=
-                    t.time + this.getCurrentSubtitles().subtitleShift
-                ) {
-                    this.currentSubtitleKey = key;
-                }
-                if (
-                    videoTime >=
-                        t.time + this.getCurrentSubtitles().subtitleShift &&
-                    videoTime <
-                        t.time +
-                            this.getCurrentSubtitles().subtitleShift +
-                            t.duration
-                ) {
-                    if (t.isCurrent !== true) {
-                        t.isCurrent = true;
-                    }
-                } else if (t.isCurrent !== false) {
-                    t.isCurrent = false;
-                }
-            });
+						const _setCurrentSubtitle = (t,key) =>{
+									if (
+										videoTime >=
+										t.time + this.getCurrentSubtitles().subtitleShift
+								) {
+										this.currentSubtitleKey = key;
+								}
+								if (
+										videoTime >=
+												t.time + this.getCurrentSubtitles().subtitleShift &&
+										videoTime <
+												t.time +
+														this.getCurrentSubtitles().subtitleShift +
+														t.duration
+								) {
+										if (t.isCurrent !== true) {
+												t.isCurrent = true;
+										}
+								} else if (t.isCurrent !== false) {
+										t.isCurrent = false;
+								}
+								}
+								currentSubtitle.forEach(_setCurrentSubtitle);
+								secondSubtitle.forEach(_setCurrentSubtitle);
         }
     }
     getCurrentSubtitle(key = this.currentSubtitleKey) {
@@ -242,6 +271,7 @@ export class SubtitlesService {
         this.subtitleLoaded.emit(null);
         this.subtitles = undefined;
         this.currentSubtitleLanguageNumber = undefined;
+        this.secondSubtitleLanguageNumber = undefined;
     }
     changeSubtitleShift(time) {
         if (this.subtitles) this.getCurrentSubtitles().subtitleShift += time;

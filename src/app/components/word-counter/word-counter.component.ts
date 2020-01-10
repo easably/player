@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { shell } from "electron";
 import { serverApi, api, extension } from "easylang-extension";
 import { MpvService } from "../../services/mpv.service";

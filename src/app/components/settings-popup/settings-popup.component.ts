@@ -26,7 +26,6 @@ export class SettingsPopupComponent implements OnInit {
     }
 
     handleInputSpeed(e) {
-        console.log(e.target.value)
         this.mpvService.changeSpeed(e.target.value);
     }
     handleClickSpeed(e) {

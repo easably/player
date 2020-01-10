@@ -34,9 +34,14 @@ export class SideBarComponent implements OnInit {
         return !this.open ? -this.sideBarWidth : 0;
     }
 
-    onChangeLang(e) {
-        e.target.blur();
-        this.subtitlesService.currentSubtitleLanguageNumber = +e.target.id;
+    onChangeLang(e, number) {
+				e.target.blur();
+				if (number === 1){
+					this.subtitlesService.currentSubtitleLanguageNumber = +e.target.value;
+				}else if (number ===2 ){
+					this.subtitlesService.secondSubtitleLanguageNumber = +e.target.value;
+
+				}
         // this.changeDetectedRef.detectChanges();
     }
     filterAudioTrack(arr) {

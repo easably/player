@@ -39,7 +39,7 @@ export class VideoComponent implements OnInit {
         this.mpvService.mpv.setPluginNode(element);
     }
     ngAfterViewInit() {
-        this.injectExtension();
+        // this.injectExtension();
     }
     injectExtension() {
         const playerParameters = {

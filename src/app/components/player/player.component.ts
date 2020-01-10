@@ -46,7 +46,6 @@ export class PlayerComponent implements OnInit {
         private storeService: StoreService,
         private themeService: ThemeService
     ) {
-        console.log(storeService);
         this.onChangeTheme(storeService.store.get("theme") || "dark");
         this.mpvService.mpvReadyHook = () => {
             ipcRenderer.send("appReady");
@@ -132,8 +131,9 @@ export class PlayerComponent implements OnInit {
         });
         ipcRenderer.on("clearRecentDocuments", () => {
             this.recentFiles = [];
-            this.storeService.set.custom("recentFiles", this.recentFiles);
-            remote.app.clearRecentDocuments();
+						this.storeService.set.custom("recentFiles", this.recentFiles);
+						this.storeService.clear();
+						remote.app.clearRecentDocuments();
         });
     }
     ngOnInit() {
@@ -156,7 +156,7 @@ export class PlayerComponent implements OnInit {
                 this.sideBarComponent.open = "tutor";
             }
         });
-        allPages();
+        // allPages();
         tutor();
     }
 
@@ -188,6 +188,10 @@ export class PlayerComponent implements OnInit {
             this.storeService.set.subtitlesId(
                 mpvState.path,
                 this.subtitlesService.currentSubtitleLanguageNumber
+            );
+            this.storeService.set.subtitlesId2(
+                mpvState.path,
+                this.subtitlesService.secondSubtitleLanguageNumber
             );
             this.addRecentFile(mpvState.path, mpvState.filename);
             this.storeService.set.custom("recentFiles", this.recentFiles);
@@ -232,6 +236,7 @@ export class PlayerComponent implements OnInit {
                 const audioTrack = this.storeService.get.audioTrackId(file);
                 const subtitles = this.storeService.get.subtitles(file);
                 const subtitlesId = this.storeService.get.subtitlesId(file);
+                const subtitlesId2 = this.storeService.get.subtitlesId2(file);
                 const timeInterval = 100;
                 const there = this;
                 setTimeout(function tick() {
@@ -244,6 +249,9 @@ export class PlayerComponent implements OnInit {
                             there.subtitlesService.currentSubtitleLanguageNumber = subtitlesId
                                 ? subtitlesId
                                 : subtitles[0].number;
+                            there.subtitlesService.secondSubtitleLanguageNumber = subtitlesId2
+                                ? subtitlesId2
+                                : subtitles[subtitles.length>0 ? 1 : 0].number;
                         } else {
                             there.getSubtitlesFromStoreOrMatroskaFile(file);
                         }

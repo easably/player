@@ -35,25 +35,42 @@
             class="select-language select-language-subtitles"
             *ngIf="mpvService.state.duration !== 0"
         >
-            <span class="select-language-title">Subtitles: </span>
+						<span class="select-language-title">Subtitles: </span>
             <div class="select-language-wrapper">
-                <ul class="scroll">
-                    <li *ngFor="let lang of subtitlesService.subtitles">
-                        <input
-                            type="radio"
-                            name="language-subtitle"
-                            [id]="lang.number"
-                            [checked]="
-                                lang.number ===
-                                subtitlesService.currentSubtitleLanguageNumber
-                            "
-                            (change)="onChangeLang($event)"
-                        />
-                        <label [for]="lang.number">{{
-                            lang.language || "eng"
-                        }}</label>
-                    </li>
-                </ul>
+							<select
+									class="select-language-list"
+									(change)="onChangeLang($event, 1)"
+							>
+									<option
+											*ngFor="
+												let lang of subtitlesService.subtitles
+											"
+											[value]="lang.number"
+											[selected]="lang.number ===
+											subtitlesService.currentSubtitleLanguageNumber"
+									>
+											{{
+												lang.language
+											}}
+									</option>
+						</select>
+							<select
+									class="select-language-list"
+									(change)="onChangeLang($event, 2)"
+							>
+									<option
+											*ngFor="
+												let lang of subtitlesService.subtitles
+											"
+											[value]="lang.number"
+											[selected]="lang.number ===
+											subtitlesService.secondSubtitleLanguageNumber"
+									>
+											{{
+												lang.language
+											}}
+									</option>
+						</select>
                 <div class="add-language">
                     <button (click)="onOpenSubtitles($event)">
                         Load subtitles

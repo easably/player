@@ -1,4 +1,5 @@
 <div class="app">
+	<div class="first-column">
     <div class="video-container">
         <app-open-file-popup
             *ngIf="this.mpvService.state.duration === 0"
@@ -24,6 +25,8 @@
             ></svg-icon>
         </div>
     </div>
+		<app-interlinear></app-interlinear>
+	</div>
     <app-side-bar
         [contextMenuEvent]="contextMenuEvent"
         class="side-menu"

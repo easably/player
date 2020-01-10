@@ -22,6 +22,9 @@ export class StoreService {
         subtitlesId: (path, id) => {
             id && this.store.set(`${path}.subtitlesId`, id);
         },
+        subtitlesId2: (path, id) => {
+            id && this.store.set(`${path}.subtitlesId2`, id);
+        },
         extensionData: data => {
             this.store.set(`extensionData`, data);
         }
@@ -42,11 +45,16 @@ export class StoreService {
         subtitlesId: path => {
             return this.store.get(`${path}.subtitlesId`);
         },
+        subtitlesId2: path => {
+            return this.store.get(`${path}.subtitlesId2`);
+        },
         extensionData: () => {
             return this.store.get(`extensionData`);
         }
     };
-
+		public clear = ()=>{
+			this.store.clear()
+		}
     constructor() {
         this.store = new Store();
         const data = this.store.get(`extensionData`);
