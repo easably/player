@@ -71,18 +71,28 @@ export class InterlinearComponent implements OnInit {
                 Authorization: extension.userToken
               },
               body: JSON.stringify({
-                from: langFrom,
+                from: 'en',
                 text: text,
-                to: langTo
+                to: 'ru'
               })
+              // body: JSON.stringify({
+              //   from: langFrom,
+              //   text: text,
+              //   to: langTo
+              // })
             })
               .then(function(response) {
                 return response.json();
               })
               .then(e => {
-                if (e.translation)
+                if (e.translation){
                   this.translateText = text + " - " + e.translation;
-              });
+								}else{
+									throw 'error';
+								}
+								}).catch(e=>{
+                  this.translateText = "<!--  Translate Error  --!>";
+							});
           }else{
 						this.translateText = text + " - " + text;
 					}

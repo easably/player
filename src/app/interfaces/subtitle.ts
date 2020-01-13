@@ -3,5 +3,6 @@ export default interface Subtitle {
     time: number,
     duration: number,
     isCurrent: boolean,
-    isLoop: boolean
+		isLoop: boolean,
+		startShift: number
 }

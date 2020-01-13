@@ -31,28 +31,6 @@ export class ItemSubtitlesListComponent implements OnInit {
 
     ngOnInit() {}
 
-    checkBetweenLineAfterComponent() {
-        let nextSubtitle: Subtitle = this.subtitlesService.getCurrentSubtitles()
-            .subtitle[this.index + 1];
-        if (!nextSubtitle) {
-            nextSubtitle = {
-                time: this.mpvService.state.duration,
-                duration: 0,
-                text: "",
-                isCurrent: false,
-                isLoop: false
-            };
-        }
-        const time: number = this.subtitle.time + this.subtitle.duration;
-        const duration: number = nextSubtitle.time - time;
-        const curTime: number = this.mpvService.state["time-pos"];
-        const isCurrent: boolean = curTime >= time && curTime < time + duration;
-        if (isCurrent) {
-            return true;
-        }
-        return false;
-    }
-
     ngDoCheck() {
         if (this.subtitle.isCurrent && !this.isAlreadyScroll) {
             // this.scrollToSubtitle(this.index);
@@ -68,10 +46,17 @@ export class ItemSubtitlesListComponent implements OnInit {
             this.subtitlesService.addLoopRangeSubtitle(this.index);
         } else {
             !this.subtitle.isLoop && this.subtitlesService.clearLoop();
+						this.subtitlesService.setSubtitleByKey(this.index)
             const startTime = this.subtitle.time + this.shift;
-            this.mpvService.setTimePos(startTime);
             if (this.mpvService.state.pause) {
-                this.mpvService.playSomeTime(startTime, this.subtitle.duration);
+							const nextSub = this.subtitlesService.getCurrentSubtitles().subtitle[this.index+1]
+							let nextSubTime;
+							if (nextSub){
+								nextSubTime = nextSub.time
+							}else{
+								nextSubTime = this.mpvService.state.duration;
+							}
+                this.mpvService.playSomeTime(startTime-this.subtitle.startShift, nextSubTime - this.subtitle.time + this.subtitle.startShift);
             }
         }
     }

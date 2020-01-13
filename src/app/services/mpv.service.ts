@@ -24,7 +24,7 @@ export class MpvService {
     private maxCountTrack: number = 100;
     public playbackSpeedList = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5];
     private powerSaveBlocker;
-    public speedLimits = [0.5, 1.5]
+		public speedLimits = [0.5, 1.5];
     constructor() {
         this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
     }
@@ -101,7 +101,7 @@ export class MpvService {
                     };
                 this.state.trackList[index][type] = value;
             }
-        } else {
+				} else {
             if (name === "filename/no-ext") name = "filename";
             if (name === "time-pos" && !this.state.duration) return;
             this.state[name] = value;
@@ -233,5 +233,5 @@ export class MpvService {
     }
     setAudioTrack(id: number) {
         this.mpv.property("options/aid", id);
-    }
+		}
 }
