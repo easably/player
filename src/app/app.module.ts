@@ -29,7 +29,8 @@ import { AngularSvgIconModule} from 'angular-svg-icon';
 import { SettingsPopupComponent } from './components/settings-popup/settings-popup.component';
 import { WordCounterComponent } from './components/word-counter/word-counter.component';
 import {VirtualScrollerModule} from 'ngx-virtual-scroller';
-import { InterlinearComponent } from './components/interlinear/interlinear.component'
+import { InterlinearComponent } from './components/interlinear/interlinear.component';
+import { SettingsComponent } from './components/settings/settings.component'
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -51,6 +52,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsPopupComponent,
     WordCounterComponent,
     InterlinearComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

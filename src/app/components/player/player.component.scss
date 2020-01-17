@@ -1,12 +1,14 @@
 .first-column{
 	flex: 1;
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 .video-container {
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	height: 50%;
+	flex: 1 1 50%;
 }
 
 .video {
@@ -19,6 +21,7 @@
 }
 
 .app {
+	position: relative;
   display: flex;
   height: 100%;
 }

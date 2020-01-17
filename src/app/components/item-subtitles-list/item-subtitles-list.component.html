@@ -14,5 +14,5 @@
             ></svg-icon>
         </div>
     </div>
-    <p [innerHTML]="subtitle.text"></p>
+    <p [class]="'text' + (settingsService.oneLineSubtitle ? ' oneline' : '')" [innerHTML]="subtitle.text"></p>
 </div>

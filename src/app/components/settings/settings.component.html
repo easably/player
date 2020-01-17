@@ -1,0 +1,22 @@
+<div class="wrapper">
+  <h2 class="title">Settings</h2>
+  <div
+    class="point"
+    (click)="
+      settingsService.setOneLineSubtitle(!settingsService.oneLineSubtitle)
+    "
+  >
+    <div
+      [class]="'checkbox' + (settingsService.oneLineSubtitle ? ' checked' : '')"
+    >
+      <div class="checkbox-check" *ngIf="settingsService.oneLineSubtitle">
+        <svg-icon
+          src="assets/images/check.svg"
+          [svgStyle]="{ 'width.%': 100, 'height.%': 100 }"
+        ></svg-icon>
+      </div>
+    </div>
+    <div class="text">Single line subtitles</div>
+  </div>
+  <div class="closeBtn" (click)="closeSettings()">X</div>
+</div>

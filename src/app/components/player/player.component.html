@@ -39,4 +39,5 @@
     >
         ></app-side-bar
     >
-</div>
+		<app-settings *ngIf="isOpenSettings" [closeSettings]="closeSettings.bind(this)"></app-settings>
+	</div>

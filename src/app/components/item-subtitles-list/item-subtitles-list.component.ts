@@ -8,6 +8,7 @@ import {
 import { MpvService } from "../../services/mpv.service";
 import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
+import { SettingsService} from '../../services/settings.service'
 
 @Component({
     selector: "app-item-subtitles-list",
@@ -26,7 +27,8 @@ export class ItemSubtitlesListComponent implements OnInit {
     constructor(
         private mpvService: MpvService,
         private subtitlesService: SubtitlesService,
-        public elRef: ElementRef
+				public elRef: ElementRef,
+				public settingsService: SettingsService
     ) {}
 
     ngOnInit() {}

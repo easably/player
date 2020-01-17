@@ -5,7 +5,8 @@
         [items]="curSubtitles"
         [enableUnequalChildrenSizes]="true"
         [parentScroll]="list"
-        (vsEnd)="fetchMore($event)"
+				(vsEnd)="fetchMore($event)"
+				[scrollAnimationTime]="100"
     >
         <li *ngFor="let curSubtitle of scroll.viewPortItems">
             <app-item-subtitles-list

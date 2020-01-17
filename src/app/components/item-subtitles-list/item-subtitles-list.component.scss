@@ -41,12 +41,18 @@ $betweenLineHeight: 3px;
         background-color: var(--select);
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     }
-    & p{
+    .text{
         display: block;
-        height: 100%;
-        width: max-content;
+				width: max-content;
+				height: 100%;
         max-width: 100%;
-        margin: 0;
+				margin: 0;
+				&.oneline{
+					height: 16px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
         &:hover{
             cursor: text;
         }

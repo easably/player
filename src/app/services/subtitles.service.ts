@@ -221,23 +221,25 @@ export class SubtitlesService {
     if (!this.getCurrentSubtitles().subtitle) return;
     return this.getCurrentSubtitles().subtitle[key];
   }
-  setSubtitleByKey(key) {
+  setSubtitleByKey(key, isWithShift = false) {
 		const shiftValue = 1;
-		if (this.subtitleWithShift){
+		if (isWithShift && this.subtitleWithShift){
 			this.subtitleWithShift.startShift = 0
 			this.subtitleWithShift = undefined;
 		}
 		const curSub = this.getCurrentSubtitle(key);
-    curSub.startShift = shiftValue;
-		this.subtitleWithShift = curSub;
+		if (isWithShift){
+			curSub.startShift = shiftValue;
+			this.subtitleWithShift = curSub;
+		}
 		const time = curSub.time;
     this.mpvService.setTimePos(
-      time - shiftValue + this.getCurrentSubtitles().subtitleShift
+      time - (isWithShift ? shiftValue: 0) + this.getCurrentSubtitles().subtitleShift
 		);
   }
   setSubtitleRepeat() {
     if (this.subtitles) {
-      this.setSubtitleByKey(this.currentSubtitleKey);
+      this.setSubtitleByKey(this.currentSubtitleKey, true);
       if (this.mpvService.state.pause) {
         this.mpvService.playSomeTime(
           this.getCurrentSubtitle().time,

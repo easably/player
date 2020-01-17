@@ -78,14 +78,20 @@ export class SubtitlesListComponent implements OnInit {
     }
 
     scrollToSubtitle(time) {
-        let timeFilterSubtitle = this.curSubtitles.filter(s=>s.subtitle.time===time);
-        if (!timeFilterSubtitle || timeFilterSubtitle.length===0 || !this.virtualScroller) return;
-        let index = timeFilterSubtitle[0].index;
-        this.virtualScroller.scrollToIndex(
-            index,
-            true,
-            -this.list.nativeElement.offsetHeight / 2
-        );
+			let timeFilterSubtitle = this.curSubtitles.filter(s=>s.subtitle.time===time);
+			if (!timeFilterSubtitle || timeFilterSubtitle.length===0 || !this.virtualScroller) return;
+			let index = timeFilterSubtitle[0].index;
+			let viewIndexes = this.virtualScroller.viewPortItems.map(e=>e.index);
+			let offset;
+			if (index < viewIndexes[1] || index > viewIndexes[viewIndexes.length - 2]){
+				offset = -this.list.nativeElement.offsetHeight/3;
+				this.virtualScroller.scrollToIndex(
+						index,
+						true,
+						offset,
+						100
+				);
+			}
     }
 
     getSubtitleList() {

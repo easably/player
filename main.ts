@@ -199,6 +199,13 @@ function createMenu() {
                 }
             },
             {
+                label: "Settings",
+                accelerator: "CmdOrCtrl+P",
+                click: function() {
+                    win.webContents.send("open-settings");
+                }
+            },
+            {
                 role: "recentDocuments",
                 submenu: [
                     {
@@ -276,7 +283,6 @@ function createMenu() {
             // },
             {
                 label: "Repeat Subtitle",
-                accelerator: "R",
                 click: function() {
                     win.webContents.send("fast-repeat");
                 }
