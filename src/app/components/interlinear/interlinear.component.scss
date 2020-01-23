@@ -9,8 +9,42 @@
 	flex: 0 1 calc(100%/3);
 	margin: 10px;
 	padding: 20px;
+	padding-left: 60px;
 	background-color: var(--hoverText);
 	color: var(--hoverBg);
 	border-radius: 20px;
 	font-size: 20px;
+	min-height: 90px;
+	display: flex;
+	align-items:center;
+	&.translate-field{
+		position: relative;
+		.add{
+			position: absolute;
+			left: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+			display: flex;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			border: 1px solid var(--hoverBg);
+			color: var(--hoverBg);
+			border-radius: 20px;
+			cursor: pointer;
+			font-size: 50px;
+			line-height: 50px;
+			&:hover{
+				transform: scale(1.1) translateY(-50%);
+			}
+			&.complete{
+				cursor: default;
+				font-size: 20px;
+				pointer-events: none; 
+				background-color: var(--hoverBg);
+				color: var(--hoverText);
+				align-items: center;
+			}
+		}
+	}
 }

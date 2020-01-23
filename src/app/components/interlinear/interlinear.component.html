@@ -1,7 +1,17 @@
 <div class="field current-subtitles">
   <span #currentSubtitleRef [innerHTML]="currentSubtitle"></span>
 </div>
-<div class="field translate-field"><span #translateFieldRef>{{translateText}}</span></div>
+<div class="field translate-field">
+  <div
+    [class]="'add' + (isAdded ? ' complete' : '')"
+    *ngIf="isAddAvailable"
+    (click)="handleClickAdd($event)"
+    #addBtnRef
+  >
+    {{ !isAdded ? "+" : "ok" }}
+  </div>
+  <span #translateFieldRef>{{ translateText }}</span>
+</div>
 <div class="field second-subtitles">
   <span #secondSubtitleRef [innerHTML]="secondSubtitle"></span>
 </div>
