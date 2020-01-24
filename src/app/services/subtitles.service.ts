@@ -265,8 +265,8 @@ export class SubtitlesService {
       if (
         this.currentSubtitleKey <
         this.getCurrentSubtitles().subtitle.length - 1
-      )
-        this.setSubtitleByKey(this.currentSubtitleKey + 1);
+			)
+				this.setSubtitleByKey(this.currentSubtitleKey + 1);
       else
         this.setSubtitleByKey(this.getCurrentSubtitles().subtitle.length - 1);
       if (this.getLoopSubtitles().length === 1) this.clearLoop();

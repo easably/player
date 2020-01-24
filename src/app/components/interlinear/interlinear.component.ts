@@ -137,9 +137,13 @@ export class InterlinearComponent implements OnInit {
 
   ngDoCheck() {
     if (this.subtitlesService.subtitles) {
-      this.currentSubtitle = this.updateSubtitle(
+			const newCurSub = this.updateSubtitle(
         this.subtitlesService.getCurrentSubtitles()
-      );
+			);
+			if (newCurSub !== this.currentSubtitle){
+				this.translateText = "";
+			}
+      this.currentSubtitle = newCurSub;
       this.secondSubtitle = this.updateSubtitle(
         this.subtitlesService.getSecondSubtitles()
       );

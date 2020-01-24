@@ -1,6 +1,6 @@
 {
     "name": "step-by-step-movie",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "The desktop application that allows watching movies by subtitles. You can easily repeat one sentence several times. https://easylang.app/",
     "homepage": "https://github.com/easably/step-by-step-movie",
     "author": {
