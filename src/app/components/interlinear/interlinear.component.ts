@@ -20,24 +20,24 @@ export class InterlinearComponent implements OnInit {
   @ViewChild("translateFieldRef", null) translateFieldRef: ElementRef;
   @ViewChild("secondSubtitleRef", null) secondSubtitleRef: ElementRef;
   @ViewChild("addBtnRef", null) addBtnRef: ElementRef;
-  private mouseMovePaused = false;
-  @HostListener("mousemove", ["$event"]) handleKeyEvent(e) {
-    const fields = [
-      this.currentSubtitleRef && this.currentSubtitleRef.nativeElement,
-      this.translateFieldRef && this.translateFieldRef.nativeElement,
-			this.translateFieldRef && this.translateFieldRef.nativeElement,
-			this.addBtnRef && this.addBtnRef.nativeElement
-    ];
-    if (fields.some(f => f && f.contains(e.target))) {
-      if (!this.mpvService.state.pause) {
-        this.mpvService.setPause(true);
-        this.mouseMovePaused = true;
-      }
-    } else if (this.mpvService.state.pause && this.mouseMovePaused) {
-      this.mpvService.setPause(false);
-      this.mouseMovePaused = false;
-    }
-  }
+  // private mouseMovePaused = false;
+  // @HostListener("mousemove", ["$event"]) handleKeyEvent(e) {
+  //   const fields = [
+  //     this.currentSubtitleRef && this.currentSubtitleRef.nativeElement,
+  //     this.translateFieldRef && this.translateFieldRef.nativeElement,
+	// 		this.translateFieldRef && this.translateFieldRef.nativeElement,
+	// 		this.addBtnRef && this.addBtnRef.nativeElement
+  //   ];
+  //   if (fields.some(f => f && f.contains(e.target))) {
+  //     if (!this.mpvService.state.pause) {
+  //       this.mpvService.setPause(true);
+  //       this.mouseMovePaused = true;
+  //     }
+  //   } else if (this.mpvService.state.pause && this.mouseMovePaused) {
+  //     this.mpvService.setPause(false);
+  //     this.mouseMovePaused = false;
+  //   }
+  // }
   private selectedText = "";
   public currentSubtitle: string = "";
   public translateText: string = "";
