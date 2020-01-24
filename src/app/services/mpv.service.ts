@@ -29,7 +29,7 @@ export class MpvService {
         this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
     }
     setTimePos = timePos => {
-        this.mpv.property("time-pos", timePos);
+        this.mpv.property("time-pos", timePos + 0.05);
     };
 
     setVolume = volume => {
@@ -103,7 +103,7 @@ export class MpvService {
             }
 				} else {
             if (name === "filename/no-ext") name = "filename";
-            if (name === "time-pos" && !this.state.duration) return;
+						if (name === "time-pos" && !this.state.duration) return;
             this.state[name] = value;
         }
     };
