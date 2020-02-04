@@ -30,7 +30,8 @@ import { SettingsPopupComponent } from './components/settings-popup/settings-pop
 import { WordCounterComponent } from './components/word-counter/word-counter.component';
 import {VirtualScrollerModule} from 'ngx-virtual-scroller';
 import { InterlinearComponent } from './components/interlinear/interlinear.component';
-import { SettingsComponent } from './components/settings/settings.component'
+import { SettingsComponent } from './components/settings/settings.component';
+import { SubtitleSettingsComponent } from './components/subtitle-settings/subtitle-settings.component'
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -53,6 +54,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WordCounterComponent,
     InterlinearComponent,
     SettingsComponent,
+    SubtitleSettingsComponent,
   ],
   imports: [
     BrowserModule,

@@ -153,10 +153,15 @@
         [contextMenuEvent]="contextMenuEvent"
         [subtitleShift] = "getSubtitleShift()"
         [currentSubtitle]="subtitlesService.subtitles && subtitlesService.getCurrentSubtitle()"
-    ></app-subtitles-list>
+		></app-subtitles-list>
+		
+		<app-subtitle-settings>
+
+		</app-subtitle-settings>
+<!-- 
     <app-word-counter>
 
-    </app-word-counter>
+    </app-word-counter> -->
     
 </div>
 <div *ngIf="open === 'tutor'" class="tutor">

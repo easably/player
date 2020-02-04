@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import { remote } from "electron";
 import { MpvService } from "./mpv.service";
+import { SettingsService } from "./settings.service";
 import * as fs from "fs";
 import * as MatroskaSubtitles from "matroska-subtitles";
 import * as parser from "subtitles-parser-vtt";
@@ -23,7 +24,7 @@ export class SubtitlesService {
   public shift: number = 0;
 	public showOnVideo = true;
 	private subtitleWithShift = undefined;
-  constructor(private mpvService: MpvService) {}
+  constructor(private mpvService: MpvService, private settingsService: SettingsService) {}
 
   toggleShowOnVideo(state?) {
     if (state === undefined) {
@@ -179,48 +180,52 @@ export class SubtitlesService {
   }
   findCurrentSubtitle() {
     if (this.subtitles) {
-      const currentSubtitle = this.getCurrentSubtitles().subtitle;
-      const secondSubtitle = this.getSecondSubtitles().subtitle;
-      if (!currentSubtitle) return;
-      let videoTime: number = this.mpvService.state["time-pos"];
+      const currentSubtitles = this.getCurrentSubtitles().subtitle;
+      const secondSubtitles = this.getSecondSubtitles().subtitle;
+      if (!currentSubtitles) return;
+			let videoTime: number = this.mpvService.state["time-pos"];
       const curSub = this.getCurrentSubtitle();
       if (
         curSub &&
         curSub.isCurrent &&
-        videoTime >= curSub.time &&
-        videoTime < curSub.time + curSub.duration
+				videoTime >= curSub.time - curSub.startShift + this.getCurrentSubtitles().subtitleShift &&
+				this.getNextSubtitle() &&
+        videoTime < this.getNextSubtitle().time - curSub.startShift + this.getCurrentSubtitles().subtitleShift 
       ){
-        // return;
+        return;
 			}
       const _setCurrentSubtitle = (t, index, arr) => {
-
         if (
           videoTime >=
             t.time - t.startShift + this.getCurrentSubtitles().subtitleShift &&
-          (!arr[index + 1] ||
+          (!arr[index + 1] ||		
             videoTime <
               arr[index + 1].time - arr[index + 1].startShift + this.getCurrentSubtitles().subtitleShift)
         ) {
           if (t.isCurrent !== true) {
-            t.isCurrent = true;
-          }
+						t.isCurrent = true;
+					}
         } else if (t.isCurrent !== false) {
-          t.isCurrent = false;
+					t.isCurrent = false;
         }
       };
-      currentSubtitle.forEach((t, key) => {
-        if (videoTime >= t.time - t.startShift + this.getCurrentSubtitles().subtitleShift) {
+      currentSubtitles.forEach((t, key) => {
+				if (videoTime >= t.time - t.startShift + this.getCurrentSubtitles().subtitleShift && this.currentSubtitleKey !== key) {
 					this.currentSubtitleKey = key;
         }
 			});
-      currentSubtitle.forEach(_setCurrentSubtitle);
-      secondSubtitle.forEach(_setCurrentSubtitle);
+      currentSubtitles.forEach(_setCurrentSubtitle);
+			secondSubtitles.forEach(_setCurrentSubtitle);
     }
   }
   getCurrentSubtitle(key = this.currentSubtitleKey) {
     if (!this.getCurrentSubtitles().subtitle) return;
     return this.getCurrentSubtitles().subtitle[key];
-  }
+	}
+	getNextSubtitle(key = this.currentSubtitleKey+ 1 ){
+    if (!this.subtitles || !this.getCurrentSubtitles().subtitle) return;
+    return this.getCurrentSubtitles().subtitle[key];
+	}
   setSubtitleByKey(key, isWithShift = false) {
 		const shiftValue = 1;
 		if (isWithShift && this.subtitleWithShift){
@@ -236,16 +241,13 @@ export class SubtitlesService {
     this.mpvService.setTimePos(
       time - (isWithShift ? shiftValue: 0) + this.getCurrentSubtitles().subtitleShift
 		);
+		if (this.settingsService.repeatMode && this.mpvService.state.pause){
+			this.mpvService.setPause(false);
+		}
   }
   setSubtitleRepeat() {
     if (this.subtitles) {
       this.setSubtitleByKey(this.currentSubtitleKey, true);
-      if (this.mpvService.state.pause) {
-        this.mpvService.playSomeTime(
-          this.getCurrentSubtitle().time,
-          this.getCurrentSubtitle().duration
-        );
-      }
     }
   }
   setSubtitlePrev() {

@@ -1,0 +1,14 @@
+<div class="wrapper">
+  <div class="play-mode">
+    <span (click)="settingsService.setRepeatMode(false)">Play mode</span>
+    <input
+      type="checkbox"
+      id="enable"
+      class="switcher"
+      (change)="handleClickSwitcher($event)"
+      [(ngModel)]="settingsService.repeatMode"
+    />
+    <label for="enable"></label>
+    <span (click)="settingsService.setRepeatMode(true)">Pause mode</span>
+  </div>
+</div>

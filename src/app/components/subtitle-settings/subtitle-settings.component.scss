@@ -1,0 +1,85 @@
+.wrapper {
+  width: 100%;
+	padding: 20px;
+	border-top: 3px solid var(--main);
+	border-radius: 20% 20% 0 0;
+}
+
+.play-mode{
+	display: flex;
+	align-items:center;
+	justify-content: flex-start;
+	span{
+		font-size: 12px;
+		cursor: pointer;
+	}
+}
+
+input[type="checkbox"].switcher {
+  $width: 46px;
+  $height: 23px;
+  $point_width: 23px;
+  $border: 2px;
+  $fontSize: 13px;
+  $sidePadding: 13px;
+
+  box-sizing: initial;
+  display: none;
+  position: absolute;
+  margin: 8px 0 0 16px;
+  opacity: 0;
+  & + label {
+    position: relative;
+    padding-left: $width;
+    height: $height;
+    display: flex;
+    align-items: center;
+    margin: 8px 5px;
+    cursor: pointer;
+    &:before {
+      content: "";
+      justify-content: flex-end;
+      font-family: "Open Sans", sans-serif;
+      color: var(--textOnMainBg);
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #fff;
+      font-size: $fontSize;
+      width: $width - 2 * $sidePadding;
+      height: $height;
+      border-radius: $height;
+      padding: 0px $sidePadding;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      display: block;
+      left: 0;
+      top: 0;
+      background: var(--background);
+      width: $point_width;
+      height: $height - 2 * $border;
+      border-radius: $height;
+      margin-left: $border;
+			margin-top: $border;
+      transition: all 0.3s ease-in-out;
+    }
+    &:hover:after {
+      box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+    }
+  }
+  &:checked + label {
+    &:before {
+      content: "";
+      justify-content: flex-start;
+      background: #fff;
+    }
+    &:after {
+      background: var(--main);
+      margin-left: $width - $point_width - $border;
+    }
+  }
+}

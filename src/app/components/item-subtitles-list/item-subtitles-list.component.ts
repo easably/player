@@ -49,17 +49,6 @@ export class ItemSubtitlesListComponent implements OnInit {
         } else {
             !this.subtitle.isLoop && this.subtitlesService.clearLoop();
 						this.subtitlesService.setSubtitleByKey(this.index)
-            const startTime = this.subtitle.time + this.shift;
-            if (this.mpvService.state.pause) {
-							const nextSub = this.subtitlesService.getCurrentSubtitles().subtitle[this.index+1]
-							let nextSubTime;
-							if (nextSub){
-								nextSubTime = nextSub.time
-							}else{
-								nextSubTime = this.mpvService.state.duration;
-							}
-                this.mpvService.playSomeTime(startTime-this.subtitle.startShift, nextSubTime - this.subtitle.time + this.subtitle.startShift);
-            }
         }
     }
 
