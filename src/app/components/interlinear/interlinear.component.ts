@@ -9,6 +9,7 @@ import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
 import { MpvService } from "../../services/mpv.service";
 import { extension, serverApi } from "easylang-extension";
+import translateApi from 'google-translate-api'
 
 @Component({
   selector: "app-interlinear",
@@ -74,47 +75,43 @@ export class InterlinearComponent implements OnInit {
         const langTo = this.subtitlesService.getLangCodeByNumber(
           this.subtitlesService.secondSubtitleLanguageNumber
         );
+				if (langTo !== langFrom) {
+					fetch(serverApi + "/api/translation", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							from: "en",
+							text: text,
+							to: "ru"
+						})
+						// body: JSON.stringify({
+						//   from: langFrom,
+						//   text: text,
+						//   to: langTo
+						// })
+					})
+						.then(function(response) {
+							return response.json();
+						})
+						.then(e => {
+							if (e.translation) {
+								this.translateText = text + " - " + e.translation;
+							} else {
+								throw "error";
+							}
+						})
+						.catch(e => {
+							this.translateText = "<!--  Translate Error  --!>";
+						});
+				} else {
+					this.translateText = text + " - " + text;
+				}
         if (extension.userToken) {
-          if (langTo !== langFrom) {
-            fetch(serverApi + "/api/translation", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: extension.userToken
-              },
-              body: JSON.stringify({
-                from: "en",
-                text: text,
-                to: "ru"
-              })
-              // body: JSON.stringify({
-              //   from: langFrom,
-              //   text: text,
-              //   to: langTo
-              // })
-            })
-              .then(function(response) {
-                return response.json();
-              })
-              .then(e => {
-                if (e.translation) {
-                  this.translateText = text + " - " + e.translation;
-                  this.isAddAvailable = true;
-                } else {
-                  throw "error";
-                }
-              })
-              .catch(e => {
-                this.translateText = "<!--  Translate Error  --!>";
-                this.isAddAvailable = false;
-              });
-          } else {
-            this.translateText = text + " - " + text;
-            this.isAddAvailable = true;
-          }
+					this.isAddAvailable = true;
         } else {
-          this.translateText = "<!--  Log In Please  --!>";
-          this.isAddAvailable = false;
+					this.isAddAvailable = false;
         }
         this.selectedText = text;
       }
@@ -124,7 +121,9 @@ export class InterlinearComponent implements OnInit {
   constructor(
     public subtitlesService: SubtitlesService,
     public mpvService: MpvService
-  ) {}
+  ) {
+		console.log(translateApi)
+	}
 
   ngOnInit() {}
   updateSubtitle(subtitles) {
