@@ -9,7 +9,6 @@ import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
 import { MpvService } from "../../services/mpv.service";
 import { extension, serverApi } from "easylang-extension";
-import translateApi from 'google-translate-api'
 
 @Component({
   selector: "app-interlinear",
