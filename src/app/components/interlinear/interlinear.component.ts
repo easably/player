@@ -25,8 +25,8 @@ export class InterlinearComponent implements OnInit {
   //   const fields = [
   //     this.currentSubtitleRef && this.currentSubtitleRef.nativeElement,
   //     this.translateFieldRef && this.translateFieldRef.nativeElement,
-	// 		this.translateFieldRef && this.translateFieldRef.nativeElement,
-	// 		this.addBtnRef && this.addBtnRef.nativeElement
+  // 		this.translateFieldRef && this.translateFieldRef.nativeElement,
+  // 		this.addBtnRef && this.addBtnRef.nativeElement
   //   ];
   //   if (fields.some(f => f && f.contains(e.target))) {
   //     if (!this.mpvService.state.pause) {
@@ -42,10 +42,10 @@ export class InterlinearComponent implements OnInit {
   public currentSubtitle: string = "";
   public translateText: string = "";
   public secondSubtitle: string = "";
-	public isAddAvailable: boolean = false;
-	public isAdded: boolean = false;
-	private selectedWord: any = [0, 0];
-	private fullTextWhenSelected:string = "";
+  public isAddAvailable: boolean = false;
+  public isAdded: boolean = false;
+  private selectedWord: any = [0, 0];
+  private fullTextWhenSelected: string = "";
   @HostListener("document:mouseup", ["$event"]) selectionEvent(e) {
     let getSelection = window.getSelection && window.getSelection();
     if (
@@ -61,56 +61,56 @@ export class InterlinearComponent implements OnInit {
         text &&
         text !== this.selectedText
       ) {
-				this.isAdded = false;
-				const range = getSelection.getRangeAt(0);
+        this.isAdded = false;
+        const range = getSelection.getRangeAt(0);
         this.selectedWord = [
           range.startOffset,
           range.endOffset - range.startOffset
-				];
-				this.fullTextWhenSelected = range.commonAncestorContainer.textContent;
+        ];
+        this.fullTextWhenSelected = range.commonAncestorContainer.textContent;
         const langFrom = this.subtitlesService.getLangCodeByNumber(
           this.subtitlesService.currentSubtitleLanguageNumber
         );
         const langTo = this.subtitlesService.getLangCodeByNumber(
           this.subtitlesService.secondSubtitleLanguageNumber
         );
-				if (langTo !== langFrom) {
-					fetch(serverApi + "/api/translation", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							from: "en",
-							text: text,
-							to: "ru"
-						})
-						// body: JSON.stringify({
-						//   from: langFrom,
-						//   text: text,
-						//   to: langTo
-						// })
-					})
-						.then(function(response) {
-							return response.json();
-						})
-						.then(e => {
-							if (e.translation) {
-								this.translateText = text + " - " + e.translation;
-							} else {
-								throw "error";
-							}
-						})
-						.catch(e => {
-							this.translateText = "<!--  Translate Error  --!>";
-						});
-				} else {
-					this.translateText = text + " - " + text;
-				}
-        if (extension.userToken) {
-					this.isAddAvailable = true;
+        if (langTo !== langFrom) {
+          fetch(serverApi + "/api/translation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              from: "en",
+              text: text,
+              to: "ru"
+            })
+            // body: JSON.stringify({
+            //   from: langFrom,
+            //   text: text,
+            //   to: langTo
+            // })
+          })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(e => {
+              if (e.translation) {
+                this.translateText = text + " - " + e.translation;
+              } else {
+                throw "error";
+              }
+            })
+            .catch(e => {
+              this.translateText = "<!--  Translate Error  --!>";
+            });
         } else {
-					this.isAddAvailable = false;
+          this.translateText = text + " - " + text;
+        }
+        if (extension.userToken) {
+          this.isAddAvailable = true;
+        } else {
+          this.isAddAvailable = false;
         }
         this.selectedText = text;
       }
@@ -120,9 +120,7 @@ export class InterlinearComponent implements OnInit {
   constructor(
     public subtitlesService: SubtitlesService,
     public mpvService: MpvService
-  ) {
-		console.log(translateApi)
-	}
+  ) {}
 
   ngOnInit() {}
   updateSubtitle(subtitles) {
@@ -135,12 +133,12 @@ export class InterlinearComponent implements OnInit {
 
   ngDoCheck() {
     if (this.subtitlesService.subtitles) {
-			const newCurSub = this.updateSubtitle(
+      const newCurSub = this.updateSubtitle(
         this.subtitlesService.getCurrentSubtitles()
-			);
-			if (newCurSub !== this.currentSubtitle){
-				this.translateText = "";
-			}
+      );
+      if (newCurSub !== this.currentSubtitle) {
+        this.translateText = "";
+      }
       this.currentSubtitle = newCurSub;
       this.secondSubtitle = this.updateSubtitle(
         this.subtitlesService.getSecondSubtitles()
@@ -220,8 +218,8 @@ export class InterlinearComponent implements OnInit {
       this.mpvService.state.filename,
       "player:" + this.mpvService.state.filename
     ).then(_ => {
-			console.log("ok");
-			this.isAdded = true;
+      console.log("ok");
+      this.isAdded = true;
     });
   }
 }
