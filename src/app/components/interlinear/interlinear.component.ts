@@ -9,6 +9,7 @@ import { SubtitlesService } from "../../services/subtitles.service";
 import Subtitle from "../../interfaces/subtitle";
 import { MpvService } from "../../services/mpv.service";
 import { extension, serverApi } from "easylang-extension";
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: "app-interlinear",
@@ -38,6 +39,18 @@ export class InterlinearComponent implements OnInit {
   //     this.mouseMovePaused = false;
   //   }
   // }
+  @HostListener("mouseup", ["$event"]) handleKeyEvent(e) {
+    let getSelection = window.getSelection && window.getSelection();
+    if (
+      getSelection &&
+      getSelection.rangeCount &&
+      getSelection.rangeCount > 0
+    ) {
+      if (!getSelection.isCollapsed) {
+        this.settingsService.setRepeatMode(true);
+      }
+    }
+  }
   private selectedText = "";
   public currentSubtitle: string = "";
   public translateText: string = "";
@@ -119,7 +132,8 @@ export class InterlinearComponent implements OnInit {
 
   constructor(
     public subtitlesService: SubtitlesService,
-    public mpvService: MpvService
+		public mpvService: MpvService,
+		private settingsService: SettingsService
   ) {}
 
   ngOnInit() {}

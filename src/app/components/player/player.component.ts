@@ -53,7 +53,6 @@ export class PlayerComponent implements OnInit {
 		private themeService: ThemeService,
 		public settingsService:SettingsService
   ) {
-console.log(process.env['TRANSLATE_APP_ID'])
     this.onChangeTheme(storeService.store.get("theme") || "dark");
     this.mpvService.mpvReadyHook = () => {
       ipcRenderer.send("appReady");

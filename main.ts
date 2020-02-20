@@ -11,7 +11,6 @@ import * as path from "path";
 import * as url from "url";
 import { getPluginEntry } from "mpv.js-vanilla";
 
-console.log(process.env['TRANSLATE_APP_ID'])
 
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
@@ -78,8 +77,8 @@ function createWindow() {
         );
     }
 
-		win.webContents.openDevTools();
     if (serve) {
+			win.webContents.openDevTools();
     }
 
     // Emitted when the window is closed.
