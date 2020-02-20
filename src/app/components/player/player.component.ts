@@ -13,6 +13,7 @@ import { SideBarComponent } from "../side-bar/side-bar.component";
 import { allPages, messageListener, tutor } from "easylang-extension";
 import { StoreService } from "../../services/store.service";
 import { ThemeService } from "../../services/theme.service";
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: "app-player",
@@ -25,9 +26,11 @@ export class PlayerComponent implements OnInit {
     if (e.keyCode === 27 && this.mpvService.state.fullscreen) {
       this.mpvService.toggleFullscreen();
     } else if (e.keyCode === 38) {
-      this.subtitlesService.setSubtitlePrev();
+      this.subtitlesService.setSubtitleRepeat();
+			
     } else if (e.keyCode === 40) {
-      this.subtitlesService.setSubtitleNext();
+      this.subtitlesService.setSubtitleRepeat();
+			
     } else if (e.keyCode === 32 && e.target === document.body) {
       e.preventDefault();
       this.mpvService.togglePause();
@@ -47,9 +50,9 @@ export class PlayerComponent implements OnInit {
     private subtitlesService: SubtitlesService,
     private _ngZone: NgZone,
     private storeService: StoreService,
-		private themeService: ThemeService
+		private themeService: ThemeService,
+		public settingsService:SettingsService
   ) {
-		console.log('!!!!!!!!!_____---------HERE\n\n\n\n\n\n\n----------------\n\n\n\n\n\n')
 console.log(process.env['TRANSLATE_APP_ID'])
     this.onChangeTheme(storeService.store.get("theme") || "dark");
     this.mpvService.mpvReadyHook = () => {

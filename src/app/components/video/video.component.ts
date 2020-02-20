@@ -85,22 +85,23 @@ export class VideoComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.time) {
       let isCheckNewSubtitles = true;
-      if (this.settingsService.repeatMode) {
-        const nextSub = this.subtitlesService.getNextSubtitle();
+      const nextSub = this.subtitlesService.getNextSubtitle();
+      if (
+        Math.abs(changes.time.currentValue - changes.time.previousValue) < 0.1
+      ) {
         if (
-          Math.abs(changes.time.currentValue - changes.time.previousValue) < 0.1
+          nextSub &&
+          changes.time.currentValue >= nextSub.time &&
+          changes.time.previousValue < nextSub.time
         ) {
-          if (
-            nextSub &&
-            changes.time.currentValue >= nextSub.time &&
-            changes.time.previousValue < nextSub.time
-          ) {
+          if (this.settingsService.repeatMode) {
             this.mpvService.setPause(true);
-            isCheckNewSubtitles = false;
-          } else if (this.mpvService.state.pause) {
             isCheckNewSubtitles = false;
           }
         }
+      }
+      if (this.mpvService.state.pause) {
+        isCheckNewSubtitles = false;
       }
       isCheckNewSubtitles && this.subtitlesService.findCurrentSubtitle();
       this.loopBorderControl();

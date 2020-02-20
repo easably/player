@@ -53,3 +53,19 @@
         cursor: pointer;
     }
 }
+
+.popupMode{
+	position: absolute;
+	left: 0;
+	width: 100%;
+	top: 30px;
+	text-align: center;
+	z-index: 2;
+	span{
+		font-size: 15px;
+		padding: 15px;
+		background-color: rgba(255, 255, 255, 0.26);
+		color:#000;
+		border-radius: 30px;
+	}
+}

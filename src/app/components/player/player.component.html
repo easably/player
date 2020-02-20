@@ -1,6 +1,9 @@
 <div class="app">
 	<div class="first-column">
     <div class="video-container">
+				<div class="popupMode" *ngIf="settingsService.repeatMode">
+					<span>Pause mode</span>
+				</div>
         <app-open-file-popup
             *ngIf="this.mpvService.state.duration === 0"
             [openFile]="openFile.bind(this)"

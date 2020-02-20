@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MpvJs } from "mpv.js-vanilla";
 import { remote } from "electron";
 import mpvState from "../interfaces/mpv-state";
-
+import {SettingsService} from '../services/settings.service'
 @Injectable({
     providedIn: "root"
 })
@@ -25,8 +25,8 @@ export class MpvService {
     public playbackSpeedList = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5];
     private powerSaveBlocker;
 		public speedLimits = [0.5, 1.5];
-    constructor() {
-        this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
+    constructor(private settingsService:SettingsService) {
+				this.mpv = new MpvJs(this.handleMPVReady, this.handlePropertyChange);
     }
     setTimePos = timePos => {
         this.mpv.property("time-pos", timePos + 0.05);
@@ -123,7 +123,11 @@ export class MpvService {
     }
     setPause(state = true, ignore = false) {
         if (!this.state.duration && !ignore) return;
-        this.mpv.property("pause", state);
+				this.mpv.property("pause", state);
+				if (state === true){
+					this.settingsService.setRepeatMode(false);
+
+				}
         if (state === false) {
             this.powerSaveBlocker = remote.powerSaveBlocker.start(
                 "prevent-display-sleep"

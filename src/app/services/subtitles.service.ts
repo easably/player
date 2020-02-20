@@ -227,6 +227,7 @@ export class SubtitlesService {
     return this.getCurrentSubtitles().subtitle[key];
 	}
   setSubtitleByKey(key, isWithShift = false) {
+		this.settingsService.setRepeatMode(true)
 		const shiftValue = 1;
 		if (isWithShift && this.subtitleWithShift){
 			this.subtitleWithShift.startShift = 0
