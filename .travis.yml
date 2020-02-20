@@ -17,7 +17,7 @@ install:
  - npm install
 jobs:
  include:
- - stage: Deploy Windows & Mac
+  - stage: Deploy Windows & Mac
     if: tag IS present
     os: osx
     osx_image: xcode10.1
