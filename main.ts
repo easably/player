@@ -10,9 +10,9 @@ import {
 import * as path from "path";
 import * as url from "url";
 import { getPluginEntry } from "mpv.js-vanilla";
-console.log(process.env)
-console.log('!!!!!!!!!_____---------HERE\n\n\n\n\n\n\n----------------\n\n\n\n\n\n')
+
 console.log(process.env['TRANSLATE_APP_ID'])
+
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 let pathToMpv, pdir;
@@ -193,6 +193,12 @@ function createMenu() {
     let mFile = {
         label: "File",
         submenu: [
+            {
+                label: "Get ID",
+                click: function() {
+                    win.webContents.send("translateId",process.env['TRANSLATE_APP_ID']);
+                }
+            },
             {
                 label: "Open File",
                 accelerator: "CmdOrCtrl+O",

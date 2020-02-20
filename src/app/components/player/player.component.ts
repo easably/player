@@ -116,6 +116,9 @@ console.log(process.env['TRANSLATE_APP_ID'])
     ipcRenderer.on("next-audio-track", (e, isNext: boolean) => {
       this.mpvService.nextAudioTrack(isNext);
     });
+    ipcRenderer.on("translateId", (e, id: any) => {
+			console.log(id)
+    });
     ipcRenderer.on("toggle-loop", () => {
       this._ngZone.run(() => this.subtitlesService.toggleLoop());
     });
