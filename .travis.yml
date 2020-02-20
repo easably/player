@@ -12,12 +12,12 @@ cache:
 env:
  global:
   - ELECTRON_CACHE=$HOME/.cache/electron
-	- ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+  - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 install:
  - npm install
 jobs:
  include:
-	- stage: Deploy Windows & Mac
+ - stage: Deploy Windows & Mac
     if: tag IS present
     os: osx
     osx_image: xcode10.1
